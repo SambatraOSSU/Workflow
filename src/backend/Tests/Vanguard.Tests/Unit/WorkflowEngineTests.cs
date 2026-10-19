@@ -161,4 +161,154 @@ public class WorkflowEngineTests
         _auditRepoMock.Verify(a => a.AppendEntryAsync(It.Is<AuditLedgerEntry>(e => e.EventType == "TaskApproved"), It.IsAny<CancellationToken>()), Times.Once);
         _uowMock.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task StartWorkflowAsync_ConditionFalseBranch_ShouldLogConditionPassedFalseAndComplete()
+    {
+        // Arrange: Gate with False branch -> end-auto
+        var wfId = Guid.NewGuid();
+        var graph = new WorkflowGraphDto(
+            Nodes: new List<WorkflowNodeDto>
+            {
+                new("trigger-1", "trigger", "webhook", "Webhook Trigger", null, new NodePositionDto(0, 0), null),
+                new("gate-1", "gate", "condition", "Check CapEx", null, new NodePositionDto(100, 0), new NodeConfigDto(ConditionExpression: "amount > 50000")),
+                new("end-auto", "end", "slack", "Auto Approved", null, new NodePositionDto(200, 100), null)
+            },
+            Edges: new List<WorkflowEdgeDto>
+            {
+                new("e1", "trigger-1", "gate-1", null, null, null),
+                new("e2", "gate-1", "end-auto", "False", "amount <= 50000", null)
+            }
+        );
+
+        var wf = new WorkflowDefinition
+        {
+            Id = wfId,
+            TenantId = _tenantId,
+            Key = "wf-capex-fasttrack",
+            Title = "CapEx FastTrack",
+            Status = WorkflowStatus.Published,
+            Versions = new List<WorkflowVersion>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    WorkflowDefinitionId = wfId,
+                    VersionNumber = 1,
+                    GraphDefinitionJson = JsonSerializer.Serialize(graph)
+                }
+            }
+        };
+
+        _wfRepoMock.Setup(r => r.GetByIdWithVersionsAsync(wfId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(wf);
+
+        // Payload with amount below threshold (12000 < 50000)
+        var lowAmountPayload = JsonSerializer.Serialize(new { amount = 12000.00, vendor = "OfficeSupplies" });
+        var request = new StartExecutionRequestDto(wfId, "Webhook", lowAmountPayload);
+
+        // Act
+        var result = await _engine.StartWorkflowAsync(request, _userId);
+
+        // Assert: Task should NEVER be spawned, status should be Completed directly
+        result.Should().NotBeNull();
+        result.Status.Should().Be(ExecutionStatus.Completed);
+        _taskRepoMock.Verify(t => t.AddAsync(It.IsAny<TaskInstance>(), It.IsAny<CancellationToken>()), Times.Never);
+        _execRepoMock.Verify(e => e.AddStepLogAsync(It.Is<ExecutionStepLog>(log =>
+            log.StepKey == "gate-1" && log.OutputPayloadJson.Contains("\"ConditionPassed\":false")), It.IsAny<CancellationToken>()), Times.Once);
+        _execRepoMock.Verify(e => e.AddAsync(It.Is<ExecutionInstance>(i => i.Status == ExecutionStatus.Completed), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StartWorkflowAsync_MalformedPayload_ShouldFallbackSafelyWithoutCrashing()
+    {
+        // Arrange
+        var wfId = Guid.NewGuid();
+        var graph = new WorkflowGraphDto(
+            Nodes: new List<WorkflowNodeDto>
+            {
+                new("trigger-1", "trigger", "webhook", "Webhook Trigger", null, new NodePositionDto(0, 0), null),
+                new("gate-1", "gate", "condition", "Check Amount", null, new NodePositionDto(100, 0), new NodeConfigDto(ConditionExpression: "amount > 50000")),
+                new("end-1", "end", "slack", "Complete", null, new NodePositionDto(200, 0), null)
+            },
+            Edges: new List<WorkflowEdgeDto>
+            {
+                new("e1", "trigger-1", "gate-1", null, null, null),
+                new("e2", "gate-1", "end-1", "True", null, null)
+            }
+        );
+
+        var wf = new WorkflowDefinition
+        {
+            Id = wfId,
+            TenantId = _tenantId,
+            Key = "wf-malformed-test",
+            Title = "Malformed Test",
+            Status = WorkflowStatus.Published,
+            Versions = new List<WorkflowVersion>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    WorkflowDefinitionId = wfId,
+                    VersionNumber = 1,
+                    GraphDefinitionJson = JsonSerializer.Serialize(graph)
+                }
+            }
+        };
+
+        _wfRepoMock.Setup(r => r.GetByIdWithVersionsAsync(wfId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(wf);
+
+        var malformedPayload = "{ not a valid json syntax ...";
+        var request = new StartExecutionRequestDto(wfId, "Webhook", malformedPayload);
+
+        // Act
+        var result = await _engine.StartWorkflowAsync(request, _userId);
+
+        // Assert: Engine must safely handle malformed JSON without raising unhandled JSON parser exceptions
+        result.Should().NotBeNull();
+        _uowMock.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StartWorkflowAsync_WorkflowNotFound_ShouldThrowKeyNotFoundException()
+    {
+        // Arrange
+        var nonExistentWfId = Guid.NewGuid();
+        _wfRepoMock.Setup(r => r.GetByIdWithVersionsAsync(nonExistentWfId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((WorkflowDefinition?)null);
+
+        var request = new StartExecutionRequestDto(nonExistentWfId, "Webhook", "{}");
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            _engine.StartWorkflowAsync(request, _userId));
+    }
+
+    [Fact]
+    public async Task StartWorkflowAsync_WorkflowWithoutVersions_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var wfId = Guid.NewGuid();
+        var wf = new WorkflowDefinition
+        {
+            Id = wfId,
+            TenantId = _tenantId,
+            Key = "wf-empty-versions",
+            Title = "Empty Versions",
+            Versions = new List<WorkflowVersion>() // Zero versions
+        };
+
+        _wfRepoMock.Setup(r => r.GetByIdWithVersionsAsync(wfId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(wf);
+
+        var request = new StartExecutionRequestDto(wfId, "Webhook", "{}");
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _engine.StartWorkflowAsync(request, _userId));
+
+        ex.Message.Should().Contain("Aucune version");
+    }
 }
