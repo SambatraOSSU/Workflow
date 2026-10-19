@@ -1,14 +1,27 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { UiStateService } from '../../../core/services/ui-state.service';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
   template: `
-    <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl select-none">
-      <!-- Search and Environment Bar -->
-      <div class="flex items-center gap-space-lg flex-1 max-w-xl">
+    <header class="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-4 sm:px-6 lg:px-space-xl select-none transition-all duration-300">
+      <!-- Search, Mobile Drawer Toggle and Environment Bar -->
+      <div class="flex items-center gap-2 sm:gap-space-md flex-1 max-w-xl">
+        <!-- Mobile Drawer Hamburger Toggle (< lg) -->
+        <button
+          type="button"
+          (click)="ui.toggleMobileSidebar()"
+          class="lg:hidden p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container shrink-0 transition-colors"
+          aria-label="Ouvrir le menu de navigation"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+
         <div class="relative w-full max-w-md">
           <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -18,27 +31,28 @@ import { AuthService } from '../../../core/services/auth.service';
             placeholder="Search workflows, runs, triggers (Cmd+K)..."
             type="text"
           />
-          <kbd class="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-surface-container-highest text-[11px] text-on-surface-variant font-mono font-medium">⌘K</kbd>
+          <kbd class="hidden sm:inline-block absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-surface-container-highest text-[11px] text-on-surface-variant font-mono font-medium">⌘K</kbd>
         </div>
 
-        <div class="hidden lg:flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-low border border-surface-container text-on-surface-variant text-xs">
+        <div class="hidden lg:flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-low border border-surface-container text-on-surface-variant text-xs shrink-0">
           <span class="w-2 h-2 rounded-full bg-success"></span>
           <span class="text-on-surface font-medium">Production - US-East-1</span>
         </div>
       </div>
 
       <!-- Action Buttons & User Profile -->
-      <div class="flex items-center gap-space-md">
+      <div class="flex items-center gap-2 sm:gap-space-md">
         <!-- New Workflow CTA -->
         <button
           (click)="onNewWorkflow()"
-          class="h-10 px-space-md rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-sm font-bold flex items-center gap-2 transition-colors shadow-sm"
+          class="h-9 sm:h-10 px-3 sm:px-space-md rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold flex items-center gap-2 transition-colors shadow-sm"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <line x1="12" x2="12" y1="5" y2="19"></line>
             <line x1="5" x2="19" y1="12" y2="12"></line>
           </svg>
-          <span>New Workflow</span>
+          <span class="hidden sm:inline">New Workflow</span>
+          <span class="sm:hidden">New</span>
         </button>
 
         <!-- Notification Bell -->
@@ -54,7 +68,7 @@ import { AuthService } from '../../../core/services/auth.service';
           <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span>
         </button>
 
-        <div class="h-6 w-px bg-surface-container-high"></div>
+        <div class="h-6 w-px bg-surface-container-high hidden sm:block"></div>
 
         <!-- User Profile Dropdown Toggle -->
         <div class="relative">
@@ -80,6 +94,9 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <!-- Profile Flyout Menu -->
           @if (menuOpen()) {
+            <!-- Click-away backdrop -->
+            <div (click)="closeMenu()" class="fixed inset-0 z-40" aria-hidden="true"></div>
+
             <div class="absolute right-0 top-12 w-56 rounded-xl bg-surface-container-lowest border border-surface-container shadow-xl p-1.5 z-50">
               <div class="p-2 border-b border-surface-container mb-1">
                 <p class="text-xs font-bold text-on-surface">{{ auth.currentUser()?.fullName ?? 'Alexander Vance' }}</p>
@@ -106,12 +123,17 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class TopbarComponent {
   protected readonly auth = inject(AuthService);
+  protected readonly ui = inject(UiStateService);
   private readonly router = inject(Router);
 
   protected readonly menuOpen = signal(false);
 
   protected toggleMenu(): void {
     this.menuOpen.update((v) => !v);
+  }
+
+  protected closeMenu(): void {
+    this.menuOpen.set(false);
   }
 
   protected onNewWorkflow(): void {
@@ -123,6 +145,7 @@ export class TopbarComponent {
   }
 
   protected logout(): void {
+    this.closeMenu();
     this.auth.logout();
     this.router.navigate(['/login']);
   }
