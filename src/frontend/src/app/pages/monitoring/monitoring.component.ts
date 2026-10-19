@@ -20,7 +20,7 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-6 lg:px-space-xl flex-1 flex flex-col max-w-[1680px] mx-auto pb-space-4xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
           <!-- Top Page Header Section -->
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg py-space-xl">
             <div class="flex flex-col gap-space-xs">

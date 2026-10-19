@@ -20,7 +20,7 @@ import { NotificationItem } from '../../core/models/notification.models';
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-6 lg:px-space-xl flex-1 flex flex-col max-w-[1680px] mx-auto pb-space-4xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
           <!-- Ambient Glow Behind Operational Canvas -->
           <div class="relative w-full">
             <div class="absolute -top-12 right-24 w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl pointer-events-none -z-10"></div>

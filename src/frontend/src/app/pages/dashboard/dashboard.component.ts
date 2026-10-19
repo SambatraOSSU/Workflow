@@ -16,7 +16,7 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
       <div class="pl-0 lg:pl-64 flex flex-col flex-1 min-w-0 transition-all duration-300">
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-6 lg:px-space-xl pb-space-4xl flex-1 max-w-[1680px] mx-auto min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 pb-space-4xl flex-1 max-w-7xl 2xl:max-w-[1536px] mx-auto min-w-0">
           <div class="flex flex-col w-full space-y-space-xl pt-space-lg">
             
             <!-- 1. Executive Header Bar -->

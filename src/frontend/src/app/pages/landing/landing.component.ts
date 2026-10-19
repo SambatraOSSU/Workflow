@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
     <div class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
       <!-- Fixed Header Navigation -->
       <header class="fixed top-0 w-full z-50 bg-pure-white/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div class="h-16 w-full px-gutter-lg flex items-center justify-between gap-space-lg">
+        <div class="h-16 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between gap-space-lg">
           <div class="flex items-center gap-space-2xl">
             <a routerLink="/" class="flex items-center gap-space-sm text-primary">
               <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-secondary-container shadow-sm">
@@ -67,7 +67,7 @@ import { RouterLink } from '@angular/router';
       <main class="w-full pt-16 bg-surface flex-1">
         <div class="flex flex-col w-full">
           <!-- HERO SECTION -->
-          <section class="relative w-full overflow-hidden bg-surface py-space-4xl px-gutter-lg flex flex-col items-center">
+          <section class="relative w-full overflow-hidden bg-surface py-space-4xl px-6 sm:px-8 lg:px-12 flex flex-col items-center">
             <!-- Ambient Canvas Glow behind Hero -->
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[520px] bg-gradient-to-b from-primary-container/10 via-secondary-container/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
             
@@ -311,7 +311,7 @@ import { RouterLink } from '@angular/router';
           </section>
 
           <!-- SOCIAL PROOF / ENTERPRISE ADOPTION TICKER -->
-          <section class="w-full bg-pure-white py-space-3xl px-gutter-lg border-y border-surface-container">
+          <section class="w-full bg-pure-white py-space-3xl px-6 sm:px-8 lg:px-12 border-y border-surface-container">
             <div class="max-w-6xl mx-auto flex flex-col items-center">
               <p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold text-center mb-space-xl">
                 Propulsé au cœur des infrastructures financières et industrielles les plus exigeantes
@@ -342,7 +342,7 @@ import { RouterLink } from '@angular/router';
           </section>
 
           <!-- CORE VALUE PILLARS (Bento Grid of Features) -->
-          <section class="w-full bg-surface py-space-5xl px-gutter-lg">
+          <section class="w-full bg-surface py-space-5xl px-6 sm:px-8 lg:px-12">
             <div class="max-w-6xl mx-auto flex flex-col gap-space-4xl">
               <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
                 <div>
@@ -428,7 +428,7 @@ import { RouterLink } from '@angular/router';
           </section>
 
           <!-- TECHNICAL BENCHMARKS & ARCHITECTURE MATRIX -->
-          <section class="w-full bg-pure-white py-space-5xl px-gutter-lg border-y border-surface-container">
+          <section class="w-full bg-pure-white py-space-5xl px-6 sm:px-8 lg:px-12 border-y border-surface-container">
             <div class="max-w-6xl mx-auto flex flex-col gap-space-3xl">
               <!-- Section Intro Header -->
               <div class="text-center max-w-2xl mx-auto">
@@ -490,7 +490,7 @@ import { RouterLink } from '@angular/router';
           </section>
 
           <!-- INTERACTIVE WORKFLOW COMPARISON / STEPPER -->
-          <section class="w-full bg-surface py-space-5xl px-gutter-lg">
+          <section class="w-full bg-surface py-space-5xl px-6 sm:px-8 lg:px-12">
             <div class="max-w-6xl mx-auto flex flex-col gap-space-3xl">
               <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
                 <div>
@@ -565,7 +565,7 @@ import { RouterLink } from '@angular/router';
           </section>
 
           <!-- FINAL ENTERPRISE CONVERSION CTA SECTION -->
-          <section class="w-full bg-surface py-space-5xl px-gutter-lg">
+          <section class="w-full bg-surface py-space-5xl px-6 sm:px-8 lg:px-12">
             <div class="max-w-6xl mx-auto relative rounded-3xl bg-primary-container text-on-primary p-space-2xl sm:p-space-4xl overflow-hidden shadow-xl border border-white/10">
               <!-- Ambient Radial Flare -->
               <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
@@ -610,7 +610,7 @@ import { RouterLink } from '@angular/router';
 
       <!-- ENTERPRISE FOOTER -->
       <footer class="w-full bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-t border-surface-container">
-        <div class="w-full px-gutter-lg py-space-4xl flex flex-col gap-space-3xl max-w-7xl mx-auto">
+        <div class="w-full px-6 sm:px-8 lg:px-12 py-space-4xl flex flex-col gap-space-3xl max-w-7xl mx-auto">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-2xl">
             <div class="lg:col-span-2 flex flex-col gap-space-md">
               <div class="flex items-center gap-space-sm text-primary">

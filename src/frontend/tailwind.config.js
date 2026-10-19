@@ -92,7 +92,12 @@ module.exports = {
         "space-2xl": "2rem",
         "space-3xl": "2.5rem",
         "space-4xl": "3rem",
-        "space-5xl": "4rem"
+        "space-5xl": "4rem",
+        "gutter": "1rem",
+        "gutter-lg": "1.5rem",
+        "margin": "1rem",
+        "margin-md": "1.5rem",
+        "margin-lg": "2rem"
       }
     },
   },

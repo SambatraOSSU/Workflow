@@ -21,7 +21,7 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="flex-1 pt-20 px-4 sm:px-6 lg:px-space-xl py-space-xl flex flex-col gap-space-lg max-w-[1680px] w-full mx-auto min-w-0">
+        <main class="flex-1 pt-20 px-6 sm:px-8 lg:px-10 xl:px-12 py-space-xl flex flex-col gap-space-lg max-w-7xl 2xl:max-w-[1536px] w-full mx-auto min-w-0">
           <!-- Page Header & Action Controls -->
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md border-b border-surface-container-high pb-space-lg">
             <div class="flex flex-col gap-1">

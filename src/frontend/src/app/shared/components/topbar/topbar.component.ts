@@ -7,7 +7,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
   selector: 'app-topbar',
   standalone: true,
   template: `
-    <header class="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-4 sm:px-6 lg:px-space-xl select-none transition-all duration-300">
+    <header class="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-6 sm:px-8 lg:px-10 xl:px-12 select-none transition-all duration-300">
       <!-- Search, Mobile Drawer Toggle and Environment Bar -->
       <div class="flex items-center gap-2 sm:gap-space-md flex-1 max-w-xl">
         <!-- Mobile Drawer Hamburger Toggle (< lg) -->

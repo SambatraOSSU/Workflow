@@ -34,7 +34,7 @@ interface MockFeedItem {
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-20 px-4 sm:px-6 lg:px-8 pb-12 flex-1 flex flex-col max-w-[1600px] mx-auto min-w-0">
+        <main class="w-full pt-20 px-6 sm:px-8 lg:px-10 xl:px-12 pb-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto min-w-0">
           <!-- Operational Header Strip -->
           <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6">
             <div class="flex flex-col gap-1 max-w-2xl">

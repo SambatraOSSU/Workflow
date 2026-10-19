@@ -12,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
     <div class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col justify-between">
       <!-- Fixed Header -->
       <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div class="h-16 w-full px-gutter-lg flex items-center justify-between">
+        <div class="h-16 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between">
           <div class="flex items-center gap-space-lg">
             <a routerLink="/" class="flex items-center gap-space-sm">
               <div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center shadow-sm">
@@ -660,7 +660,7 @@ import { AuthService } from '../../core/services/auth.service';
 
       <!-- Footer -->
       <footer class="w-full bg-surface-container-low py-space-xl border-t border-surface-container">
-        <div class="w-full px-gutter-lg flex flex-col md:flex-row items-center justify-between gap-space-md max-w-7xl mx-auto">
+        <div class="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-space-md">
           <div class="flex flex-wrap items-center gap-space-md">
             <div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded">
               <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>

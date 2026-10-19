@@ -36,7 +36,7 @@ interface NodeTemplate {
 
       <div class="pl-0 lg:pl-64 flex flex-col h-full overflow-hidden transition-all duration-300">
         <!-- ================= TOPBAR (Global Header) ================= -->
-        <header class="h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container flex items-center justify-between px-4 sm:px-6 lg:px-space-xl z-40 shadow-xs flex-shrink-0">
+        <header class="h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container flex items-center justify-between px-6 sm:px-8 lg:px-10 xl:px-12 z-40 shadow-xs flex-shrink-0">
           <div class="flex items-center gap-2 sm:gap-space-lg flex-1 max-w-xl">
             <!-- Mobile Drawer Hamburger Toggle (< lg) -->
             <button
