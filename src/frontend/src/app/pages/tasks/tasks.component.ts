@@ -30,11 +30,11 @@ interface MockFeedItem {
       <!-- Fixed Sidebar -->
       <app-sidebar />
 
-      <div class="pl-64 flex flex-col flex-1">
+      <div class="pl-0 lg:pl-64 flex flex-col flex-1 min-w-0 transition-all duration-300">
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-20 px-8 pb-12 flex-1 flex flex-col max-w-[1600px] mx-auto">
+        <main class="w-full pt-20 px-4 sm:px-6 lg:px-8 pb-12 flex-1 flex flex-col max-w-[1600px] mx-auto min-w-0">
           <!-- Operational Header Strip -->
           <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6">
             <div class="flex flex-col gap-1 max-w-2xl">
