@@ -36,12 +36,14 @@ import { RouterLink } from '@angular/router';
           </div>
 
           <div class="flex items-center gap-2 sm:gap-space-md">
-            <!-- Bouton Connexion toujours visible sur Mobile & Desktop -->
+            <!-- Bouton Connexion / Démo interactive toujours visible sur Mobile & Desktop -->
             <a routerLink="/login" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-primary/20 hover:border-primary text-primary hover:bg-primary/5 font-label-md text-xs sm:text-sm font-bold transition-all shadow-xs">
               <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <span>Connexion</span>
+              <span class="hidden xl:inline">Connexion / Démo interactive</span>
+              <span class="hidden sm:inline xl:hidden">Connexion / Démo</span>
+              <span class="sm:hidden">Connexion</span>
             </a>
 
             <!-- Bouton Enterprise Demo -->
