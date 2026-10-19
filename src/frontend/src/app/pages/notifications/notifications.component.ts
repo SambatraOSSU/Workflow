@@ -16,11 +16,11 @@ import { NotificationItem } from '../../core/models/notification.models';
       <!-- Fixed Sidebar -->
       <app-sidebar />
 
-      <div class="pl-64 flex flex-col flex-1">
+      <div class="pl-0 lg:pl-64 flex flex-col flex-1 min-w-0 transition-all duration-300">
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 bg-surface px-space-xl flex-1 flex flex-col max-w-[1680px] mx-auto pb-space-4xl">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-6 lg:px-space-xl flex-1 flex flex-col max-w-[1680px] mx-auto pb-space-4xl min-w-0">
           <!-- Ambient Glow Behind Operational Canvas -->
           <div class="relative w-full">
             <div class="absolute -top-12 right-24 w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
