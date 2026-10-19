@@ -244,11 +244,12 @@ public class GraphValidatorTests
             }
         );
 
-        // Act & Assert
-        // QA Finding: GraphValidator detects duplicate IDs in errors list, but unhandled ArgumentException
-        // occurs when building inDegree dictionary before returning the validation result.
-        var act = () => _validator.ValidateGraph(graph);
-        act.Should().Throw<ArgumentException>().WithMessage("*node-dup*");
+        // Act
+        // Finding 2 Fixed: GraphValidator gracefully detects duplicate IDs in errors list
+        // and returns IsValid = false without crashing with ArgumentException.
+        var result = _validator.ValidateGraph(graph);
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("Identifiant de nœud en double"));
     }
 
     [Fact]

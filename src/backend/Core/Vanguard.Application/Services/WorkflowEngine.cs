@@ -240,128 +240,148 @@ public class WorkflowEngine : IWorkflowEngine
             var targetNode = graph.Nodes.FirstOrDefault(n => string.Equals(n.Id, edge.To, StringComparison.OrdinalIgnoreCase));
             if (targetNode == null) continue;
 
-            if (string.Equals(targetNode.Type, "gate", StringComparison.OrdinalIgnoreCase))
+            await ProcessTargetNodeAsync(execution, graph, targetNode, currentPayloadJson, tenantId, cancellationToken);
+            return;
+        }
+    }
+
+    private async Task ProcessTargetNodeAsync(
+        ExecutionInstance execution,
+        WorkflowGraphDto graph,
+        WorkflowNodeDto targetNode,
+        string currentPayloadJson,
+        Guid tenantId,
+        CancellationToken cancellationToken)
+    {
+        if (string.Equals(targetNode.Type, "gate", StringComparison.OrdinalIgnoreCase))
+        {
+            // Passerelle conditionnelle (IF/ELSE)
+            var conditionPassed = EvaluateCondition(targetNode.Config?.ConditionExpression, currentPayloadJson);
+
+            var gateLog = new ExecutionStepLog
             {
-                // Passerelle conditionnelle (IF/ELSE)
-                var conditionPassed = EvaluateCondition(targetNode.Config?.ConditionExpression, currentPayloadJson);
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                ExecutionInstanceId = execution.Id,
+                StepKey = targetNode.Id,
+                StepName = targetNode.Label,
+                StepType = "Condition",
+                Status = "Succeeded",
+                ExecutionDurationMs = 1,
+                InputPayloadJson = currentPayloadJson,
+                OutputPayloadJson = JsonSerializer.Serialize(new { ConditionPassed = conditionPassed })
+            };
+            await _executionRepository.AddStepLogAsync(gateLog, cancellationToken);
 
-                var gateLog = new ExecutionStepLog
+            // Sélectionner la branche True ou False
+            var gateEdges = graph.Edges.Where(e => string.Equals(e.From, targetNode.Id, StringComparison.OrdinalIgnoreCase)).ToList();
+            var selectedEdge = gateEdges.FirstOrDefault(e =>
+                conditionPassed ? (e.Label?.Contains("True", StringComparison.OrdinalIgnoreCase) ?? true)
+                                : (e.Label?.Contains("False", StringComparison.OrdinalIgnoreCase) ?? false))
+                ?? gateEdges.FirstOrDefault();
+
+            if (selectedEdge != null)
+            {
+                var nextNode = graph.Nodes.FirstOrDefault(n => string.Equals(n.Id, selectedEdge.To, StringComparison.OrdinalIgnoreCase));
+                if (nextNode != null)
                 {
-                    Id = Guid.NewGuid(),
-                    TenantId = tenantId,
-                    ExecutionInstanceId = execution.Id,
-                    StepKey = targetNode.Id,
-                    StepName = targetNode.Label,
-                    StepType = "Condition",
-                    Status = "Succeeded",
-                    ExecutionDurationMs = 1,
-                    InputPayloadJson = currentPayloadJson,
-                    OutputPayloadJson = JsonSerializer.Serialize(new { ConditionPassed = conditionPassed })
-                };
-                await _executionRepository.AddStepLogAsync(gateLog, cancellationToken);
-
-                // Sélectionner la branche True ou False
-                var gateEdges = graph.Edges.Where(e => string.Equals(e.From, targetNode.Id, StringComparison.OrdinalIgnoreCase)).ToList();
-                var selectedEdge = gateEdges.FirstOrDefault(e =>
-                    conditionPassed ? (e.Label?.Contains("True", StringComparison.OrdinalIgnoreCase) ?? true)
-                                    : (e.Label?.Contains("False", StringComparison.OrdinalIgnoreCase) ?? false))
-                    ?? gateEdges.FirstOrDefault();
-
-                if (selectedEdge != null)
-                {
-                    await ProcessNextStepsAsync(execution, graph, targetNode.Id, currentPayloadJson, tenantId, cancellationToken);
+                    await ProcessTargetNodeAsync(execution, graph, nextNode, currentPayloadJson, tenantId, cancellationToken);
                 }
-                return;
+                else
+                {
+                    await ProcessNextStepsAsync(execution, graph, selectedEdge.To, currentPayloadJson, tenantId, cancellationToken);
+                }
             }
+            return;
+        }
 
-            if (string.Equals(targetNode.Type, "task", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(targetNode.Type, "task", StringComparison.OrdinalIgnoreCase))
+        {
+            // Tâche humaine (HITL) : suspendre l'exécution en attente d'approbation
+            execution.CurrentStepKey = targetNode.Id;
+            execution.Status = ExecutionStatus.Running;
+
+            var slaHours = targetNode.Config?.TargetSlaHours ?? 4;
+            var task = new TaskInstance
             {
-                // Tâche humaine (HITL) : suspendre l'exécution en attente d'approbation
-                execution.CurrentStepKey = targetNode.Id;
-                execution.Status = ExecutionStatus.Running;
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                ExecutionInstanceId = execution.Id,
+                Title = targetNode.Label,
+                Description = targetNode.Config?.Prompt ?? targetNode.Description ?? "Validation requise",
+                StepKey = targetNode.Id,
+                Priority = "Urgent",
+                Status = TaskStatus.Pending,
+                SlaHours = slaHours,
+                DueAtUtc = DateTime.UtcNow.AddHours(slaHours),
+                ConsensusPolicy = targetNode.Config?.ConsensusPolicy ?? "FourEyes"
+            };
 
-                var slaHours = targetNode.Config?.TargetSlaHours ?? 4;
-                var task = new TaskInstance
-                {
-                    Id = Guid.NewGuid(),
-                    TenantId = tenantId,
-                    ExecutionInstanceId = execution.Id,
-                    Title = targetNode.Label,
-                    Description = targetNode.Config?.Prompt ?? targetNode.Description ?? "Validation requise",
-                    StepKey = targetNode.Id,
-                    Priority = "Urgent",
-                    Status = TaskStatus.Pending,
-                    SlaHours = slaHours,
-                    DueAtUtc = DateTime.UtcNow.AddHours(slaHours),
-                    ConsensusPolicy = targetNode.Config?.ConsensusPolicy ?? "FourEyes"
-                };
+            await _taskRepository.AddAsync(task, cancellationToken);
 
-                await _taskRepository.AddAsync(task, cancellationToken);
-
-                var taskLog = new ExecutionStepLog
-                {
-                    Id = Guid.NewGuid(),
-                    TenantId = tenantId,
-                    ExecutionInstanceId = execution.Id,
-                    StepKey = targetNode.Id,
-                    StepName = targetNode.Label,
-                    StepType = "HumanTask",
-                    Status = "Executing",
-                    ExecutionDurationMs = 0,
-                    InputPayloadJson = currentPayloadJson,
-                    OutputPayloadJson = "{}"
-                };
-                await _executionRepository.AddStepLogAsync(taskLog, cancellationToken);
-
-                return; // Attente de résolution humaine
-            }
-
-            if (string.Equals(targetNode.Type, "integration", StringComparison.OrdinalIgnoreCase))
+            var taskLog = new ExecutionStepLog
             {
-                // Tâche d'intégration automatique
-                var intLog = new ExecutionStepLog
-                {
-                    Id = Guid.NewGuid(),
-                    TenantId = tenantId,
-                    ExecutionInstanceId = execution.Id,
-                    StepKey = targetNode.Id,
-                    StepName = targetNode.Label,
-                    StepType = "AutomatedTask",
-                    Status = "Succeeded",
-                    ExecutionDurationMs = 14,
-                    InputPayloadJson = currentPayloadJson,
-                    OutputPayloadJson = JsonSerializer.Serialize(new { Status = "Synced", Engine = "Nitro-KMS", Latency = "14ms" })
-                };
-                await _executionRepository.AddStepLogAsync(intLog, cancellationToken);
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                ExecutionInstanceId = execution.Id,
+                StepKey = targetNode.Id,
+                StepName = targetNode.Label,
+                StepType = "HumanTask",
+                Status = "Executing",
+                ExecutionDurationMs = 0,
+                InputPayloadJson = currentPayloadJson,
+                OutputPayloadJson = "{}"
+            };
+            await _executionRepository.AddStepLogAsync(taskLog, cancellationToken);
 
-                // Continuer vers le nœud suivant
-                await ProcessNextStepsAsync(execution, graph, targetNode.Id, currentPayloadJson, tenantId, cancellationToken);
-                return;
-            }
+            return; // Attente de résolution humaine
+        }
 
-            if (string.Equals(targetNode.Type, "end", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(targetNode.Type, "integration", StringComparison.OrdinalIgnoreCase))
+        {
+            // Tâche d'intégration automatique
+            var intLog = new ExecutionStepLog
             {
-                // Nœud de fin
-                execution.CurrentStepKey = targetNode.Id;
-                execution.Status = ExecutionStatus.Completed;
-                execution.CompletedAtUtc = DateTime.UtcNow;
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                ExecutionInstanceId = execution.Id,
+                StepKey = targetNode.Id,
+                StepName = targetNode.Label,
+                StepType = "AutomatedTask",
+                Status = "Succeeded",
+                ExecutionDurationMs = 14,
+                InputPayloadJson = currentPayloadJson,
+                OutputPayloadJson = JsonSerializer.Serialize(new { Status = "Synced", Engine = "Nitro-KMS", Latency = "14ms" })
+            };
+            await _executionRepository.AddStepLogAsync(intLog, cancellationToken);
 
-                var endLog = new ExecutionStepLog
-                {
-                    Id = Guid.NewGuid(),
-                    TenantId = tenantId,
-                    ExecutionInstanceId = execution.Id,
-                    StepKey = targetNode.Id,
-                    StepName = targetNode.Label,
-                    StepType = "End",
-                    Status = "Succeeded",
-                    ExecutionDurationMs = 5,
-                    InputPayloadJson = currentPayloadJson,
-                    OutputPayloadJson = currentPayloadJson
-                };
-                await _executionRepository.AddStepLogAsync(endLog, cancellationToken);
-                return;
-            }
+            // Continuer vers le nœud suivant
+            await ProcessNextStepsAsync(execution, graph, targetNode.Id, currentPayloadJson, tenantId, cancellationToken);
+            return;
+        }
+
+        if (string.Equals(targetNode.Type, "end", StringComparison.OrdinalIgnoreCase))
+        {
+            // Nœud de fin
+            execution.CurrentStepKey = targetNode.Id;
+            execution.Status = ExecutionStatus.Completed;
+            execution.CompletedAtUtc = DateTime.UtcNow;
+
+            var endLog = new ExecutionStepLog
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                ExecutionInstanceId = execution.Id,
+                StepKey = targetNode.Id,
+                StepName = targetNode.Label,
+                StepType = "End",
+                Status = "Succeeded",
+                ExecutionDurationMs = 5,
+                InputPayloadJson = currentPayloadJson,
+                OutputPayloadJson = currentPayloadJson
+            };
+            await _executionRepository.AddStepLogAsync(endLog, cancellationToken);
+            return;
         }
     }
 

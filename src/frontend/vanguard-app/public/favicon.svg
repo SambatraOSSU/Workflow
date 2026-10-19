@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background Badge Navy -->
+  <rect width="64" height="64" rx="14" fill="#14213D"/>
+  
+  <!-- Vanguard 3-Tier Layered Workflow Orchestration Logo in Accent Amber #FCA311 -->
+  <!-- Top Layer / Diamond -->
+  <path d="M32 10L12 21L32 32L52 21L32 10Z" fill="#FCA311" fill-opacity="0.95"/>
+  <path d="M32 10L12 21L32 32L52 21L32 10Z" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
+  
+  <!-- Middle Layer / Workflow Horizon -->
+  <path d="M12 33L32 44L52 33" stroke="#FCA311" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Bottom Foundation Layer / Zero-Trust Base -->
+  <path d="M12 45L32 56L52 45" stroke="#FCA311" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Center Connection Dot (Execution Core) -->
+  <circle cx="32" cy="32" r="3.5" fill="#FFFFFF"/>
+</svg>

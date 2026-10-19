@@ -15,6 +15,11 @@ public static class DependencyInjection
         services.AddScoped<IWorkflowService, WorkflowService>();
         services.AddScoped<IWorkflowEngine, WorkflowEngine>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IMonitoringService, MonitoringService>();
+        services.AddScoped<IRequestHubService, RequestHubService>();
+        services.AddScoped<IAuditService, AuditService>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<ISettingsService, SettingsService>();
 
         return services;
     }

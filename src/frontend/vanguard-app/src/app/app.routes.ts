@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent)
   },
   {
+    path: 'landing',
+    redirectTo: '',
+    pathMatch: 'full'
+  },
+  {
     path: 'login',
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
   },
@@ -34,6 +39,31 @@ export const routes: Routes = [
     path: 'tasks',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/tasks/tasks.component').then(m => m.TasksComponent)
+  },
+  {
+    path: 'requests',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/requests/requests.component').then(m => m.RequestsComponent)
+  },
+  {
+    path: 'monitoring',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/monitoring/monitoring.component').then(m => m.MonitoringComponent)
+  },
+  {
+    path: 'audit-center',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/audit-center/audit-center.component').then(m => m.AuditCenterComponent)
+  },
+  {
+    path: 'notifications',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
+  },
+  {
+    path: 'settings',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent)
   },
   {
     path: '**',

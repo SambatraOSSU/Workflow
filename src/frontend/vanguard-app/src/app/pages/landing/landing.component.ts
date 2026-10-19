@@ -35,14 +35,23 @@ import { RouterLink } from '@angular/router';
             </nav>
           </div>
 
-          <div class="flex items-center gap-space-md">
-            <a routerLink="/login" class="hidden sm:inline-flex items-center justify-center px-space-md py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface font-semibold transition-colors">
-              Sign In
+          <div class="flex items-center gap-2 sm:gap-space-md">
+            <!-- Bouton Connexion toujours visible sur Mobile & Desktop -->
+            <a routerLink="/login" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-primary/20 hover:border-primary text-primary hover:bg-primary/5 font-label-md text-xs sm:text-sm font-bold transition-all shadow-xs">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Connexion</span>
             </a>
-            <a routerLink="/register" class="inline-flex items-center justify-center px-space-lg py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold hover:bg-secondary hover:text-on-secondary transition-all shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
-              Request Enterprise Demo
+
+            <!-- Bouton Enterprise Demo -->
+            <a routerLink="/register" class="inline-flex items-center justify-center px-3 py-1.5 sm:px-space-lg sm:py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-xs sm:text-sm font-bold hover:bg-secondary hover:text-on-secondary transition-all shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
+              <span class="hidden sm:inline">Request Enterprise Demo</span>
+              <span class="sm:hidden">Essai Demo</span>
             </a>
-            <a routerLink="/login" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:opacity-90 transition-opacity">
+
+            <!-- Pastille profil / accès rapide login -->
+            <a routerLink="/login" title="Accéder à l'espace de connexion" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:opacity-90 transition-opacity shadow-xs">
               <svg class="w-4 h-4 text-pure-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -92,10 +101,10 @@ import { RouterLink } from '@angular/router';
                   </svg>
                 </a>
                 <a routerLink="/login" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-pure-white text-primary font-label-md text-label-md font-semibold shadow-xs hover:bg-surface-container-low transition-all border border-surface-container">
-                  <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span>Explorer la démo interactive</span>
+                  <span>Connexion / Démo interactive</span>
                 </a>
               </div>
 
