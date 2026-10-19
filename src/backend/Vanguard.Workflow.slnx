@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Api/">
+    <Project Path="Api/Vanguard.Api/Vanguard.Api.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="Core/Vanguard.Application/Vanguard.Application.csproj" />
+    <Project Path="Core/Vanguard.Domain/Vanguard.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/Vanguard.Infrastructure/Vanguard.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Vanguard.Tests/Vanguard.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,712 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#525e7d", "on-primary-fixed-variant": "#3a4664", "surface-container-lowest": "#ffffff", "on-secondary-fixed": "#2a1700", "on-error-container": "#93000a", "on-primary-fixed": "#0d1b36", "surface-container": "#eeeeee", "surface-bright": "#f9f9f9", "on-primary-container": "#7c89aa", "secondary-container": "#ffa515", "success": "#10B981", "surface": "#f9f9f9", "tertiary": "#130900", "secondary-fixed": "#ffddb8", "inverse-on-surface": "#f1f1f1", "tertiary-fixed": "#ffddb6", "on-primary": "#ffffff", "surface-variant": "#e2e2e2", "secondary": "#855300", "on-secondary": "#ffffff", "tertiary-container": "#321d00", "on-tertiary-fixed": "#2a1800", "on-secondary-container": "#684000", "surface-container-high": "#e8e8e8", "warning": "#F59E0B", "on-surface": "#1a1c1c", "on-surface-variant": "#45464d", "primary-container": "#14213d", "secondary-fixed-dim": "#ffb95f", "outline": "#75777e", "error": "#EF4444", "outline-variant": "#c5c6ce", "pure-white": "#FFFFFF", "primary-fixed": "#d9e2ff", "on-background": "#1a1c1c", "inverse-primary": "#b9c6ea", "on-tertiary": "#ffffff", "surface-dim": "#dadada", "disabled": "#9CA3AF", "error-container": "#ffdad6", "surface-container-low": "#f4f3f3", "primary-fixed-dim": "#b9c6ea", "primary": "#000a24", "inverse-surface": "#2f3131", "noir-text": "#000000", "info": "#3B82F6", "on-tertiary-container": "#a58359", "tertiary-fixed-dim": "#e7c092", "background": "#f9f9f9", "surface-container-highest": "#e2e2e2", "on-error": "#ffffff", "on-tertiary-fixed-variant": "#5c421e", "on-secondary-fixed-variant": "#653e00" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-lg": "1.5rem", "margin": "1rem", "margin-lg": "2rem", "space-xl": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-2xl": "2rem", "space-lg": "1rem", "gutter": "1rem", "space-4xl": "3rem", "space-3xl": "2.5rem", "margin-md": "1.5rem", "space-5xl": "4rem", "space-md": "0.75rem" }, "fontFamily": { "caption": ["Inter"], "headline-lg-mobile": ["Inter"], "label-md": ["Inter"], "display": ["Inter"], "body-md": ["Inter"], "label-sm": ["Inter"], "headline-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"], "body-lg": ["Inter"] }, "fontSize": { "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }] } } } }</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-72 bg-primary-container text-on-primary z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col flex-1 min-h-0"><div class="h-16 flex items-center gap-space-sm px-space-lg bg-primary-container"><div class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-tertiary text-[20px]">bolt</span></div><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm uppercase tracking-wider text-pure-white truncate font-bold">Vanguard</span><span class="font-caption text-caption text-on-primary-container truncate uppercase tracking-widest text-[10px]">Workflow Engine</span></div></div><div class="px-space-md py-space-sm"><div class="px-space-sm py-space-xs text-on-primary-container uppercase font-caption text-[11px] font-semibold tracking-wider">Operational Core</div></div><nav class="flex-1 px-space-md space-y-1 overflow-y-auto" data-active-classes="bg-surface-tint text-pure-white font-semibold"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="dashboard" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg><span class="font-label-md text-label-md flex-1">Dashboard</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="workflows" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect width="6" height="6" x="3" y="3" rx="1"></rect><path d="M6 9v12"></path><path d="M6 15h10"></path><rect width="6" height="6" x="15" y="12" rx="1"></rect></svg><span class="font-label-md text-label-md flex-1">Workflows</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="tasks" href="#"><div class="flex items-center gap-space-md"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg><span class="font-label-md text-label-md">Tasks</span></div><span class="px-space-sm py-0.5 rounded-full font-caption text-[11px] font-bold bg-secondary-container text-noir-text">14</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="requests" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg><span class="font-label-md text-label-md flex-1">Requests</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="monitoring" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg><span class="font-label-md text-label-md flex-1">Monitoring</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-secondary-container text-tertiary font-bold shadow-sm" data-path="audit-center" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span class="font-label-md text-label-md flex-1">Audit Center</span></a><div class="pt-space-md pb-space-xs"><div class="px-space-sm text-on-primary-container uppercase font-caption text-[11px] font-semibold tracking-wider">Preferences</div></div><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="notifications" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg><span class="font-label-md text-label-md flex-1">Notifications</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-on-primary-container hover:bg-surface-tint hover:text-pure-white transition-colors" data-path="settings" href="#"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span class="font-label-md text-label-md flex-1">Settings</span></a></nav></div><div class="p-space-md m-space-md rounded-lg bg-primary"><div class="flex items-center justify-between mb-space-xs"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-success animate-pulse"></span><span class="font-label-sm text-label-sm text-pure-white font-medium">Cluster 01-A</span></div><span class="font-caption text-caption text-success font-semibold">Healthy</span></div><div class="font-caption text-caption text-on-primary-container flex items-center justify-between"><span>Nodes 24/24</span><span>Load 18%</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md flex-1 max-w-xl"><div class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm cursor-pointer hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-secondary-container text-[18px]">dns</span><span class="font-medium">US-East-1 Prod</span><span class="material-symbols-outlined text-on-surface-variant text-[16px]">expand_more</span></div><div class="relative flex-1"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-14 rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="Search pipelines, execution logs, instances..." type="text"><kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded font-caption text-caption text-on-surface-variant bg-surface-container border-0">⌘K</kbd></div></div><div class="flex items-center gap-space-lg"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-low"><span class="w-2 h-2 rounded-full bg-success"></span><span class="font-caption text-caption font-semibold text-on-surface">99.99% Uptime</span></div><button class="flex items-center gap-space-xs bg-secondary-container text-tertiary px-space-md py-2 rounded-lg font-label-md text-label-md font-bold hover:bg-secondary-fixed-dim transition-colors shadow-sm"><span class="material-symbols-outlined text-[18px]">add</span><span>New Workflow</span></button><button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><div class="flex items-center gap-space-md pl-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden xl:flex flex-col text-left"><span class="font-label-sm text-label-sm font-bold text-on-surface leading-tight">Alexander Vance</span><span class="font-caption text-caption text-on-surface-variant leading-tight">Org Admin</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-space-xl"><div class="flex flex-col w-full pb-space-4xl">
+<!-- Interactive script to highlight sidebar link as requested -->
+<script>
+    (function () {
+      const activeLink = document.querySelector('aside nav a[data-path="audit-center"]');
+      if (activeLink) {
+        document.querySelectorAll('aside nav a').forEach(el => {
+          el.classList.remove('bg-surface-tint', 'text-pure-white', 'font-semibold');
+        });
+        activeLink.classList.add('bg-secondary-container', 'text-tertiary', 'font-bold', 'shadow-sm');
+        activeLink.classList.remove('text-on-primary-container', 'hover:bg-surface-tint', 'hover:text-pure-white');
+      }
+    })();
+  </script>
+<!-- Section 1: Executive Compliance Header -->
+<header class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-lg pt-space-lg pb-space-2xl">
+<div class="flex flex-col max-w-3xl">
+<div class="flex items-center gap-space-sm mb-space-xs">
+<span class="font-caption text-caption uppercase tracking-widest font-bold px-2 py-0.5 rounded-full bg-primary-container text-primary-fixed">
+          Enterprise Security Ledger v4.12
+        </span>
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-success/10 text-success font-caption text-caption font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+<path d="m9 12 2 2 4-4"></path>
+</svg>
+          Cryptographically Sealed
+        </span>
+</div>
+<h1 class="font-display text-display text-on-surface tracking-tight font-extrabold mb-space-xs">
+        Audit Center &amp; Compliance Engine
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl leading-relaxed">
+        Immutable cryptographic ledger, SOX-404 and SOC-2 Type II audit trail, state transitions, and executive sign-off verification across cluster operations.
+      </p>
+<div class="mt-space-md flex flex-wrap items-center gap-space-md text-on-surface-variant font-caption text-caption">
+<div class="flex items-center gap-1.5 bg-surface-container px-space-sm py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+<span class="font-medium text-on-surface">SHA-256 Merkle Root:</span>
+<span class="font-mono text-noir-text font-bold">0x7f4b8a...c992</span>
+</div>
+<div class="flex items-center gap-1 text-outline">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>Last verification: <strong class="text-on-surface font-medium">32 seconds ago</strong> (Sync latency: 12ms)</span>
+</div>
+</div>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-space-sm shrink-0 self-stretch sm:self-auto">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold px-space-lg py-2.5 rounded-lg shadow-sm transition-all duration-150">
+<svg class="w-4 h-4 text-on-surface" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+<span>Export Audit Report</span>
+</button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-space-xs bg-secondary-container hover:bg-secondary-fixed-dim text-noir-text font-label-md text-label-md font-bold px-space-lg py-2.5 rounded-lg shadow-sm transition-all duration-150">
+<svg class="w-4 h-4 text-tertiary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M12 15l-2 5l4-1l4 1l-2-5"></path>
+<circle cx="12" cy="9" r="6"></circle>
+<polyline points="9 9 11 11 15 7"></polyline>
+</svg>
+<span>Generate Compliance Certificate</span>
+</button>
+</div>
+</header>
+<!-- Section 2: 4 KPI Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg mb-space-2xl">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider">Total Ledger Events</span>
+<div class="w-9 h-9 rounded-lg bg-primary-container text-pure-white flex items-center justify-center">
+<svg class="w-5 h-5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+</div>
+</div>
+<div>
+<div class="font-display text-display font-extrabold text-on-surface tracking-tight mb-1">1,842,910</div>
+<div class="flex items-center justify-between text-on-surface-variant font-caption text-caption pt-space-xs">
+<span class="flex items-center gap-1 text-success font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+            100% Hash Integrity
+          </span>
+<span class="font-mono text-outline font-medium">Merkle Depth: 24</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary-container to-primary-container opacity-70"></div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider">SOX-404 Duties (SoD)</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-display text-display font-extrabold text-on-surface tracking-tight">100%</span>
+<span class="font-label-sm text-label-sm font-bold text-success uppercase">Compliant</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-caption text-caption pt-space-xs">
+<span>Dual-signoff active</span>
+<span class="font-medium text-on-surface">0 bypasses in 90d</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-success opacity-80"></div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider">Privileged Actions (24h)</span>
+<div class="w-9 h-9 rounded-lg bg-primary text-pure-white flex items-center justify-center">
+<svg class="w-5 h-5 text-secondary-fixed" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-display text-display font-extrabold text-on-surface tracking-tight">14</span>
+<span class="font-caption text-caption text-on-surface-variant">Logged &amp; Audited</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-caption text-caption pt-space-xs">
+<span class="text-primary font-semibold">MFA Re-auth: 100%</span>
+<span>Justification required</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-primary-container opacity-80"></div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider">Policy Violations</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container text-success flex items-center justify-center">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+<path d="M12 8v4"></path>
+<path d="M12 16h.01"></path>
+</svg>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-display text-display font-extrabold text-on-surface tracking-tight">0</span>
+<span class="font-label-sm text-label-sm font-bold text-success uppercase">Breaches</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-caption text-caption pt-space-xs">
+<span class="text-on-surface-variant">Active Enclave Guard</span>
+<span class="font-semibold text-warning">3 blocked at gate</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-success opacity-80"></div>
+</div>
+</section>
+<!-- Section 3: Filter & Compliance Tags Bar -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-xl flex flex-col gap-space-md">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Search Input with SVG -->
+<div class="relative flex-1 min-w-[280px]">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+</div>
+<input class="w-full h-10 pl-10 pr-4 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container focus:ring-2 focus:ring-primary-container transition-all" placeholder="Search Actor, Workflow ID, Instance Hash, or Merkle Leaf..." type="text">
+</div>
+<!-- Filter Dropdowns -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Time Range -->
+<div class="relative">
+<button class="h-10 px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm font-medium flex items-center gap-space-xs transition-colors">
+<svg class="w-4 h-4 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+<span>Time: <strong>Last 30 Days</strong></span>
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<!-- Category -->
+<div class="relative">
+<button class="h-10 px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm font-medium flex items-center gap-space-xs transition-colors">
+<svg class="w-4 h-4 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<line x1="4" x2="4" y1="21" y2="14"></line>
+<line x1="4" x2="4" y1="10" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="12"></line>
+<line x1="12" x2="12" y1="8" y2="3"></line>
+<line x1="20" x2="20" y1="21" y2="16"></line>
+<line x1="20" x2="20" y1="12" y2="3"></line>
+<line x1="1" x2="7" y1="14" y2="14"></line>
+<line x1="9" x2="15" y1="8" y2="8"></line>
+<line x1="17" x2="23" y1="16" y2="16"></line>
+</svg>
+<span>Category: <strong>All (Approvals, Transitions, Vault)</strong></span>
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<!-- Severity -->
+<div class="relative">
+<button class="h-10 px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm font-medium flex items-center gap-space-xs transition-colors">
+<span>Severity: <strong>All Severities</strong></span>
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+<button class="h-10 px-3 bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface rounded-lg transition-colors" title="Reset Filters">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+<path d="M3 3v5h5"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Compliance Regulation Tags -->
+<div class="flex items-center gap-space-sm pt-space-xs flex-wrap">
+<span class="font-caption text-caption text-outline font-semibold uppercase tracking-wider mr-1">Compliance Frameworks:</span>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-pure-white font-caption text-caption font-bold shadow-sm transition-transform hover:scale-105">
+<svg class="w-3 h-3 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span>SOX-404 Active</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-pure-white font-caption text-caption font-bold shadow-sm transition-transform hover:scale-105">
+<svg class="w-3 h-3 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span>SOC-2 Type II</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface font-caption text-caption font-medium hover:bg-surface-container-high transition-colors">
+<span>GDPR Article 32</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface font-caption text-caption font-medium hover:bg-surface-container-high transition-colors">
+<span>HIPAA Security Rule</span>
+</button>
+<span class="ml-auto font-caption text-caption text-outline">
+        5,240 events matched in ledger index
+      </span>
+</div>
+</section>
+<!-- Section 4: Audit Records Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-2xl">
+<div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Verifiable Cryptographic Log</h2>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-caption text-caption font-bold uppercase">Merkle Chain Validated</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-caption text-caption">
+<svg class="w-3.5 h-3.5 text-success" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+</svg>
+<span>Real-time Consensus Sync</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">
+<th class="py-3 px-space-xl">Timestamp &amp; Block</th>
+<th class="py-3 px-space-lg">Actor &amp; Credential</th>
+<th class="py-3 px-space-lg">Event Action</th>
+<th class="py-3 px-space-lg">Context / Resource</th>
+<th class="py-3 px-space-lg">Cryptographic Hash</th>
+<th class="py-3 px-space-lg">Framework</th>
+<th class="py-3 px-space-xl text-right">Verification</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y-0"><!-- Row 1: Selected Row -->
+<tr class="bg-surface-container-high/40 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<td class="py-4 px-space-xl whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-on-surface font-bold">2024-10-31 14:28:09 UTC</span>
+<span class="font-mono text-caption text-outline font-semibold">Block #4,198,203</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-pure-white text-caption font-bold">
+  AV
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Alexander Vance</span>
+<span class="font-caption text-caption text-secondary font-semibold">Org Admin • FIDO2</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary-container/20 text-noir-text font-label-sm font-bold text-caption">
+<svg class="w-3.5 h-3.5 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+<polyline points="22 4 12 14.01 9 11.01"></polyline>
+</svg>
+<span class="">Executive Approval</span>
+</span>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">PO #88319</span>
+<span class="font-caption text-caption text-on-surface-variant font-mono">$124,500.00 (CapEx)</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded text-on-surface group-hover:bg-surface-container-high transition-colors">
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<span class="font-mono text-caption font-semibold tracking-wide">8f9a...c41e</span>
+<button title="Copy hash" class="text-outline hover:text-on-surface transition-colors ml-0.5">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="13" height="13" x="9" y="9" rx="2" ry="2"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-pure-white font-caption text-[11px] font-bold">SOX-404</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-caption text-[11px] font-bold">SOC-2</span>
+</div>
+</td>
+<td class="py-4 px-space-xl whitespace-nowrap text-right">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success/15 text-success font-caption text-caption font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span class="">Verified</span>
+</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="py-4 px-space-xl whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-on-surface font-bold">2024-10-31 14:15:22 UTC</span>
+<span class="font-mono text-caption text-outline font-semibold">Block #4,198,202</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface text-caption font-bold">
+  KS
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Kenji Sato</span>
+<span class="font-caption text-caption text-on-surface-variant font-medium">VP Finance • FIDO2</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container text-on-surface font-label-sm font-bold text-caption">
+<svg class="w-3.5 h-3.5 text-warning" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+<span class="">Workflow Gate Cleared</span>
+</span>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">PO #88319</span>
+<span class="font-caption text-caption text-outline">Tier-1 Threshold Clear</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded text-on-surface group-hover:bg-surface-container-high transition-colors">
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<span class="font-mono text-caption font-semibold tracking-wide">3a1b...e901</span>
+<button title="Copy hash" class="text-outline hover:text-on-surface transition-colors ml-0.5">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="13" height="13" x="9" y="9" rx="2" ry="2"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-pure-white font-caption text-[11px] font-bold">SOX-404</span>
+</td>
+<td class="py-4 px-space-xl whitespace-nowrap text-right">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success/15 text-success font-caption text-caption font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span class="">Verified</span>
+</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="py-4 px-space-xl whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-on-surface font-bold">2024-10-31 13:50:04 UTC</span>
+<span class="font-mono text-caption text-outline font-semibold">Block #4,198,201</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-pure-white">
+<svg class="w-3.5 h-3.5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">System Enclave Guard</span>
+<span class="font-caption text-caption text-on-surface-variant font-medium">HSM Root Actor</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container text-on-surface font-label-sm font-bold text-caption">
+<svg class="w-3.5 h-3.5 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+</svg>
+<span class="">Secret Key Rotation</span>
+</span>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Vault / Prod Secrets</span>
+<span class="font-caption text-caption text-outline">KMS Key ID: kms-use1-99</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded text-on-surface group-hover:bg-surface-container-high transition-colors">
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<span class="font-mono text-caption font-semibold tracking-wide">7c4d...2f18</span>
+<button title="Copy hash" class="text-outline hover:text-on-surface transition-colors ml-0.5">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="13" height="13" x="9" y="9" rx="2" ry="2"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-caption text-[11px] font-bold">SOC-2</span>
+</td>
+<td class="py-4 px-space-xl whitespace-nowrap text-right">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success/15 text-success font-caption text-caption font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span class="">Verified</span>
+</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="py-4 px-space-xl whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-on-surface font-bold">2024-10-31 12:44:19 UTC</span>
+<span class="font-mono text-caption text-outline font-semibold">Block #4,198,200</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface text-caption font-bold">
+  DR
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Devon Ramos</span>
+<span class="font-caption text-caption text-on-surface-variant font-medium">Staff Engineer • WebAuthn</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container text-on-surface font-label-sm font-bold text-caption">
+<svg class="w-3.5 h-3.5 text-info" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="m21 16-4 4-4-4"></path>
+<path d="M17 20V4"></path>
+<path d="m3 8 4-4 4 4"></path>
+<path d="M7 4v16"></path>
+</svg>
+<span class="">Pipeline Deploy Prod</span>
+</span>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">wf-procurement-v2.4</span>
+<span class="font-caption text-caption text-outline">Git SHA: e5b14c</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded text-on-surface group-hover:bg-surface-container-high transition-colors">
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<span class="font-mono text-caption font-semibold tracking-wide">1e2f...bb44</span>
+<button title="Copy hash" class="text-outline hover:text-on-surface transition-colors ml-0.5">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="13" height="13" x="9" y="9" rx="2" ry="2"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-caption text-[11px] font-bold">SOC-2</span>
+</td>
+<td class="py-4 px-space-xl whitespace-nowrap text-right">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success/15 text-success font-caption text-caption font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+<span class="">Verified</span>
+</span>
+</td>
+</tr>
+<!-- Row 5: Blocked Policy Attempt -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="py-4 px-space-xl whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-on-surface font-bold">2024-10-31 11:20:00 UTC</span>
+<span class="font-mono text-caption text-outline font-semibold">Block #4,198,199</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-error text-pure-white flex items-center justify-center text-caption font-bold">
+  !
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Policy Engine</span>
+<span class="font-caption text-caption text-error font-semibold">Automated Enforcement</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-error/15 text-error font-label-sm font-bold text-caption">
+<svg class="w-3.5 h-3.5 text-error" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+<line x1="12" x2="12" y1="8" y2="12"></line>
+<line x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<span class="">Bypass Blocked</span>
+</span>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-error">Unauthorized CapEx Rule</span>
+<span class="font-caption text-caption text-outline">Threshold bypass rejection</span>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 bg-surface-container px-2.5 py-1 rounded text-on-surface group-hover:bg-surface-container-high transition-colors">
+<svg class="w-3.5 h-3.5 text-outline" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<span class="font-mono text-caption font-semibold tracking-wide">990a...55c2</span>
+<button title="Copy hash" class="text-outline hover:text-on-surface transition-colors ml-0.5">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect width="13" height="13" x="9" y="9" rx="2" ry="2"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+</button>
+</div>
+</td>
+<td class="py-4 px-space-lg whitespace-nowrap">
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-pure-white font-caption text-[11px] font-bold">SOX-404</span>
+</td>
+<td class="py-4 px-space-xl whitespace-nowrap text-right">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error/15 text-error font-caption text-caption font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+<line x1="12" x2="12" y1="8" y2="12"></line>
+<line x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<span class="">Blocked Alert</span>
+</span>
+</td>
+</tr></tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-space-xl py-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<span class="font-caption text-caption text-on-surface-variant font-medium">
+        Showing <strong class="text-on-surface font-bold">1–5</strong> of <strong class="text-on-surface font-bold">1,842,910</strong> immutable events
+      </span>
+<div class="flex items-center gap-space-xs">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+<span>Prev</span>
+</button>
+<span class="px-3 py-1 font-mono font-bold text-caption text-pure-white bg-primary-container rounded">Page 1</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-colors">
+<span>Next</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+</div>
+</div>
+<!-- Section 5: Selected Event Deep Dive Panel (#AUD-994129) -->
+<section class="bg-surface-container-lowest rounded-xl shadow-md p-space-xl relative overflow-hidden">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg pb-space-lg">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-tertiary flex items-center justify-center shrink-0 shadow-sm">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" viewBox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+<path d="m9 12 2 2 4-4"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-space-sm flex-wrap"><span class="font-caption text-caption font-mono uppercase bg-primary-container text-pure-white px-2.5 py-0.5 rounded font-bold flex items-center gap-1.5"><svg class="w-3 h-3 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg><span class="">Event #AUD-994129</span></span><span class="font-caption text-caption text-success font-bold flex items-center gap-1.5 bg-success/10 px-2 py-0.5 rounded-full"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg><span class="">Ed25519 Cryptographically Validated</span></span></div>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface mt-1">
+            Executive Approval for Purchase Order #88319
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Dual-control regulatory sign-off completed by Alexander Vance under Sarbanes-Oxley Title IV.
+          </p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm shrink-0 flex-wrap">
+<button class="flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+<svg class="w-4 h-4 text-on-surface" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect>
+<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+</svg>
+<span>Copy Full Hash</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-secondary-container hover:bg-secondary-fixed-dim text-noir-text font-label-md text-label-md font-bold transition-all shadow-sm">
+<svg class="w-4 h-4 text-tertiary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+<span>Download Signed Receipt</span>
+</button>
+</div>
+</div>
+<!-- Metadata Bento Breakdown -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md bg-surface-container-low rounded-xl p-space-lg mb-space-lg">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-on-surface-variant font-medium">Merkle Root Leaf</span>
+<span class="font-mono text-label-sm font-bold text-on-surface truncate">0x9f82...71e4</span>
+<span class="font-caption text-[11px] text-outline mt-0.5">Leaf index: #8812</span>
+</div>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-on-surface-variant font-medium">Network Origin IP</span>
+<span class="font-mono text-label-sm font-bold text-on-surface">192.0.2.144</span>
+<span class="font-caption text-[11px] text-success font-semibold mt-0.5">Ashburn Authorized VPN</span>
+</div>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-on-surface-variant font-medium">Hardware Token ID</span>
+<span class="font-mono text-label-sm font-bold text-on-surface">YubiKey-8821</span>
+<span class="font-caption text-[11px] text-outline mt-0.5">FIDO2 Touch Verified</span>
+</div>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-on-surface-variant font-medium">Cryptographic Signature</span>
+<span class="font-mono text-label-sm font-bold text-success truncate">Ed25519 Verified</span>
+<span class="font-caption text-[11px] text-outline mt-0.5">Hash algorithm: SHA-512/256</span>
+</div>
+</div>
+<!-- Justification Block -->
+<div class="bg-surface-container rounded-lg p-space-md flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="mt-0.5 text-secondary shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Audit Reason &amp; Mandatory Justification Statement</span>
+<p class="font-body-md text-body-md text-on-surface font-medium italic">
+            “Approved under FY24-Q4 Infrastructure CapEx budget CC-ENG-01 approved by Board.”
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs text-caption font-mono text-on-surface-variant shrink-0 bg-surface-container-low px-space-sm py-1 rounded">
+<span>Ledger ID:</span>
+<span class="font-bold text-on-surface">LG-2024-X89</span>
+</div>
+</div>
+</section>
+</div></main></div>
+
+</body></html>
