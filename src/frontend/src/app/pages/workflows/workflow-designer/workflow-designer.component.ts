@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { WorkflowService } from '../../../core/services/workflow.service';
+import { UiStateService } from '../../../core/services/ui-state.service';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import {
   WorkflowDetail,
@@ -33,10 +34,21 @@ interface NodeTemplate {
       <!-- Fixed Sidebar (collapsible or permanent) -->
       <app-sidebar />
 
-      <div class="pl-64 flex flex-col h-full overflow-hidden">
+      <div class="pl-0 lg:pl-64 flex flex-col h-full overflow-hidden transition-all duration-300">
         <!-- ================= TOPBAR (Global Header) ================= -->
-        <header class="h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container flex items-center justify-between px-space-xl z-40 shadow-xs flex-shrink-0">
-          <div class="flex items-center gap-space-lg flex-1 max-w-xl">
+        <header class="h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container flex items-center justify-between px-4 sm:px-6 lg:px-space-xl z-40 shadow-xs flex-shrink-0">
+          <div class="flex items-center gap-2 sm:gap-space-lg flex-1 max-w-xl">
+            <!-- Mobile Drawer Hamburger Toggle (< lg) -->
+            <button
+              type="button"
+              (click)="ui.toggleMobileSidebar()"
+              class="lg:hidden p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container shrink-0 transition-colors"
+              aria-label="Ouvrir le menu de navigation"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
             <div class="flex items-center gap-space-xs text-caption text-on-surface-variant font-mono">
               <span class="w-2 h-2 rounded-full bg-success"></span>
               <span class="font-semibold text-on-surface">Vanguard Designer</span>
@@ -143,6 +155,20 @@ interface NodeTemplate {
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
               <span class="hidden xl:inline">Validate Graph</span>
+            </button>
+
+            <!-- Toggle Inspector Panel -->
+            <button
+              type="button"
+              (click)="ui.toggleDesignerInspector()"
+              [class.bg-surface-container]="ui.designerInspectorOpen()"
+              class="h-9 px-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-caption font-medium flex items-center gap-1.5 transition-colors border border-surface-container-highest shadow-xs"
+              title="Afficher/masquer l'inspecteur d'étape">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="15" y1="3" x2="15" y2="21"></line>
+              </svg>
+              <span class="hidden xl:inline">{{ ui.designerInspectorOpen() ? 'Hide Inspector' : 'Show Inspector' }}</span>
             </button>
 
             <div class="h-5 w-px bg-surface-container-highest"></div>
@@ -478,12 +504,15 @@ interface NodeTemplate {
                   [style.left.px]="node.position.x"
                   [style.top.px]="node.position.y">
 
-                  <!-- Input Port (Left) -->
+                  <!-- Input Port (Left) with enlarged hitbox -->
                   @if (node.type !== 'trigger') {
                     <div
                       (click)="onInputPortClick(node, $event)"
                       title="Connect target"
-                      [class]="connectingFromNodeId() ? 'absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary-container border-2 border-pure-white shadow-md ring-2 ring-secondary animate-bounce cursor-pointer' : 'absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white border-2 border-primary shadow-xs hover:scale-125 transition-transform cursor-pointer'">
+                      class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center cursor-pointer z-30 group/port">
+                      <div
+                        [class]="connectingFromNodeId() ? 'w-4 h-4 rounded-full bg-secondary-container border-2 border-pure-white shadow-md ring-2 ring-secondary animate-bounce' : 'w-3.5 h-3.5 rounded-full bg-pure-white border-2 border-primary shadow-xs group-hover/port:scale-125 group-hover/port:border-secondary transition-transform'">
+                      </div>
                     </div>
                   }
 
