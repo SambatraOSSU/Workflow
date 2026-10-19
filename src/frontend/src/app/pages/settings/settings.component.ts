@@ -16,14 +16,14 @@ import { EngineSettings } from '../../core/models/settings.models';
       <!-- Fixed Sidebar -->
       <app-sidebar />
 
-      <div class="pl-64 flex flex-col flex-1">
+      <div class="pl-0 lg:pl-64 flex flex-col flex-1 min-w-0 transition-all duration-300">
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 bg-surface px-space-xl flex-1 flex flex-col max-w-[1680px] mx-auto pb-space-5xl">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-6 lg:px-space-xl flex-1 flex flex-col max-w-[1680px] mx-auto pb-space-5xl min-w-0">
           <!-- Interactive Toast Notification Container -->
           @if (toastMessage()) {
-            <div class="fixed bottom-6 right-8 z-50 flex items-center gap-space-md px-space-lg py-space-md bg-primary text-pure-white rounded-xl shadow-xl animate-bounce">
+            <div class="fixed bottom-6 right-4 sm:right-8 z-50 flex items-center gap-space-md px-space-lg py-space-md bg-primary-container text-pure-white rounded-xl shadow-2xl border border-white/10 transition-all duration-300 transform translate-y-0 opacity-100">
               <div class="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center shrink-0">
                 <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M20 6L9 17l-5-5"></path>
