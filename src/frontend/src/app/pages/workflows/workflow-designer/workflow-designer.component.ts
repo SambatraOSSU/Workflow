@@ -1032,6 +1032,7 @@ export class WorkflowDesignerComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly workflowService = inject(WorkflowService);
+  readonly ui = inject(UiStateService);
 
   // Workflow State
   readonly workflowId = signal<string>('');
