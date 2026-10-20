@@ -35,7 +35,7 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="flex items-center gap-space-xl">
             <nav class="hidden md:flex items-center gap-space-xl">
               <a routerLink="/login" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-semibold">Se connecter</a>
-              <a routerLink="/register" class="transition-colors text-primary font-bold">Créer un compte</a>
+              <a routerLink="/register" class="transition-colors text-primary font-bold">Demander une démo</a>
             </nav>
           </div>
         </div>
@@ -126,7 +126,7 @@ import { AuthService } from '../../core/services/auth.service';
                       </span>
                       <span class="text-on-primary-container font-caption text-caption">· Architecture Isolation Spec 4.2</span>
                     </div>
-                    <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight font-bold">Créer un compte Enterprise</h1>
+                    <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight font-bold">Demander une démo Enterprise</h1>
                     <p class="font-body-md text-body-md text-on-primary-container leading-relaxed">
                       Deploy your dedicated workflow orchestration cluster with isolated cryptographic enclaves, zero-trust state verification, and single-tenant memory spaces.
                     </p>
@@ -561,7 +561,7 @@ import { AuthService } from '../../core/services/auth.service';
                         </svg>
                         <span>Initialisation du cluster...</span>
                       } @else {
-                        <span>Créer un compte & Initialiser le Cluster</span>
+                        <span>Demander une démo & Initialiser le Cluster</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
                           <polyline points="13 17 18 12 13 7"></polyline>
                           <polyline points="6 17 11 12 6 7"></polyline>

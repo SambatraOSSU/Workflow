@@ -150,10 +150,7 @@ import { AuthService } from '../../core/services/auth.service';
                   <div class="flex flex-col gap-1">
                     <div class="flex items-center justify-between">
                       <h2 class="font-headline-md text-headline-md text-primary tracking-tight font-bold">Se connecter à Vanguard</h2>
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-caption text-caption font-semibold">
-                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                        Auth v4.2
-                      </span>
+                      
                     </div>
                     <p class="font-body-md text-body-md text-on-surface-variant">
                       Accédez à votre cluster d'orchestration enterprise et à vos approbations d'exécution.
@@ -335,7 +332,7 @@ import { AuthService } from '../../core/services/auth.service';
                     <p class="font-body-md text-body-md text-on-surface-variant">
                       Pas encore de compte ?
                       <a routerLink="/register" class="font-bold text-primary hover:text-secondary underline underline-offset-4 ml-1 transition duration-150">
-                        Créer un compte
+                        Demander une démo
                       </a>
                     </p>
                   </div>
