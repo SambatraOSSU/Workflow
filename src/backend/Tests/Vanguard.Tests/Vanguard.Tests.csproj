@@ -27,7 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Vanguard.Application\Vanguard.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Vanguard.Infrastructure\Vanguard.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Api\Vanguard.Api\Vanguard.Api.csproj" />
     <ProjectReference Include="..\..\Core\Vanguard.Domain\Vanguard.Domain.csproj" />
   </ItemGroup>
 

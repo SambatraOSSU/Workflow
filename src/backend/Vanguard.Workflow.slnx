@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/Api/">
-    <Project Path="Api/Vanguard.Api/Vanguard.Api.csproj" />
+    <Project Path="Api/Vanguard.Api.csproj" />
   </Folder>
   <Folder Name="/Core/">
     <Project Path="Core/Vanguard.Application/Vanguard.Application.csproj" />
