@@ -8,56 +8,40 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
-      <!-- Fixed Header Navigation -->
-      <header class="fixed top-0 w-full z-50 bg-pure-white/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+            <!-- Fixed Header Navigation -->
+      <header class="fixed top-0 w-full z-50 bg-pure-white/95 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
         <div class="h-16 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between gap-space-lg">
-          <div class="flex items-center gap-space-2xl">
-            <a routerLink="/" class="flex items-center gap-space-sm text-primary">
-              <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-secondary-container shadow-sm">
-                <svg class="w-5 h-5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+          <div class="flex items-center gap-8 lg:gap-10">
+            <!-- Brand Logo -->
+            <a routerLink="/" class="flex items-center gap-2.5 text-primary group">
+              <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-secondary-container shadow-xs group-hover:scale-105 transition-transform">
+                <svg class="w-4.5 h-4.5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                   <path d="M2 17l10 5 10-5"></path>
                   <path d="M2 12l10 5 10-5"></path>
                 </svg>
               </div>
-              <div class="flex flex-col">
-                <span class="font-headline-sm text-headline-sm tracking-tight text-primary leading-none font-bold">VANGUARD</span>
-                <span class="font-caption text-caption text-on-surface-variant font-medium tracking-wider uppercase leading-none mt-0.5">Workflow Engine</span>
-              </div>
+              <span class="text-lg tracking-tight text-primary font-bold">VANGUARD</span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-space-xl">
-              <a routerLink="/" class="transition-colors text-primary font-bold">Platform</a>
-              <a routerLink="/workflows" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Solutions</a>
-              <a routerLink="/monitoring" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Engine Architecture</a>
-              <a routerLink="/audit-center" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Security & Trust</a>
-              <a routerLink="/workflows" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Documentation</a>
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+              <a routerLink="/" class="text-primary font-semibold hover:text-secondary-container transition-colors">Plateforme</a>
+              <a routerLink="/workflows" class="text-on-surface-variant hover:text-primary transition-colors">Solutions</a>
+              <a routerLink="/monitoring" class="text-on-surface-variant hover:text-primary transition-colors">Architecture</a>
+              <a routerLink="/audit-center" class="text-on-surface-variant hover:text-primary transition-colors">Sécurité</a>
+              <a routerLink="/workflows" class="text-on-surface-variant hover:text-primary transition-colors">Docs</a>
             </nav>
           </div>
 
-          <div class="flex items-center gap-2 sm:gap-space-md">
-            <!-- Bouton Connexion / Démo interactive toujours visible sur Mobile & Desktop -->
-            <a routerLink="/login" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-primary/20 hover:border-primary text-primary hover:bg-primary/5 font-label-md text-xs sm:text-sm font-bold transition-all shadow-xs">
-              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="hidden xl:inline">Connexion / Démo interactive</span>
-              <span class="hidden sm:inline xl:hidden">Connexion / Démo</span>
-              <span class="sm:hidden">Connexion</span>
+          <!-- Actions -->
+          <div class="flex items-center gap-3 sm:gap-4">
+            <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg hover:bg-surface-container-low transition-colors">
+              Connexion
             </a>
 
-            <!-- Bouton Enterprise Demo -->
-            <a routerLink="/register" class="inline-flex items-center justify-center px-3 py-1.5 sm:px-space-lg sm:py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-xs sm:text-sm font-bold hover:bg-secondary hover:text-on-secondary transition-all shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
-              <span class="hidden sm:inline">Request Enterprise Demo</span>
-              <span class="sm:hidden">Essai Demo</span>
-            </a>
-
-            <!-- Pastille profil / accès rapide login -->
-            <a routerLink="/login" title="Accéder à l'espace de connexion" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:opacity-90 transition-opacity shadow-xs">
-              <svg class="w-4 h-4 text-pure-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
+            <a routerLink="/register" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
+              Demander une démo
             </a>
           </div>
         </div>
