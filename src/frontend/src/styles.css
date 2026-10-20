@@ -5,17 +5,63 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Vanguard Design System Color Tokens */
+  --vanguard-primary: #000a24;
+  --vanguard-primary-container: #14213d;
+  --vanguard-secondary: #fca311;
+  --vanguard-secondary-hover: #e5920a;
+  --vanguard-secondary-container: #ffa515;
+  --vanguard-neutral: #e5e5e5;
+  --vanguard-canvas: #ffffff;
+  --vanguard-canvas-subtle: #f9f9f9;
+  --vanguard-on-surface: #1a1c1c;
+  --vanguard-on-surface-variant: #45464d;
+  --vanguard-outline: #75777e;
+  --font-inter: 'Inter', sans-serif;
+}
+
 @layer base {
   html, body {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #f9f9f9;
     color: #1a1c1c;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     overscroll-behavior: none;
+  }
+
+  /* High-contrast accessible selection highlight */
+  ::selection {
+    background-color: #ffa515;
+    color: #000000;
+  }
+}
+
+@layer components {
+  /* Vanguard Primary Action Button (Accent Orange #FCA311 with #000000 text) */
+  .btn-vanguard-primary {
+    @apply inline-flex items-center justify-center font-bold text-noir-text bg-secondary hover:bg-secondary-hover active:scale-[0.98] rounded-lg transition-all duration-150 shadow-xs hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 cursor-pointer;
+  }
+
+  /* Vanguard Secondary / Enterprise Operational Button (Deep Navy #14213D) */
+  .btn-vanguard-secondary {
+    @apply inline-flex items-center justify-center font-semibold text-pure-white bg-primary-container hover:bg-primary active:scale-[0.98] rounded-lg transition-all duration-150 shadow-xs hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 cursor-pointer;
+  }
+
+  /* Vanguard Tertiary / Outline Button */
+  .btn-vanguard-outline {
+    @apply inline-flex items-center justify-center font-medium text-on-surface bg-transparent border border-surface-container hover:bg-surface-container-low hover:text-primary-container active:scale-[0.98] rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-container/20 cursor-pointer;
+  }
+
+  /* Vanguard Status Pill Badge */
+  .badge-vanguard {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-caption font-medium tracking-wide;
   }
 }
 

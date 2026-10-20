@@ -20,7 +20,7 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
           <!-- Top Page Header Section -->
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg py-space-xl">
             <div class="flex flex-col gap-space-xs">
@@ -52,7 +52,7 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
                   </svg>
                   <select
                     class="bg-transparent font-label-sm text-label-sm font-semibold text-on-surface outline-none cursor-pointer pr-4 appearance-none"
-                    [ngModel]="timeRange()"
+                    aria-label="Plage temporelle" [ngModel]="timeRange()"
                     (ngModelChange)="timeRange.set($event)"
                   >
                     <option value="15m">Last 15 minutes</option>
@@ -236,8 +236,8 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
                 <!-- Flow Connectors (SVG background) -->
                 <div class="hidden md:block absolute top-1/2 left-8 right-8 -translate-y-1/2 -z-0">
                   <svg class="w-full h-8" fill="none" preserveAspectRatio="none" viewBox="0 0 600 32">
-                    <path d="M0 16 H600" stroke="#E2E2E2" stroke-dasharray="6 6" stroke-width="3"></path>
-                    <path d="M0 16 H360" stroke="#10B981" stroke-width="3"></path>
+                    <path d="M0 16 H600" stroke="currentColor" class="text-surface-container-highest" stroke-dasharray="6 6" stroke-width="3"></path>
+                    <path d="M0 16 H360" stroke="currentColor" class="text-success" stroke-width="3"></path>
                   </svg>
                 </div>
 
@@ -357,7 +357,7 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
                   </svg>
                   <input
                     class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface-container-lowest font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container shadow-xs border border-surface-container"
-                    placeholder="Filter by Instance ID, Workflow hash, or Step..."
+                    placeholder="Filter by Instance ID, Workflow hash, or Step..." aria-label="Filtrer les exécutions en direct"
                     type="text"
                     [ngModel]="searchTerm()"
                     (ngModelChange)="onSearchChange($event)"
@@ -367,7 +367,7 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
                 <div class="relative">
                   <select
                     class="h-10 pl-3 pr-8 rounded-lg bg-surface-container-lowest font-label-sm text-label-sm text-on-surface outline-none cursor-pointer appearance-none shadow-xs border border-surface-container"
-                    [ngModel]="statusFilter()"
+                    aria-label="Filtrer par statut d'exécution" [ngModel]="statusFilter()"
                     (ngModelChange)="onStatusFilterChange($event)"
                   >
                     <option value="all">Status: All ({{ liveRows().length }})</option>
@@ -385,17 +385,17 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
 
             <!-- Execution Table -->
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="w-full text-left border-collapse" aria-label="Matrice des exécutions en direct">
                 <thead>
                   <tr class="bg-surface-container-low text-on-surface font-caption text-caption uppercase tracking-wider font-bold border-b border-surface-container">
-                    <th class="py-space-md px-space-md">Instance ID & Title</th>
-                    <th class="py-space-md px-space-md">Workflow Hash</th>
-                    <th class="py-space-md px-space-md">Current Stage / Step</th>
-                    <th class="py-space-md px-space-md">Step Latency</th>
-                    <th class="py-space-md px-space-md">Total Duration</th>
-                    <th class="py-space-md px-space-md">Worker Node</th>
-                    <th class="py-space-md px-space-md">Status</th>
-                    <th class="py-space-md px-space-md text-right">Actions</th>
+                    <th scope="col" class="py-space-md px-space-md">Instance ID & Title</th>
+                    <th scope="col" class="py-space-md px-space-md">Workflow Hash</th>
+                    <th scope="col" class="py-space-md px-space-md">Current Stage / Step</th>
+                    <th scope="col" class="py-space-md px-space-md">Step Latency</th>
+                    <th scope="col" class="py-space-md px-space-md">Total Duration</th>
+                    <th scope="col" class="py-space-md px-space-md">Worker Node</th>
+                    <th scope="col" class="py-space-md px-space-md">Status</th>
+                    <th scope="col" class="py-space-md px-space-md text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody class="font-body-md text-body-md text-on-surface divide-y divide-surface-container">
@@ -456,7 +456,7 @@ import { LiveExecutionRow } from '../../core/models/monitoring.models';
                         <button
                           type="button"
                           class="p-1.5 rounded-lg hover:bg-surface-container-highest text-primary transition-colors cursor-pointer"
-                          title="Inspect Execution Trace"
+                          title="Inspect Execution Trace" aria-label="Inspecter la trace d'exécution"
                         >
                           <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                         </button>

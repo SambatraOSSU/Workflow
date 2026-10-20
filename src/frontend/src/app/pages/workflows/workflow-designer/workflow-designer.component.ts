@@ -368,7 +368,7 @@ interface NodeTemplate {
             <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-60" height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <pattern id="canvas-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1" fill="#dadada"></circle>
+                  <circle cx="2" cy="2" r="1" class="fill-outline-variant/60"></circle>
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#canvas-grid)"></rect>
@@ -466,13 +466,13 @@ interface NodeTemplate {
             <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <marker id="arrow-navy" markerWidth="6" markerHeight="6" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
-                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#14213d"></path>
+                  <path d="M 0 1 L 8 5 L 0 9 z" class="fill-primary-container"></path>
                 </marker>
                 <marker id="arrow-orange" markerWidth="7" markerHeight="7" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
-                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#ffa515"></path>
+                  <path d="M 0 1 L 8 5 L 0 9 z" class="fill-secondary-container"></path>
                 </marker>
                 <marker id="arrow-green" markerWidth="6" markerHeight="6" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
-                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#10B981"></path>
+                  <path d="M 0 1 L 8 5 L 0 9 z" class="fill-success"></path>
                 </marker>
               </defs>
 
@@ -480,7 +480,7 @@ interface NodeTemplate {
                 <path
                   [attr.d]="computeBezierPath(edge)"
                   fill="none"
-                  [attr.stroke]="getEdgeColor(edge)"
+                  [class]="getEdgeClass(edge)"
                   [attr.stroke-width]="getEdgeWidth(edge)"
                   [attr.stroke-dasharray]="getEdgeDash(edge)"
                   [attr.marker-end]="getEdgeMarker(edge)">
@@ -627,7 +627,7 @@ interface NodeTemplate {
           <!-- ---------------------------------------------------- -->
           <!-- RIGHT PANEL: CONTEXTUAL NODE INSPECTOR (340px)        -->
           <!-- ---------------------------------------------------- -->
-          <aside class="w-80 2xl:w-96 flex-shrink-0 bg-surface-container-lowest border-l border-surface-container-highest flex flex-col z-20 shadow-[-1px_0_4px_rgba(0,0,0,0.03)] select-none">
+          <aside [class.hidden]="!ui.designerInspectorOpen()" class="w-80 2xl:w-96 flex-shrink-0 bg-surface-container-lowest border-l border-surface-container flex flex-col z-20 shadow-xs select-none transition-all duration-200">
             @if (selectedNode(); as selNode) {
               <!-- Inspector Header -->
               <div class="p-space-md border-b border-surface-container flex items-start justify-between bg-surface-container-low/30">
@@ -638,12 +638,23 @@ interface NodeTemplate {
                   </div>
                   <h2 class="text-body-lg font-bold text-primary mt-1 truncate">{{ selNode.label }}</h2>
                 </div>
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/15 text-success font-label-sm text-[11px] font-bold flex-shrink-0">
-                  <svg class="w-3 h-3 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Config Valid
-                </span>
+                @if (validation()?.isValid !== false) {
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/15 text-success font-label-sm text-[11px] font-bold flex-shrink-0">
+                    <svg class="w-3 h-3 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Config Valid
+                  </span>
+                } @else {
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-error/15 text-error font-label-sm text-[11px] font-bold flex-shrink-0">
+                    <svg class="w-3 h-3 text-error" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Topology Alert
+                  </span>
+                }
               </div>
 
               <!-- Inspector Navigation Tabs -->
@@ -1520,11 +1531,15 @@ export class WorkflowDesignerComponent implements OnInit {
     return `M ${sourceX} ${sourceY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
   }
 
+  getEdgeClass(edge: WorkflowEdge): string {
+    if (edge.style === 'orange') return 'stroke-secondary-container';
+    if (edge.style === 'green') return 'stroke-success';
+    if (edge.style === 'dashed') return 'stroke-outline-variant';
+    return 'stroke-primary-container';
+  }
+
   getEdgeColor(edge: WorkflowEdge): string {
-    if (edge.style === 'orange') return '#ffa515';
-    if (edge.style === 'green') return '#10B981';
-    if (edge.style === 'dashed') return '#c5c6ce';
-    return '#14213d';
+    return 'currentColor';
   }
 
   getEdgeWidth(edge: WorkflowEdge): number {

@@ -20,10 +20,10 @@ import { EngineSettings } from '../../core/models/settings.models';
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-5xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-5xl min-w-0">
           <!-- Interactive Toast Notification Container -->
           @if (toastMessage()) {
-            <div class="fixed bottom-6 right-4 sm:right-8 z-50 flex items-center gap-space-md px-space-lg py-space-md bg-primary-container text-pure-white rounded-xl shadow-2xl border border-white/10 transition-all duration-300 transform translate-y-0 opacity-100">
+            <div class="fixed bottom-6 right-4 sm:right-8 z-50 flex items-center gap-space-md px-space-lg py-space-md bg-primary-container text-pure-white rounded-xl shadow-2xl border border-primary-fixed/20 transition-all duration-300 transform translate-y-0 opacity-100">
               <div class="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center shrink-0">
                 <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M20 6L9 17l-5-5"></path>
@@ -85,7 +85,7 @@ import { EngineSettings } from '../../core/models/settings.models';
               [class.bg-primary]="activeTab() === 'general'"
               [class.text-pure-white]="activeTab() === 'general'"
               [class.text-on-surface-variant]="activeTab() !== 'general'"
-              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium transition-all shrink-0"
+              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium hover:bg-surface-container transition-all shrink-0 cursor-pointer"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                 <rect height="18" rx="2" width="16" x="4" y="3"></rect>
@@ -122,7 +122,7 @@ import { EngineSettings } from '../../core/models/settings.models';
               [class.bg-primary]="activeTab() === 'security'"
               [class.text-pure-white]="activeTab() === 'security'"
               [class.text-on-surface-variant]="activeTab() !== 'security'"
-              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium transition-all shrink-0"
+              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium hover:bg-surface-container transition-all shrink-0 cursor-pointer"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -137,7 +137,7 @@ import { EngineSettings } from '../../core/models/settings.models';
               [class.bg-primary]="activeTab() === 'integrations'"
               [class.text-pure-white]="activeTab() === 'integrations'"
               [class.text-on-surface-variant]="activeTab() !== 'integrations'"
-              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium transition-all shrink-0"
+              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium hover:bg-surface-container transition-all shrink-0 cursor-pointer"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -153,7 +153,7 @@ import { EngineSettings } from '../../core/models/settings.models';
               [class.bg-primary]="activeTab() === 'audit'"
               [class.text-pure-white]="activeTab() === 'audit'"
               [class.text-on-surface-variant]="activeTab() !== 'audit'"
-              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium transition-all shrink-0"
+              class="flex items-center gap-space-xs px-space-md py-2 rounded-lg font-label-md text-label-md font-medium hover:bg-surface-container transition-all shrink-0 cursor-pointer"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -279,8 +279,10 @@ import { EngineSettings } from '../../core/models/settings.models';
                     (click)="formSettings().automaticRetryEnabled = !formSettings().automaticRetryEnabled"
                     [class.bg-primary]="formSettings().automaticRetryEnabled"
                     [class.bg-surface-container-high]="!formSettings().automaticRetryEnabled"
-                    class="w-12 h-6 rounded-full relative p-0.5 transition-colors focus:outline-none shrink-0"
+                    class="w-12 h-6 rounded-full relative p-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary shrink-0"
                     role="switch"
+                    aria-label="Tentative automatique sur panne transitoire"
+                    [attr.aria-checked]="formSettings().automaticRetryEnabled"
                     type="button"
                   >
                     <div
@@ -310,8 +312,10 @@ import { EngineSettings } from '../../core/models/settings.models';
                     (click)="formSettings().strictSlaBreachAlerting = !formSettings().strictSlaBreachAlerting"
                     [class.bg-primary]="formSettings().strictSlaBreachAlerting"
                     [class.bg-surface-container-high]="!formSettings().strictSlaBreachAlerting"
-                    class="w-12 h-6 rounded-full relative p-0.5 transition-colors focus:outline-none shrink-0"
+                    class="w-12 h-6 rounded-full relative p-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary shrink-0"
                     role="switch"
+                    aria-label="Alerte prédictive en cas de dépassement strict du SLA"
+                    [attr.aria-checked]="formSettings().strictSlaBreachAlerting"
                     type="button"
                   >
                     <div
@@ -478,7 +482,7 @@ import { EngineSettings } from '../../core/models/settings.models';
                     </code>
                     <button
                       (click)="copyEndpoint(formSettings().publicKeyEndpoint)"
-                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface-tint/60 hover:bg-surface-tint text-pure-white font-caption text-caption font-semibold transition-all shrink-0"
+                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-surface-tint/60 hover:bg-surface-tint text-pure-white font-caption text-caption font-semibold transition-all shrink-0 focus:outline-none focus:ring-2 focus:ring-secondary-container" aria-label="Copier le endpoint de clé publique"
                     >
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                         <rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect>
@@ -719,7 +723,7 @@ import { EngineSettings } from '../../core/models/settings.models';
                     </div>
                     <button
                       (click)="confirmAction('Emergency Lockout')"
-                      class="px-space-md py-1.5 rounded-lg bg-error text-pure-white hover:bg-red-700 font-label-sm text-label-sm font-bold transition-colors shadow-sm"
+                      class="px-space-md py-1.5 rounded-lg bg-error text-pure-white hover:bg-error/90 font-label-sm text-label-sm font-bold transition-all active:scale-[0.98] shadow-sm cursor-pointer"
                     >
                       Initiate
                     </button>

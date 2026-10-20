@@ -21,13 +21,18 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="flex-1 pt-20 px-6 sm:px-8 lg:px-10 xl:px-12 py-space-xl flex flex-col gap-space-lg max-w-7xl 2xl:max-w-[1536px] w-full mx-auto min-w-0">
+        <main class="flex-1 pt-20 px-4 sm:px-8 lg:px-10 xl:px-12 py-space-xl flex flex-col gap-space-lg max-w-7xl 2xl:max-w-[1536px] w-full mx-auto min-w-0">
           <!-- Page Header & Action Controls -->
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md border-b border-surface-container-high pb-space-lg">
             <div class="flex flex-col gap-1">
               <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded bg-primary-container text-pure-white text-[11px] font-mono font-bold uppercase tracking-wider">Definitions</span>
-                <span class="text-caption text-on-surface-variant font-mono">SOX-404 Cryptosealed</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-primary-container text-pure-white text-[11px] font-mono font-bold uppercase tracking-wider shadow-xs">Definitions</span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-mono font-semibold border border-success/20">
+                  <svg class="w-3.5 h-3.5 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                  SOX-404 Cryptosealed
+                </span>
               </div>
               <h1 class="text-headline-md font-bold text-primary tracking-tight">Enterprise Workflow Catalog</h1>
               <p class="text-caption text-on-surface-variant">Design, version, audit, and orchestrate human-in-the-loop and automated business pipelines.</p>
@@ -58,7 +63,7 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
                 type="text"
                 [(ngModel)]="searchQuery"
                 (ngModelChange)="onFilterChanged()"
-                placeholder="Search workflows by key, title, department..."
+                placeholder="Search workflows by key, title, department..." aria-label="Rechercher des workflows"
                 class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface-container-low text-caption text-on-surface placeholder:text-outline border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" />
             </div>
 
@@ -69,8 +74,8 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
                   type="button"
                   (click)="selectCategory(cat)"
                   [class]="selectedCategory() === cat 
-                    ? 'px-3 py-1.5 rounded-lg bg-primary-container text-pure-white font-label-sm text-xs font-semibold shadow-xs' 
-                    : 'px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-xs font-medium border border-surface-container transition-colors'">
+                    ? 'px-3 py-1.5 rounded-lg bg-primary-container text-pure-white font-label-sm text-xs font-semibold shadow-xs focus:outline-none focus:ring-2 focus:ring-primary-container' 
+                    : 'px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-xs font-medium border border-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container'">
                   {{ cat }}
                 </button>
               }
@@ -119,12 +124,12 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
                       
                       <!-- Status Badge -->
                       @if (wf.status === 'Published') {
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/15 text-success font-label-sm text-[11px] font-bold">
-                          <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success/15 text-success font-label-sm text-[11px] font-bold border border-success/20">
+                          <span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
                           v{{ wf.currentVersionNumber }}.0 (Live)
                         </span>
                       } @else {
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-[11px] font-bold">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-[11px] font-bold border border-secondary-container/30">
                           <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
                           Draft v{{ wf.currentVersionNumber }}.0
                         </span>
@@ -178,7 +183,7 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
       <!-- Create Workflow Modal -->
       @if (showCreateModal()) {
         <div class="fixed inset-0 z-50 bg-noir-text/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div class="bg-surface-container-lowest rounded-2xl border border-surface-container-high shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+          <div role="dialog" aria-modal="true" aria-labelledby="modal-title-workflow" class="bg-surface-container-lowest rounded-2xl border border-surface-container-high shadow-2xl max-w-lg w-full max-w-[calc(100vw-2rem)] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <!-- Modal Header -->
             <div class="p-space-lg bg-primary-container text-pure-white flex items-center justify-between border-b border-primary">
               <div class="flex items-center gap-2">
@@ -189,14 +194,15 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
                   </svg>
                 </div>
                 <div>
-                  <h3 class="font-bold text-pure-white text-body-lg">Create New Workflow</h3>
+                  <h3 id="modal-title-workflow" class="font-bold text-pure-white text-body-lg">Create New Workflow</h3>
                   <p class="text-caption text-on-primary-container text-[11px]">Define core identifiers and governance boundaries.</p>
                 </div>
               </div>
               <button
                 type="button"
                 (click)="closeCreateModal()"
-                class="text-on-primary-container hover:text-pure-white p-1 rounded-md transition-colors">
+                aria-label="Fermer la boîte de dialogue"
+                class="text-on-primary-container hover:text-pure-white p-1 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-secondary-container">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <line x1="18" x2="6" y1="6" y2="18"></line>
                   <line x1="6" x2="18" y1="6" y2="18"></line>
@@ -218,7 +224,7 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
               }
 
               <div>
-                <label class="block text-caption font-semibold text-on-surface mb-1">Unique Slug Key *</label>
+                <label for="new-wf-key" class="block text-caption font-semibold text-on-surface mb-1">Unique Slug Key *</label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-xs text-outline font-medium">wf-</span>
                   <input
@@ -226,48 +232,48 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
                     [(ngModel)]="newWorkflowKey"
                     name="key"
                     required
-                    placeholder="enterprise-approval-service"
+                    id="new-wf-key" placeholder="enterprise-approval-service"
                     class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-container-low text-caption font-mono text-on-surface border border-surface-container focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container focus:outline-none transition-all" />
                 </div>
                 <span class="text-[11px] text-outline mt-0.5 block">Alphanumeric lowercase and hyphens only.</span>
               </div>
 
               <div>
-                <label class="block text-caption font-semibold text-on-surface mb-1">Workflow Title *</label>
+                <label for="new-wf-title" class="block text-caption font-semibold text-on-surface mb-1">Workflow Title *</label>
                 <input
                   type="text"
                   [(ngModel)]="newWorkflowTitle"
                   name="title"
                   required
-                  placeholder="e.g. Global CapEx & Infrastructure Purchase Approval"
+                  id="new-wf-title" placeholder="e.g. Global CapEx & Infrastructure Purchase Approval"
                   class="w-full h-9 px-3 rounded-lg bg-surface-container-low text-caption text-on-surface border border-surface-container focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container focus:outline-none transition-all" />
               </div>
 
               <div>
-                <label class="block text-caption font-semibold text-on-surface mb-1">Description</label>
+                <label for="new-wf-desc" class="block text-caption font-semibold text-on-surface mb-1">Description</label>
                 <textarea
                   [(ngModel)]="newWorkflowDesc"
                   name="desc"
                   rows="2"
-                  placeholder="Summary of SLA targets, trigger requirements, and stakeholders..."
+                  id="new-wf-desc" placeholder="Summary of SLA targets, trigger requirements, and stakeholders..."
                   class="w-full p-2.5 rounded-lg bg-surface-container-low text-caption text-on-surface border border-surface-container focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container focus:outline-none transition-all"></textarea>
               </div>
 
-              <div class="grid grid-cols-2 gap-space-md">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
                 <div>
-                  <label class="block text-caption font-semibold text-on-surface mb-1">Department *</label>
+                  <label for="new-wf-dept" class="block text-caption font-semibold text-on-surface mb-1">Department *</label>
                   <input
                     type="text"
                     [(ngModel)]="newWorkflowDept"
                     name="department"
                     required
-                    placeholder="Financial Operations"
+                    id="new-wf-dept" placeholder="Financial Operations"
                     class="w-full h-9 px-3 rounded-lg bg-surface-container-low text-caption text-on-surface border border-surface-container focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container focus:outline-none transition-all" />
                 </div>
                 <div>
-                  <label class="block text-caption font-semibold text-on-surface mb-1">Category *</label>
+                  <label for="new-wf-cat" class="block text-caption font-semibold text-on-surface mb-1">Category *</label>
                   <select
-                    [(ngModel)]="newWorkflowCat"
+                    id="new-wf-cat" [(ngModel)]="newWorkflowCat"
                     name="category"
                     class="w-full h-9 px-2.5 rounded-lg bg-surface-container-low text-caption text-on-surface border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all">
                     <option value="Finance & Accounting">Finance & Accounting</option>

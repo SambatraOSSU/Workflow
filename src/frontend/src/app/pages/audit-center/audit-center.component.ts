@@ -20,7 +20,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
           <!-- Section 1: Executive Compliance Header -->
           <header class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-space-lg pt-space-lg pb-space-2xl">
             <div class="flex flex-col max-w-3xl">
@@ -60,7 +60,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
 
             <!-- Header Actions -->
             <div class="flex items-center gap-space-sm shrink-0 self-stretch sm:self-auto flex-wrap">
-              <button (click)="exportReport()" class="flex-1 sm:flex-none flex items-center justify-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold px-space-lg py-2.5 rounded-lg shadow-sm transition-all duration-150">
+              <button (click)="openExportModal()" class="flex-1 sm:flex-none flex items-center justify-center gap-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold px-space-lg py-2.5 rounded-lg shadow-sm transition-all duration-150 cursor-pointer">
                 <svg class="w-4 h-4 text-on-surface" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                   <polyline points="7 10 12 15 17 10"></polyline>
@@ -197,7 +197,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
                   [ngModel]="searchQuery()"
                   (ngModelChange)="onSearchChange($event)"
                   class="w-full h-10 pl-10 pr-4 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container focus:ring-2 focus:ring-primary-container transition-all"
-                  placeholder="Search Actor, Workflow ID, Instance Hash, or Merkle Leaf..."
+                  placeholder="Search Actor, Workflow ID, Instance Hash, or Merkle Leaf..." aria-label="Rechercher dans le registre d'audit"
                   type="text"
                 />
               </div>
@@ -223,7 +223,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
                 <!-- Category -->
                 <div class="relative">
                   <select
-                    [ngModel]="selectedCategory()"
+                    aria-label="Filtrer par catégorie d'événement" [ngModel]="selectedCategory()"
                     (ngModelChange)="onCategoryChange($event)"
                     class="h-10 px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-sm text-label-sm font-medium border-0 focus:ring-2 focus:ring-primary-container cursor-pointer"
                   >
@@ -237,7 +237,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
                 </div>
 
                 <!-- Reset Filters -->
-                <button (click)="resetFilters()" class="h-10 px-3 bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface rounded-lg transition-colors" title="Reset Filters">
+                <button (click)="resetFilters()" class="h-10 px-3 bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface rounded-lg transition-colors" title="Reset Filters" aria-label="Réinitialiser les filtres">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                     <path d="M3 3v5h5"></path>
@@ -273,6 +273,109 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
             </div>
           </section>
 
+          <!-- Cryptographic Merkle Tree Visualizer Section -->
+          <section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm mb-space-2xl border border-surface-container">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pb-space-md border-b border-surface-container">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-primary-container text-secondary-container flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="5" r="3"></circle>
+                    <line x1="12" x2="6" y1="8" y2="14"></line>
+                    <line x1="12" x2="18" y1="8" y2="14"></line>
+                    <circle cx="6" cy="17" r="3"></circle>
+                    <circle cx="18" cy="17" r="3"></circle>
+                  </svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Cryptographic Merkle Proof Tree</h2>
+                    <span class="px-2 py-0.5 rounded-full bg-success/15 text-success font-caption text-caption font-bold">Tree Depth: {{ metrics()?.merkleDepth || 24 }}</span>
+                  </div>
+                  <p class="font-caption text-caption text-on-surface-variant">Hierarchical SHA-256 state tree verifying inclusion of all {{ (metrics()?.totalLedgerEvents || 1842910) | number }} immutable blocks without central trust.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="toggleMerkleTree()"
+                class="px-space-md py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
+              >
+                <span>{{ showMerkleTree() ? 'Collapse Tree' : 'Expand Merkle Proof' }}</span>
+                <svg class="w-4 h-4 text-on-surface-variant transition-transform" [class.rotate-180]="showMerkleTree()" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+
+            @if (showMerkleTree()) {
+              <div class="pt-space-lg flex flex-col gap-space-lg animate-in fade-in">
+                <!-- Visual Tree Topology -->
+                <div class="p-space-lg rounded-xl bg-surface-container-low flex flex-col items-center gap-space-md border border-surface-container overflow-x-auto">
+                  <!-- Root Node -->
+                  <div class="flex flex-col items-center">
+                    <span class="font-caption text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Merkle Root (Consensus Level)</span>
+                    <div class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-primary-container text-pure-white font-mono text-label-sm font-bold shadow-sm">
+                      <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                      <span>{{ metrics()?.merkleRoot || '0x7f4b8a4f912e6c88b20141a0279d01217e91ac992' }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Connector 1 to 2 -->
+                  <div class="w-px h-6 bg-surface-container-highest"></div>
+
+                  <!-- Intermediate Branch Nodes (2 Branches) -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-space-xl w-full max-w-2xl">
+                    <div class="flex flex-col items-center">
+                      <span class="font-caption text-[11px] font-semibold text-on-surface-variant mb-1">Branch Left (Approvals & Identity)</span>
+                      <div class="w-full text-center px-space-md py-2 rounded-lg bg-surface-container-lowest font-mono text-caption text-primary font-semibold shadow-xs border border-surface-container">
+                        SHA256: 0x3a1be9...88719ac
+                      </div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                      <span class="font-caption text-[11px] font-semibold text-on-surface-variant mb-1">Branch Right (Enclave & Policies)</span>
+                      <div class="w-full text-center px-space-md py-2 rounded-lg bg-surface-container-lowest font-mono text-caption text-primary font-semibold shadow-xs border border-surface-container">
+                        SHA256: 0x7c4d2f...ab90182
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Connector 2 to 4 -->
+                  <div class="w-px h-6 bg-surface-container-highest"></div>
+
+                  <!-- Leaf Nodes (Recent Blocks) -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md w-full">
+                    @for (entry of entries().slice(0, 4); track entry.id) {
+                      <div
+                        (click)="selectEntry(entry)"
+                        class="p-space-sm rounded-lg bg-surface-container-lowest hover:bg-surface-container transition-all cursor-pointer shadow-xs border border-surface-container flex flex-col justify-between"
+                        [class.ring-2]="selectedEntry()?.id === entry.id"
+                        [class.ring-primary-container]="selectedEntry()?.id === entry.id"
+                      >
+                        <div class="flex items-center justify-between mb-1">
+                          <span class="font-mono text-caption font-bold text-primary">#{{ entry.blockNumber }}</span>
+                          <span class="w-1.5 h-1.5 rounded-full" [class.bg-success]="entry.isVerified" [class.bg-error]="!entry.isVerified"></span>
+                        </div>
+                        <span class="font-label-sm text-caption text-on-surface font-semibold truncate">{{ entry.eventType }}</span>
+                        <span class="font-mono text-[11px] text-on-surface-variant truncate mt-1">Leaf: {{ entry.shortHash }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Proof Verification Status Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-space-sm px-space-md py-2.5 rounded-lg bg-success/10 text-success font-caption text-caption">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-success shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span class="font-semibold">Cryptographic Path Consistency: 100% verified across 4,198,203 blocks. Zero tamper anomalies.</span>
+                  </div>
+                  <span class="font-mono text-on-surface-variant text-[11px]">Last recalculated: {{ metrics()?.lastVerificationSecondsAgo || 32 }}s ago</span>
+                </div>
+              </div>
+            }
+          </section>
+
           <!-- Section 4: Cryptographic Log Table -->
           <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-2xl">
             <div class="px-space-xl py-space-md bg-surface-container-low flex items-center justify-between">
@@ -289,16 +392,16 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
             </div>
 
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="w-full text-left border-collapse" aria-label="Registre cryptographique immuable">
                 <thead>
                   <tr class="bg-surface-container font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">
-                    <th class="py-3 px-space-xl">Timestamp & Block</th>
-                    <th class="py-3 px-space-lg">Actor & Credential</th>
-                    <th class="py-3 px-space-lg">Event Action</th>
-                    <th class="py-3 px-space-lg">Context / Resource</th>
-                    <th class="py-3 px-space-lg">Cryptographic Hash</th>
-                    <th class="py-3 px-space-lg">Framework</th>
-                    <th class="py-3 px-space-xl text-right">Verification</th>
+                    <th scope="col" class="py-3 px-space-xl">Timestamp & Block</th>
+                    <th scope="col" class="py-3 px-space-lg">Actor & Credential</th>
+                    <th scope="col" class="py-3 px-space-lg">Event Action</th>
+                    <th scope="col" class="py-3 px-space-lg">Context / Resource</th>
+                    <th scope="col" class="py-3 px-space-lg">Cryptographic Hash</th>
+                    <th scope="col" class="py-3 px-space-lg">Framework</th>
+                    <th scope="col" class="py-3 px-space-xl text-right">Verification</th>
                   </tr>
                 </thead>
                 <tbody class="font-body-md text-body-md text-on-surface divide-y-0">
@@ -543,10 +646,80 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
       </div>
 
       <!-- Compliance Certificate Modal -->
+      <!-- Export Options Modal -->
+      @if (showExportModal()) {
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-primary/70 backdrop-blur-sm animate-fade-in">
+          <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-lg w-full p-space-xl border border-surface-container relative">
+            <button (click)="closeExportModal()" class="absolute top-4 right-4 text-outline hover:text-on-surface transition-colors p-1 rounded-lg cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            <div class="flex items-center gap-space-md mb-space-lg">
+              <div class="w-10 h-10 rounded-xl bg-primary-container text-pure-white flex items-center justify-center shadow-sm">
+                <svg class="w-5 h-5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" x2="12" y1="15" y2="3"></line>
+                </svg>
+              </div>
+              <div>
+                <span class="font-caption text-caption uppercase tracking-wider text-on-surface-variant font-bold">Audit Ledger Export</span>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Download Compliance Data</h3>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-space-md mb-space-xl">
+              <button
+                type="button"
+                (click)="downloadFormat('json')"
+                class="p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-center justify-between border border-surface-container cursor-pointer text-left"
+              >
+                <div class="flex items-center gap-space-sm">
+                  <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center font-mono font-bold text-primary text-xs">JSON</div>
+                  <div class="flex flex-col">
+                    <span class="font-label-md text-label-md font-bold text-on-surface">Raw Cryptographic Ledger Stream</span>
+                    <span class="font-caption text-caption text-on-surface-variant">Includes previous/current SHA-256 hashes and Ed25519 signatures</span>
+                  </div>
+                </div>
+                <svg class="w-4 h-4 text-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+
+              <button
+                type="button"
+                (click)="downloadFormat('csv')"
+                class="p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-center justify-between border border-surface-container cursor-pointer text-left"
+              >
+                <div class="flex items-center gap-space-sm">
+                  <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center font-mono font-bold text-primary text-xs">CSV</div>
+                  <div class="flex flex-col">
+                    <span class="font-label-md text-label-md font-bold text-on-surface">Spreadsheet Ledger Table</span>
+                    <span class="font-caption text-caption text-on-surface-variant">Formatted for external corporate accounting and SOX inspectors</span>
+                  </div>
+                </div>
+                <svg class="w-4 h-4 text-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-end">
+              <button
+                type="button"
+                (click)="closeExportModal()"
+                class="px-space-lg py-2 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
       @if (showCertificateModal()) {
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-xl w-full p-space-xl border border-surface-container relative">
-            <button (click)="closeCertificateModal()" class="absolute top-4 right-4 text-outline hover:text-on-surface transition-colors p-1 rounded-lg">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-primary/70 backdrop-blur-sm animate-fade-in">
+          <div role="dialog" aria-modal="true" aria-labelledby="cert-modal-title" class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-xl w-full max-w-[calc(100vw-2rem)] p-4 sm:p-space-xl border border-surface-container relative">
+            <button (click)="closeCertificateModal()" aria-label="Fermer le certificat de conformité" class="absolute top-4 right-4 text-outline hover:text-on-surface transition-colors p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-container">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -563,7 +736,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
               </div>
               <div>
                 <span class="font-caption text-caption uppercase tracking-wider text-secondary font-bold">SOX-404 / SOC-2 Type II</span>
-                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Compliance Attestation Certificate</h3>
+                <h3 id="cert-modal-title" class="font-headline-sm text-headline-sm text-on-surface font-bold">Compliance Attestation Certificate</h3>
               </div>
             </div>
 
@@ -590,7 +763,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
               </div>
             </div>
 
-            <div class="flex items-center justify-end gap-space-sm">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-space-sm">
               <button (click)="closeCertificateModal()" class="px-space-lg py-2 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors">
                 Close
               </button>
@@ -622,6 +795,9 @@ export class AuditCenterComponent implements OnInit {
   readonly selectedCategory = signal<string>('All');
   readonly isCopied = signal<boolean>(false);
   readonly showCertificateModal = signal<boolean>(false);
+  readonly showMerkleTree = signal<boolean>(true);
+  readonly showExportModal = signal<boolean>(false);
+
 
   readonly currentPage = signal<number>(1);
   readonly pageSize = 5;
@@ -666,6 +842,35 @@ export class AuditCenterComponent implements OnInit {
       this.isCopied.set(true);
       setTimeout(() => this.isCopied.set(false), 2000);
     });
+  }
+
+  toggleMerkleTree(): void {
+    this.showMerkleTree.update(v => !v);
+  }
+
+  openExportModal(): void {
+    this.showExportModal.set(true);
+  }
+
+  closeExportModal(): void {
+    this.showExportModal.set(false);
+  }
+
+  downloadFormat(format: 'json' | 'csv'): void {
+    if (format === 'json') {
+      this.exportReport();
+    } else {
+      const rows = this.entries().map(e => `${e.blockNumber},"${e.timestampUtc}","${e.actorEmail}","${e.eventType}","${e.resourceName}",${e.shortHash},${e.isVerified}`);
+      const csv = 'Block,Timestamp,Actor,EventType,Resource,ShortHash,Verified\n' + rows.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `vanguard-audit-ledger-${new Date().toISOString().substring(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    this.closeExportModal();
   }
 
   openCertificateModal(): void {

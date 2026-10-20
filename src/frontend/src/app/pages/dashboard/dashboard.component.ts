@@ -16,7 +16,7 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
       <div class="pl-0 lg:pl-64 flex flex-col flex-1 min-w-0 transition-all duration-300">
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 pb-space-4xl flex-1 max-w-7xl 2xl:max-w-[1536px] mx-auto min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-8 lg:px-10 xl:px-12 pb-space-4xl flex-1 max-w-7xl 2xl:max-w-[1536px] mx-auto min-w-0">
           <div class="flex flex-col w-full space-y-space-xl pt-space-lg">
             
             <!-- 1. Executive Header Bar -->
@@ -37,21 +37,7 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
               <div class="flex flex-wrap items-center gap-space-sm">
                 <div class="relative">
                   <select
-                    [value]="selectedTimeframe()"
-                    (change)="onTimeframeChange($event)"
-                    class="h-10 pl-3.5 pr-9 rounded-lg bg-surface-container-lowest text-on-surface text-sm font-semibold shadow-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-container border border-surface-container"
-                  >
-                    <option value="24h">Dernières 24 heures</option>
-                    <option value="7d">7 derniers jours</option>
-                    <option value="30d">30 derniers jours</option>
-                  </select>
-                  <svg class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </div>
-
-                <div class="relative">
-                  <select
+                    aria-label="Département"
                     [value]="selectedDepartment()"
                     (change)="onDepartmentChange($event)"
                     class="h-10 pl-3.5 pr-9 rounded-lg bg-surface-container-lowest text-on-surface text-sm font-semibold shadow-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-container border border-surface-container"
@@ -68,8 +54,9 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
                 </div>
 
                 <button
+                  type="button"
                   (click)="exportReport()"
-                  class="h-10 px-space-md rounded-lg bg-primary-container hover:bg-primary text-pure-white text-sm font-semibold flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]"
+                  class="h-10 px-space-md rounded-lg bg-primary-container hover:bg-primary text-pure-white text-sm font-semibold flex items-center gap-2 shadow-sm transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary-container"
                 >
                   <svg class="w-4 h-4 text-secondary-container" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -234,27 +221,27 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
                   <svg class="w-full h-full overflow-visible" viewBox="0 0 800 200" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="grad-primary" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#14213d" stop-opacity="0.25" />
-                        <stop offset="100%" stop-color="#14213d" stop-opacity="0.0" />
+                        <stop offset="0%" class="text-primary-container" stop-color="currentColor" stop-opacity="0.25" />
+                        <stop offset="100%" class="text-primary-container" stop-color="currentColor" stop-opacity="0.0" />
                       </linearGradient>
                       <linearGradient id="grad-accent" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#fca311" stop-opacity="0.35" />
-                        <stop offset="100%" stop-color="#fca311" stop-opacity="0.0" />
+                        <stop offset="0%" class="text-secondary-container" stop-color="currentColor" stop-opacity="0.35" />
+                        <stop offset="100%" class="text-secondary-container" stop-color="currentColor" stop-opacity="0.0" />
                       </linearGradient>
                     </defs>
 
                     <!-- Horizontal Grid lines -->
-                    <line x1="0" y1="40" x2="800" y2="40" stroke="#eeeeee" stroke-width="1" stroke-dasharray="4 4" />
-                    <line x1="0" y1="90" x2="800" y2="90" stroke="#eeeeee" stroke-width="1" stroke-dasharray="4 4" />
-                    <line x1="0" y1="140" x2="800" y2="140" stroke="#eeeeee" stroke-width="1" stroke-dasharray="4 4" />
+                    <line x1="0" y1="40" x2="800" y2="40" class="stroke-surface-container" stroke-width="1" stroke-dasharray="4 4" />
+                    <line x1="0" y1="90" x2="800" y2="90" class="stroke-surface-container" stroke-width="1" stroke-dasharray="4 4" />
+                    <line x1="0" y1="140" x2="800" y2="140" class="stroke-surface-container" stroke-width="1" stroke-dasharray="4 4" />
 
                     <!-- Area Primary -->
                     <path d="M0,160 Q100,120 200,130 T400,70 T600,90 T800,40 L800,200 L0,200 Z" fill="url(#grad-primary)" />
-                    <path d="M0,160 Q100,120 200,130 T400,70 T600,90 T800,40" fill="none" stroke="#14213d" stroke-width="3" />
+                    <path d="M0,160 Q100,120 200,130 T400,70 T600,90 T800,40" class="stroke-primary fill-none" stroke-width="3" />
 
                     <!-- Area Accent -->
                     <path d="M0,180 Q100,140 200,150 T400,90 T600,110 T800,55 L800,200 L0,200 Z" fill="url(#grad-accent)" />
-                    <path d="M0,180 Q100,140 200,150 T400,90 T600,110 T800,55" fill="none" stroke="#fca311" stroke-width="2.5" />
+                    <path d="M0,180 Q100,140 200,150 T400,90 T600,110 T800,55" class="stroke-secondary-container fill-none" stroke-width="2.5" />
                   </svg>
                 </div>
 
@@ -335,15 +322,15 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
               </div>
 
               <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
+                <table class="w-full text-left text-xs" aria-label="Tâches prioritaires en attente d'action">
                   <thead class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold border-b border-surface-container">
                     <tr>
-                      <th class="py-3 px-space-lg">ID Référence</th>
-                      <th class="py-3 px-space-md">Workflow / Processus</th>
-                      <th class="py-3 px-space-md">Étape Requise</th>
-                      <th class="py-3 px-space-md">Priorité</th>
-                      <th class="py-3 px-space-md">SLA Restant</th>
-                      <th class="py-3 px-space-md">Consensus</th>
+                      <th scope="col" class="py-3 px-space-lg">ID Référence</th>
+                      <th scope="col" class="py-3 px-space-md">Workflow / Processus</th>
+                      <th scope="col" class="py-3 px-space-md">Étape Requise</th>
+                      <th scope="col" class="py-3 px-space-md">Priorité</th>
+                      <th scope="col" class="py-3 px-space-md">SLA Restant</th>
+                      <th scope="col" class="py-3 px-space-md">Consensus</th>
                       <th class="py-3 px-space-lg text-right">Actions</th>
                     </tr>
                   </thead>

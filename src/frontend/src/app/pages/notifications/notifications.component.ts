@@ -20,7 +20,7 @@ import { NotificationItem } from '../../core/models/notification.models';
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
           <!-- Ambient Glow Behind Operational Canvas -->
           <div class="relative w-full">
             <div class="absolute -top-12 right-24 w-96 h-96 bg-secondary-container/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
@@ -252,13 +252,13 @@ import { NotificationItem } from '../../core/models/notification.models';
                         [ngModel]="searchQuery()"
                         (ngModelChange)="onSearchChange($event)"
                         class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container transition-all"
-                        placeholder="Filter alerts by pipeline ID, error code, commit SHA, or actor..."
+                        placeholder="Filter alerts by pipeline ID, error code, commit SHA, or actor..." aria-label="Filtrer les alertes"
                         type="text"
                       />
                     </div>
                     <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
                       <select
-                        [ngModel]="selectedSeverity()"
+                        aria-label="Filtrer par sévérité" [ngModel]="selectedSeverity()"
                         (ngModelChange)="onSeverityChange($event)"
                         class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm border-0 focus:ring-2 focus:ring-primary-container cursor-pointer"
                       >
@@ -541,7 +541,7 @@ import { NotificationItem } from '../../core/models/notification.models';
 
                   <div class="pt-space-xs flex items-center justify-between font-caption text-caption text-on-surface-variant">
                     <span>Escalation policy: <strong class="text-on-surface">Tier-1 DevOps High-Availability</strong></span>
-                    <a class="text-secondary font-semibold hover:underline" href="#">Edit</a>
+                    <button type="button" (click)="toggleRoutingRules()" class="text-secondary font-semibold hover:underline cursor-pointer">Edit</button>
                   </div>
                 </div>
 
@@ -562,13 +562,13 @@ import { NotificationItem } from '../../core/models/notification.models';
                     <svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 300 60">
                       <defs>
                         <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                          <stop offset="0%" stop-color="#ffa515" stop-opacity="0.4"></stop>
-                          <stop offset="100%" stop-color="#ffa515" stop-opacity="0"></stop>
+                          <stop offset="0%" stop-color="currentColor" class="text-secondary-container" stop-opacity="0.4"></stop>
+                          <stop offset="100%" stop-color="currentColor" class="text-secondary-container" stop-opacity="0"></stop>
                         </linearGradient>
                       </defs>
                       <path d="M 0,45 Q 30,10 60,35 T 120,20 T 180,40 T 240,15 T 300,28 L 300,60 L 0,60 Z" fill="url(#chartGradient)"></path>
-                      <path d="M 0,45 Q 30,10 60,35 T 120,20 T 180,40 T 240,15 T 300,28" fill="none" stroke="#ffa515" stroke-linecap="round" stroke-width="2.5"></path>
-                      <circle cx="240" cy="15" fill="#ffffff" r="4" stroke="#ffa515" stroke-width="2"></circle>
+                      <path d="M 0,45 Q 30,10 60,35 T 120,20 T 180,40 T 240,15 T 300,28" fill="none" stroke="currentColor" class="text-secondary-container" stroke-linecap="round" stroke-width="2.5"></path>
+                      <circle cx="240" cy="15" fill="currentColor" class="text-pure-white" r="4" stroke="currentColor" class="text-secondary-container" stroke-width="2"></circle>
                     </svg>
                   </div>
 
@@ -580,6 +580,134 @@ import { NotificationItem } from '../../core/models/notification.models';
               </div>
             </div>
           </div>
+      <!-- Routing Rules Slide-Over Drawer -->
+      @if (showRoutingDrawer()) {
+        <div class="fixed inset-0 z-50 overflow-hidden bg-primary/60 backdrop-blur-xs flex justify-end animate-fade-in">
+          <div class="w-full max-w-lg bg-surface-container-lowest h-full shadow-2xl flex flex-col justify-between border-l border-surface-container animate-in slide-in-from-right duration-200">
+            <!-- Drawer Header -->
+            <div class="p-space-xl flex items-center justify-between border-b border-surface-container">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-xl bg-primary-container text-secondary-container flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="4" x2="4" y1="21" y2="14"></line>
+                    <line x1="4" x2="4" y1="10" y2="3"></line>
+                    <line x1="12" x2="12" y1="21" y2="12"></line>
+                    <line x1="12" x2="12" y1="8" y2="3"></line>
+                    <line x1="20" x2="20" y1="21" y2="16"></line>
+                    <line x1="20" x2="20" y1="12" y2="3"></line>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Alert Routing & Escalation Rules</h3>
+                  <p class="font-caption text-caption text-on-surface-variant">Multiplex incident dispatch to team channels based on severity.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="toggleRoutingRules()"
+                class="p-1 rounded-lg text-outline hover:text-on-surface transition-colors cursor-pointer"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <line x1="18" x2="6" y1="6" y2="18"></line>
+                  <line x1="6" x2="18" y1="6" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Drawer Body -->
+            <div class="p-space-xl flex-1 overflow-y-auto space-y-space-lg">
+              <!-- Rule 1: Slack -->
+              <div class="p-space-md rounded-xl bg-surface-container-low border border-surface-container flex flex-col gap-space-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold text-xs">#</div>
+                    <span class="font-label-md text-label-md font-bold text-on-surface">Slack Dispatch Channel</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full bg-success/15 text-success font-caption text-[11px] font-bold">Active</span>
+                </div>
+                <p class="font-caption text-caption text-on-surface-variant">Route critical outages directly to the operations war room.</p>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value="#ops-alerts-live"
+                    class="flex-1 h-9 px-3 rounded-lg bg-surface-container-lowest text-on-surface font-mono text-caption border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container"
+                  />
+                  <button type="button" (click)="testPing('Slack')" class="h-9 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-caption font-semibold transition-colors cursor-pointer">
+                    Test Ping
+                  </button>
+                </div>
+              </div>
+
+              <!-- Rule 2: PagerDuty -->
+              <div class="p-space-md rounded-xl bg-surface-container-low border border-surface-container flex flex-col gap-space-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-error-container text-error flex items-center justify-center font-bold text-xs">PD</div>
+                    <span class="font-label-md text-label-md font-bold text-on-surface">PagerDuty Escalation Policy</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full bg-success/15 text-success font-caption text-[11px] font-bold">Tier-1 24/7</span>
+                </div>
+                <p class="font-caption text-caption text-on-surface-variant">Page Primary On-Call Engineer for SLA breaches exceeding 15 minutes.</p>
+                <div class="flex items-center gap-2">
+                  <select class="flex-1 h-9 px-3 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-caption border border-surface-container focus:outline-none cursor-pointer">
+                    <option>DevOps Tier-1 High Availability Policy</option>
+                    <option>SecOps Incident Response Rotation</option>
+                    <option>Executive Escalation (CapEx > $100k)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Rule 3: Secure Webhook -->
+              <div class="p-space-md rounded-xl bg-surface-container-low border border-surface-container flex flex-col gap-space-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold text-xs">&lt;/&gt;</div>
+                    <span class="font-label-md text-label-md font-bold text-on-surface">Encrypted Webhook Endpoint</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-caption text-[11px] font-bold">HMAC-SHA256</span>
+                </div>
+                <p class="font-caption text-caption text-on-surface-variant">Signed payload stream for custom SIEM, Splunk, or Datadog integrations.</p>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value="https://telemetry.vanguard.internal/v1/incidents"
+                    class="flex-1 h-9 px-3 rounded-lg bg-surface-container-lowest text-on-surface font-mono text-caption border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container"
+                  />
+                  <button type="button" (click)="testPing('Webhook')" class="h-9 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-caption font-semibold transition-colors cursor-pointer">
+                    Verify
+                  </button>
+                </div>
+              </div>
+
+              @if (routingToast()) {
+                <div class="p-3 rounded-lg bg-success/15 text-success font-caption text-caption font-semibold flex items-center gap-2 animate-in fade-in">
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>{{ routingToast() }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="p-space-xl border-t border-surface-container flex items-center justify-between bg-surface-container-low">
+              <button
+                type="button"
+                (click)="toggleRoutingRules()"
+                class="px-space-md py-2 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                (click)="saveRoutingRules()"
+                class="px-space-lg py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white font-label-md text-label-md font-bold shadow-sm transition-all cursor-pointer"
+              >
+                Save Routing Matrix
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
         </main>
       </div>
     </div>
@@ -596,6 +724,9 @@ export class NotificationsComponent implements OnInit {
   readonly selectedSeverity = signal<string>('all');
   readonly searchQuery = signal<string>('');
   readonly allMarkedRead = signal<boolean>(false);
+  readonly showRoutingDrawer = signal<boolean>(false);
+  readonly routingToast = signal<string>('');
+
 
   ngOnInit(): void {
     this.notificationService.loadSummary().subscribe();
@@ -638,7 +769,18 @@ export class NotificationsComponent implements OnInit {
   }
 
   toggleRoutingRules(): void {
-    alert('Routing rules configuration panel opened.');
+    this.showRoutingDrawer.update(v => !v);
+  }
+
+  testPing(channel: string): void {
+    this.routingToast.set('Dispatched test event to ' + channel + ' gateway.');
+    setTimeout(() => this.routingToast.set(''), 3000);
+  }
+
+  saveRoutingRules(): void {
+    this.routingToast.set('Routing matrix rules updated successfully.');
+    this.showRoutingDrawer.set(false);
+    setTimeout(() => this.routingToast.set(''), 3000);
   }
 
   exportLog(): void {
