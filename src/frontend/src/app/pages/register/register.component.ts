@@ -34,18 +34,9 @@ import { AuthService } from '../../core/services/auth.service';
 
           <div class="flex items-center gap-space-xl">
             <nav class="hidden md:flex items-center gap-space-xl">
-              <a routerLink="/login" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-medium">Sign In</a>
-              <a routerLink="/register" class="transition-colors text-primary font-bold">Register Tenant</a>
-              <a routerLink="/" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-medium">SSO Portal</a>
+              <a routerLink="/login" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-semibold">Se connecter</a>
+              <a routerLink="/register" class="transition-colors text-primary font-bold">Créer un compte</a>
             </nav>
-            <div class="flex items-center gap-space-md">
-              <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <svg class="w-4 h-4 text-pure-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </div>
-            </div>
           </div>
         </div>
       </header>
@@ -135,7 +126,7 @@ import { AuthService } from '../../core/services/auth.service';
                       </span>
                       <span class="text-on-primary-container font-caption text-caption">· Architecture Isolation Spec 4.2</span>
                     </div>
-                    <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight font-bold">Create Enterprise Tenant</h1>
+                    <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight font-bold">Créer un compte Enterprise</h1>
                     <p class="font-body-md text-body-md text-on-primary-container leading-relaxed">
                       Deploy your dedicated workflow orchestration cluster with isolated cryptographic enclaves, zero-trust state verification, and single-tenant memory spaces.
                     </p>
@@ -570,7 +561,7 @@ import { AuthService } from '../../core/services/auth.service';
                         </svg>
                         <span>Initialisation du cluster...</span>
                       } @else {
-                        <span>Initialize Tenant Cluster & Continue</span>
+                        <span>Créer un compte & Initialiser le Cluster</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
                           <polyline points="13 17 18 12 13 7"></polyline>
                           <polyline points="6 17 11 12 6 7"></polyline>
@@ -580,9 +571,9 @@ import { AuthService } from '../../core/services/auth.service';
 
                     <!-- Bottom Navigation Back to Existing Session -->
                     <div class="flex items-center gap-space-xs font-body-md text-body-md text-on-surface-variant">
-                      <span>Already have an enterprise tenant?</span>
+                      <span>Vous avez déjà un compte ?</span>
                       <a routerLink="/login" class="font-bold text-primary hover:text-secondary underline decoration-secondary-container decoration-2 underline-offset-4 transition-colors">
-                        Sign In to existing workspace
+                        Se connecter
                       </a>
                     </div>
                   </div>

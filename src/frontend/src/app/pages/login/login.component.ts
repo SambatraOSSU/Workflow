@@ -10,42 +10,41 @@ import { AuthService } from '../../core/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col justify-between">
-      <!-- Fixed Header -->
-      <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div class="h-16 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between">
-          <div class="flex items-center gap-space-lg">
-            <a routerLink="/" class="flex items-center gap-space-sm">
-              <div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center shadow-sm">
-                <svg class="w-5 h-5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+      <!-- Fixed Header Navigation -->
+      <header class="fixed top-0 w-full z-50 bg-pure-white/95 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+        <div class="h-16 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between gap-space-lg">
+          <div class="flex items-center gap-8 lg:gap-10">
+            <!-- Brand Logo -->
+            <a routerLink="/" class="flex items-center gap-2.5 text-primary group">
+              <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-secondary-container shadow-xs group-hover:scale-105 transition-transform">
+                <svg class="w-4.5 h-4.5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                   <path d="M2 17l10 5 10-5"></path>
                   <path d="M2 12l10 5 10-5"></path>
                 </svg>
               </div>
-              <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">VANGUARD</span>
-              <span class="font-caption text-caption uppercase text-on-surface-variant font-semibold tracking-wider">Workflow Engine</span>
+              <span class="text-lg tracking-tight text-primary font-bold">VANGUARD</span>
             </a>
-            <div class="h-4 w-[1px] bg-outline-variant hidden sm:block"></div>
-            <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full border border-surface-container">
-              <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-              <span class="font-caption text-caption text-on-surface-variant font-medium">Production - US-East-1</span>
-            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+              <a routerLink="/" class="text-on-surface-variant hover:text-primary transition-colors">Plateforme</a>
+              <a routerLink="/workflows" class="text-on-surface-variant hover:text-primary transition-colors">Solutions</a>
+              <a routerLink="/monitoring" class="text-on-surface-variant hover:text-primary transition-colors">Architecture</a>
+              <a routerLink="/audit-center" class="text-on-surface-variant hover:text-primary transition-colors">Sécurité</a>
+              <a routerLink="/workflows" class="text-on-surface-variant hover:text-primary transition-colors">Docs</a>
+            </nav>
           </div>
 
-          <div class="flex items-center gap-space-xl">
-            <nav class="hidden md:flex items-center gap-space-xl">
-              <a routerLink="/login" class="transition-colors text-primary font-bold">Sign In</a>
-              <a routerLink="/register" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-medium">Register Tenant</a>
-              <a routerLink="/" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-medium">SSO Portal</a>
-            </nav>
-            <div class="flex items-center gap-space-md">
-              <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <svg class="w-4 h-4 text-pure-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </div>
-            </div>
+          <!-- Actions -->
+          <div class="flex items-center gap-3 sm:gap-4">
+            <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg bg-surface-container-low transition-colors">
+              Connexion
+            </a>
+
+            <a routerLink="/register" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
+              Demander une démo
+            </a>
           </div>
         </div>
       </header>
@@ -150,14 +149,14 @@ import { AuthService } from '../../core/services/auth.service';
                   <!-- Header Area -->
                   <div class="flex flex-col gap-1">
                     <div class="flex items-center justify-between">
-                      <h2 class="font-headline-md text-headline-md text-primary tracking-tight font-bold">Sign In to Vanguard</h2>
+                      <h2 class="font-headline-md text-headline-md text-primary tracking-tight font-bold">Se connecter à Vanguard</h2>
                       <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-caption text-caption font-semibold">
                         <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
                         Auth v4.2
                       </span>
                     </div>
                     <p class="font-body-md text-body-md text-on-surface-variant">
-                      Access your enterprise orchestration cluster and execution approvals.
+                      Accédez à votre cluster d'orchestration enterprise et à vos approbations d'exécution.
                     </p>
                   </div>
 
@@ -191,7 +190,7 @@ import { AuthService } from '../../core/services/auth.service';
                   <div class="relative flex items-center justify-center my-1">
                     <div class="w-full h-px bg-surface-container-high"></div>
                     <span class="absolute bg-surface-container-lowest px-4 font-caption text-caption text-on-surface-variant uppercase tracking-wider font-semibold">
-                      Or sign in with corporate credentials
+                      Ou se connecter avec vos identifiants
                     </span>
                   </div>
 
@@ -308,7 +307,7 @@ import { AuthService } from '../../core/services/auth.service';
                           </svg>
                           <span>Authentification en cours...</span>
                         } @else {
-                          <span>Authenticate & Access Workspace</span>
+                          <span>Se connecter</span>
                           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
                           </svg>
@@ -334,9 +333,9 @@ import { AuthService } from '../../core/services/auth.service';
                   <!-- Tenant Registration Footer Prompt -->
                   <div class="pt-2 text-center">
                     <p class="font-body-md text-body-md text-on-surface-variant">
-                      Need to deploy a new organization?
+                      Pas encore de compte ?
                       <a routerLink="/register" class="font-bold text-primary hover:text-secondary underline underline-offset-4 ml-1 transition duration-150">
-                        Create an enterprise tenant
+                        Créer un compte
                       </a>
                     </p>
                   </div>

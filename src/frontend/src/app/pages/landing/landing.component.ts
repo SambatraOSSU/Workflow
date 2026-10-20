@@ -9,35 +9,39 @@ import { RouterLink } from '@angular/router';
   template: `
     <div class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
       <!-- FIXED HEADER NAVIGATION -->
-      <header class="fixed top-0 w-full z-50 bg-pure-white/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div class="h-16 w-full px-gutter-lg flex items-center justify-between gap-space-lg max-w-7xl mx-auto">
-          <div class="flex items-center gap-space-2xl">
-            <a routerLink="/" class="flex items-center gap-space-sm text-primary group">
+      <header class="fixed top-0 w-full z-50 bg-pure-white/95 backdrop-blur-xl border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+        <div class="h-16 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between gap-space-lg">
+          <div class="flex items-center gap-8 lg:gap-10">
+            <!-- Brand Logo -->
+            <a routerLink="/" class="flex items-center gap-2.5 text-primary group">
               <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-secondary-container shadow-xs group-hover:scale-105 transition-transform">
-                <span class="material-symbols-outlined text-[20px]">account_tree</span>
+                <svg class="w-4.5 h-4.5 text-secondary-container" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
               </div>
-              <div class="flex flex-col">
-                <span class="font-headline-sm text-headline-sm tracking-tight text-primary leading-none">VANGUARD</span>
-                <span class="font-caption text-caption text-on-surface-variant font-medium tracking-wider uppercase leading-none mt-0.5">Workflow Engine</span>
-              </div>
+              <span class="text-lg tracking-tight text-primary font-bold">VANGUARD</span>
             </a>
-            <nav class="hidden lg:flex items-center gap-space-xl">
-              <a routerLink="/" class="transition-colors text-primary font-semibold">Plateforme</a>
-              <a routerLink="/workflows" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Solutions</a>
-              <a routerLink="/monitoring" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Architecture Moteur</a>
-              <a routerLink="/audit-center" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Sécurité & Trust</a>
-              <a routerLink="/workflows" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Documentation</a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+              <a routerLink="/" class="text-primary font-semibold hover:text-secondary-container transition-colors">Plateforme</a>
+              <a routerLink="/workflows" class="text-on-surface-variant hover:text-primary transition-colors">Solutions</a>
+              <a routerLink="/monitoring" class="text-on-surface-variant hover:text-primary transition-colors">Architecture</a>
+              <a routerLink="/audit-center" class="text-on-surface-variant hover:text-primary transition-colors">Sécurité</a>
+              <a routerLink="/workflows" class="text-on-surface-variant hover:text-primary transition-colors">Docs</a>
             </nav>
           </div>
-          <div class="flex items-center gap-space-md">
-            <a routerLink="/login" class="hidden sm:inline-flex items-center justify-center px-space-md py-space-xs font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+
+          <!-- Actions -->
+          <div class="flex items-center gap-3 sm:gap-4">
+            <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg hover:bg-surface-container-low transition-colors">
               Connexion
             </a>
-            <a routerLink="/register" class="inline-flex items-center justify-center px-space-lg py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold hover:bg-secondary hover:text-on-secondary transition-all shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
+
+            <a routerLink="/register" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
               Demander une démo
-            </a>
-            <a routerLink="/login" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:opacity-90 transition-opacity" title="Espace utilisateur">
-              <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
             </a>
           </div>
         </div>
@@ -75,7 +79,7 @@ import { RouterLink } from '@angular/router';
               <!-- Action CTAs -->
               <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md mb-space-2xl">
                 <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold shadow-md hover:bg-secondary-fixed-dim transition-all">
-                  <span>Démarrer un essai Enterprise</span>
+                  <span>Créer un compte</span>
                   <svg class="w-4 h-4 text-noir-text" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
                     <line x1="5" x2="19" y1="12" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -85,7 +89,7 @@ import { RouterLink } from '@angular/router';
                   <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
                   </svg>
-                  <span>Explorer la démo interactive</span>
+                  <span>Se connecter / Démo interactive</span>
                 </a>
               </div>
 
@@ -575,7 +579,7 @@ import { RouterLink } from '@angular/router';
                 </p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md">
                   <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold shadow-md hover:bg-secondary-fixed-dim transition-all">
-                    <span>Demander une démonstration privée</span>
+                    <span>Créer un compte Enterprise</span>
                     <svg class="w-4 h-4 text-noir-text" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                   </a>
                   <a routerLink="/workflows" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-primary text-pure-white font-label-md text-label-md font-semibold hover:bg-primary-container transition-all">
