@@ -1,0 +1,7 @@
+# Configurer GitHub Linguist
+*.cs linguist-detectable=true
+*.ts linguist-detectable=true
+
+# Exclure les fichiers de configuration du calcul
+*.json linguist-detectable=false
+*.config.js linguist-detectable=false
