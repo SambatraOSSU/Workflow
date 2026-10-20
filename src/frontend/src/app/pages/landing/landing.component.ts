@@ -55,17 +55,6 @@ import { RouterLink } from '@angular/router';
             <!-- Ambient Canvas Glow behind Hero -->
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[520px] bg-gradient-to-b from-primary-container/10 via-secondary-container/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
             <div class="max-w-6xl w-full flex flex-col items-center text-center">
-              <!-- Live Status Pill Tag -->
-              <div class="inline-flex items-center gap-space-sm px-space-md py-1.5 rounded-full bg-surface-container-low shadow-sm mb-space-xl">
-                <span class="flex h-2 w-2 relative">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
-                </span>
-                <span class="font-caption text-caption text-primary font-semibold tracking-wide uppercase">Vanguard v4.2</span>
-                <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-                <span class="font-caption text-caption text-on-surface-variant">Moteur d'Orchestration Haut Débit &amp; Zero-Trust</span>
-              </div>
-
               <!-- Main Heading -->
               <h1 class="font-display text-display lg:text-[46px] lg:leading-[54px] text-primary tracking-tight max-w-4xl font-bold mb-space-lg">
                 Automatisez vos processus critiques avec une <span class="text-secondary-container underline decoration-secondary-container/30 underline-offset-8">gouvernance absolue</span>.
@@ -79,7 +68,7 @@ import { RouterLink } from '@angular/router';
               <!-- Action CTAs -->
               <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md mb-space-2xl">
                 <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold shadow-md hover:bg-secondary-fixed-dim transition-all">
-                  <span>Créer un compte</span>
+                  <span>Demander une démo</span>
                   <svg class="w-4 h-4 text-noir-text" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
                     <line x1="5" x2="19" y1="12" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -162,9 +151,17 @@ import { RouterLink } from '@angular/router';
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg>
                       </button>
                     </div>
-                    <button type="button" (click)="triggerSimulation()" class="flex items-center gap-space-xs px-3 py-1.5 rounded-lg bg-secondary-container text-noir-text font-label-sm text-label-sm font-bold shadow-sm hover:bg-secondary-fixed-dim transition-all active:scale-95">
-                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                      <span>{{ isSimulating() ? 'Simulation en cours...' : 'Exécuter Simulation' }}</span>
+                    <button type="button" (click)="triggerSimulation()" [disabled]="isSimulating()" class="flex items-center gap-space-xs px-3.5 py-1.5 rounded-lg bg-secondary-container text-noir-text font-label-sm text-label-sm font-bold shadow-sm hover:bg-secondary-fixed-dim transition-all active:scale-95 disabled:opacity-80 disabled:cursor-not-allowed">
+                      @if (isSimulating()) {
+                        <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        <span>Simulation (Étape {{ currentSimStep() }}/4)...</span>
+                      } @else {
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <span>Exécuter Simulation</span>
+                      }
                     </button>
                   </div>
                 </div>
@@ -181,10 +178,41 @@ import { RouterLink } from '@angular/router';
                     <rect fill="url(#dag-grid)" height="100%" width="100%"></rect>
                   </svg>
 
+                  <!-- Live Simulation Status Banner -->
+                  @if (isSimulating()) {
+                    <div class="relative z-20 mb-space-md px-space-md py-space-sm rounded-xl bg-primary-container/95 border border-secondary-container/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-xs text-pure-white shadow-lg animate-pulse">
+                      <div class="flex items-center gap-space-sm">
+                        <span class="w-2.5 h-2.5 rounded-full bg-secondary-container animate-ping"></span>
+                        <span class="font-mono text-secondary-container font-bold text-xs uppercase tracking-wider">PIPELINE SOX ACTIF :</span>
+                        <span class="font-medium text-xs sm:text-sm">
+                          @switch (currentSimStep()) {
+                            @case (1) { Étape 1/4 : Ingestion Kafka topic treasury.tx — Flux 14.8k/s }
+                            @case (2) { Étape 2/4 : Évaluation Roslyn C# — CapEx &gt; $100k SOX validé (&lt;0.4ms) }
+                            @case (3) { Étape 3/4 : Sign-off HITL WebAuthn — Approbation VP Fin &amp; CISO validée }
+                            @case (4) { Étape 4/4 : Synchronisation SAP S/4HANA &amp; Clôture Nitro KMS }
+                          }
+                        </span>
+                      </div>
+                      <span class="font-mono text-xs text-secondary-container font-bold px-2 py-0.5 rounded bg-noir-text/40">Latence: {{ simLatency() }}</span>
+                    </div>
+                  } @else if (simSuccess()) {
+                    <div class="relative z-20 mb-space-md px-space-md py-space-sm rounded-xl bg-success/15 border border-success/40 flex items-center justify-between text-pure-white text-xs sm:text-sm shadow-md">
+                      <div class="flex items-center gap-space-sm text-success">
+                        <span class="material-symbols-outlined text-[18px]">verified</span>
+                        <span class="font-semibold text-pure-white">Simulation terminée avec succès — Pipeline SOX certifié (Hash #3A89 immuable).</span>
+                      </div>
+                      <button type="button" (click)="simSuccess.set(false)" class="text-xs text-on-primary-container hover:text-pure-white transition-colors">Fermer</button>
+                    </div>
+                  }
+
                   <!-- Graph Nodes Layout Container -->
                   <div class="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-space-lg sm:gap-space-xl items-center py-space-xl" [style.transform]="'scale(' + zoomLevel() + ')'" style="transform-origin: center center; transition: transform 0.2s ease;">
                     <!-- Node 1: Ingest Webhook / Kafka -->
-                    <div class="relative flex flex-col rounded-xl bg-pure-white text-on-surface p-space-md shadow-md min-w-[210px]">
+                    <div class="relative flex flex-col rounded-xl bg-pure-white text-on-surface p-space-md shadow-md min-w-[210px] transition-all duration-300"
+                         [class.ring-4]="currentSimStep() === 1"
+                         [class.ring-info]="currentSimStep() === 1"
+                         [class.scale-105]="currentSimStep() === 1"
+                         [class.shadow-xl]="currentSimStep() === 1">
                       <div class="flex items-center justify-between mb-space-sm">
                         <div class="flex items-center gap-space-xs">
                           <div class="w-6 h-6 rounded-md bg-info/10 text-info flex items-center justify-center">
@@ -192,21 +220,28 @@ import { RouterLink } from '@angular/router';
                           </div>
                           <span class="font-caption text-caption font-bold text-primary uppercase">Ingest Trigger</span>
                         </div>
-                        <span class="w-2 h-2 rounded-full bg-info"></span>
+                        <span class="w-2 h-2 rounded-full bg-info" [class.animate-ping]="currentSimStep() === 1"></span>
                       </div>
                       <p class="font-label-sm text-label-sm font-semibold text-primary">Webhook &amp; Kafka Event</p>
                       <div class="mt-space-sm pt-space-xs flex items-center justify-between text-on-surface-variant font-caption text-caption">
                         <span>topic: treasury.tx</span>
-                        <span class="text-info font-mono font-medium">9.2k/s</span>
+                        <span class="text-info font-mono font-medium">{{ currentSimStep() === 1 ? '14.8k/s (BURST)' : '9.2k/s' }}</span>
                       </div>
                       <!-- Connector port Right -->
-                      <span class="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-info"></span>
+                      <span class="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-info transition-all duration-300"
+                            [class.ring-4]="currentSimStep() === 1 || currentSimStep() === 2"
+                            [class.bg-info]="currentSimStep() >= 1"></span>
                     </div>
 
                     <!-- Node 2: Business Rule Evaluator -->
-                    <div class="relative flex flex-col rounded-xl bg-pure-white text-on-surface p-space-md shadow-md min-w-[210px]">
+                    <div class="relative flex flex-col rounded-xl bg-pure-white text-on-surface p-space-md shadow-md min-w-[210px] transition-all duration-300"
+                         [class.ring-4]="currentSimStep() === 2"
+                         [class.ring-secondary-container]="currentSimStep() === 2"
+                         [class.scale-105]="currentSimStep() === 2"
+                         [class.shadow-xl]="currentSimStep() === 2">
                       <!-- Connector port Left -->
-                      <span class="hidden md:block absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-info"></span>
+                      <span class="hidden md:block absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-info transition-all duration-300"
+                            [class.bg-info]="currentSimStep() >= 1"></span>
                       <div class="flex items-center justify-between mb-space-sm">
                         <div class="flex items-center gap-space-xs">
                           <div class="w-6 h-6 rounded-md bg-primary-container text-pure-white flex items-center justify-center">
@@ -219,16 +254,23 @@ import { RouterLink } from '@angular/router';
                       <p class="font-label-sm text-label-sm font-semibold text-primary">CapEx &gt; $100,000 SOX</p>
                       <div class="mt-space-sm pt-space-xs flex items-center justify-between text-on-surface-variant font-caption text-caption">
                         <span>Audit hash: #3A89</span>
-                        <span class="text-success font-medium">PASS (&lt;1ms)</span>
+                        <span class="text-success font-medium font-bold" [class.animate-pulse]="currentSimStep() === 2">{{ currentSimStep() === 2 ? 'PASS (<0.4ms)' : 'PASS (<1ms)' }}</span>
                       </div>
                       <!-- Connector port Right -->
-                      <span class="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary-container ring-2 ring-secondary-container"></span>
+                      <span class="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary-container ring-2 ring-secondary-container transition-all duration-300"
+                            [class.ring-4]="currentSimStep() === 2 || currentSimStep() === 3"
+                            [class.bg-pure-white]="currentSimStep() >= 2"></span>
                     </div>
 
                     <!-- Node 3: Approval Gate (Highlighted Orange Accent) -->
-                    <div class="relative flex flex-col rounded-xl bg-secondary-container text-noir-text p-space-md shadow-lg min-w-[210px] ring-2 ring-secondary-container/50">
+                    <div class="relative flex flex-col rounded-xl bg-secondary-container text-noir-text p-space-md shadow-lg min-w-[210px] ring-2 ring-secondary-container/50 transition-all duration-300"
+                         [class.ring-4]="currentSimStep() === 3"
+                         [class.ring-pure-white]="currentSimStep() === 3"
+                         [class.scale-105]="currentSimStep() === 3"
+                         [class.shadow-2xl]="currentSimStep() === 3">
                       <!-- Connector port Left -->
-                      <span class="hidden md:block absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary-container ring-2 ring-secondary-container"></span>
+                      <span class="hidden md:block absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary-container ring-2 ring-secondary-container transition-all duration-300"
+                            [class.bg-pure-white]="currentSimStep() >= 2"></span>
                       <div class="flex items-center justify-between mb-space-sm">
                         <div class="flex items-center gap-space-xs">
                           <div class="w-6 h-6 rounded-md bg-noir-text text-secondary-container flex items-center justify-center">
@@ -236,21 +278,28 @@ import { RouterLink } from '@angular/router';
                           </div>
                           <span class="font-caption text-caption font-bold text-noir-text uppercase">Approval Gate</span>
                         </div>
-                        <span class="w-2 h-2 rounded-full bg-noir-text"></span>
+                        <span class="w-2 h-2 rounded-full bg-noir-text" [class.animate-ping]="currentSimStep() === 3"></span>
                       </div>
                       <p class="font-label-sm text-label-sm font-bold text-noir-text">Dual Sign-Off HITL</p>
                       <div class="mt-space-sm pt-space-xs flex items-center justify-between text-noir-text/80 font-caption text-caption">
                         <span>VP Fin &amp; CISO</span>
-                        <span class="font-bold underline">Approuvé WebAuthn</span>
+                        <span class="font-bold underline" [class.animate-pulse]="currentSimStep() === 3">{{ currentSimStep() >= 3 ? 'Validé WebAuthn ✓' : 'Approuvé WebAuthn' }}</span>
                       </div>
                       <!-- Connector port Right -->
-                      <span class="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-success"></span>
+                      <span class="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-success transition-all duration-300"
+                            [class.ring-4]="currentSimStep() === 3 || currentSimStep() === 4"
+                            [class.bg-success]="currentSimStep() >= 3"></span>
                     </div>
 
                     <!-- Node 4: Automated Settlement / Ledger Action -->
-                    <div class="relative flex flex-col rounded-xl bg-pure-white text-on-surface p-space-md shadow-md min-w-[210px]">
+                    <div class="relative flex flex-col rounded-xl bg-pure-white text-on-surface p-space-md shadow-md min-w-[210px] transition-all duration-300"
+                         [class.ring-4]="currentSimStep() === 4"
+                         [class.ring-success]="currentSimStep() === 4"
+                         [class.scale-105]="currentSimStep() === 4"
+                         [class.shadow-xl]="currentSimStep() === 4">
                       <!-- Connector port Left -->
-                      <span class="hidden md:block absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-success"></span>
+                      <span class="hidden md:block absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white ring-2 ring-success transition-all duration-300"
+                            [class.bg-success]="currentSimStep() >= 3"></span>
                       <div class="flex items-center justify-between mb-space-sm">
                         <div class="flex items-center gap-space-xs">
                           <div class="w-6 h-6 rounded-md bg-success/15 text-success flex items-center justify-center">
@@ -258,12 +307,12 @@ import { RouterLink } from '@angular/router';
                           </div>
                           <span class="font-caption text-caption font-bold text-success uppercase">Auto Action</span>
                         </div>
-                        <span class="px-1.5 py-0.5 rounded bg-success/15 font-caption text-[10px] text-success font-bold">200 OK</span>
+                        <span class="px-1.5 py-0.5 rounded bg-success/15 font-caption text-[10px] text-success font-bold" [class.animate-pulse]="currentSimStep() === 4">200 OK</span>
                       </div>
                       <p class="font-label-sm text-label-sm font-semibold text-primary">SAP S/4HANA &amp; KMS</p>
                       <div class="mt-space-sm pt-space-xs flex items-center justify-between text-on-surface-variant font-caption text-caption">
                         <span>Enclave Nitro KMS</span>
-                        <span class="text-success font-bold">12ms Sync</span>
+                        <span class="text-success font-bold">{{ currentSimStep() === 4 ? 'SYNC ENCLAVE' : '12ms Sync' }}</span>
                       </div>
                     </div>
                   </div>
@@ -272,13 +321,13 @@ import { RouterLink } from '@angular/router';
                   <div class="relative z-10 w-full mt-space-lg pt-space-md bg-primary-container/90 rounded-lg p-space-md flex flex-wrap items-center justify-between gap-space-md">
                     <div class="flex items-center gap-space-lg flex-wrap">
                       <div class="flex items-center gap-space-xs">
-                        <span class="w-2 h-2 rounded-full bg-success"></span>
+                        <span class="w-2 h-2 rounded-full bg-success" [class.animate-ping]="isSimulating()"></span>
                         <span class="font-caption text-caption text-on-primary-container">Débit :</span>
-                        <span class="font-label-sm text-label-sm font-mono font-bold text-pure-white">48,200 tx/sec</span>
+                        <span class="font-label-sm text-label-sm font-mono font-bold text-pure-white">{{ simThroughput() }}</span>
                       </div>
                       <div class="flex items-center gap-space-xs">
                         <span class="font-caption text-caption text-on-primary-container">Latence P99 :</span>
-                        <span class="font-label-sm text-label-sm font-mono font-bold text-pure-white">3.8 ms</span>
+                        <span class="font-label-sm text-label-sm font-mono font-bold text-pure-white">{{ simLatency() }}</span>
                       </div>
                       <div class="flex items-center gap-space-xs">
                         <span class="font-caption text-caption text-on-primary-container">Clusters Actifs :</span>
@@ -559,38 +608,59 @@ import { RouterLink } from '@angular/router';
 
           <!-- FINAL ENTERPRISE CONVERSION CTA SECTION -->
           <section class="w-full bg-surface py-space-5xl px-gutter-lg">
-            <div class="max-w-6xl mx-auto relative rounded-3xl bg-primary-container text-on-primary p-space-2xl sm:p-space-4xl overflow-hidden shadow-xl">
-              <!-- Ambient Radial Flare -->
-              <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
-              <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-info/10 blur-3xl pointer-events-none"></div>
+            <div class="max-w-6xl mx-auto relative rounded-3xl bg-gradient-to-b from-[#0e172e] via-[#091124] to-[#040814] text-white p-8 sm:p-14 lg:p-16 overflow-hidden border border-white/[0.12] shadow-[0_24px_64px_-12px_rgba(0,10,36,0.35)]">
+              <!-- Ambient Radial Flare & Grid Texture -->
+              <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none"></div>
+              <div class="absolute -top-32 -right-32 w-[32rem] h-[32rem] rounded-full bg-[#ffa515]/15 blur-[100px] pointer-events-none"></div>
+              <div class="absolute -bottom-32 -left-32 w-[32rem] h-[32rem] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none"></div>
+              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[#ffa515]/[0.06] blur-[80px] pointer-events-none"></div>
+
               <div class="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
-                <div class="w-12 h-12 rounded-xl bg-secondary-container text-noir-text flex items-center justify-center mb-space-lg shadow-md">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect>
-                    <line x1="8" x2="16" y1="21" y2="21"></line>
-                    <line x1="12" x2="12" y1="17" y2="21"></line>
-                  </svg>
+                <!-- Refined Soft Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md mb-6 shadow-sm">
+                  <span class="flex h-2 w-2 rounded-full bg-[#ffa515] animate-pulse"></span>
+                  <span class="text-xs font-semibold uppercase tracking-wider text-slate-200">Accompagnement Enterprise Dédié</span>
                 </div>
-                <h2 class="font-display text-display lg:text-[40px] lg:leading-[48px] text-pure-white font-bold tracking-tight mb-space-md">
-                  Prêt à moderniser vos chaînes d'orchestration d'entreprise ?
+
+                <h2 class="font-display text-2xl sm:text-3xl lg:text-[40px] lg:leading-[48px] text-white font-bold tracking-tight mb-4 max-w-2xl text-center">
+                  Prêt à moderniser vos chaînes <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-[#ffa515]/90">d'orchestration d'entreprise ?</span>
                 </h2>
-                <p class="font-body-lg text-body-lg text-on-primary-container max-w-xl mb-space-2xl">
-                  Bénéficiez d'un accompagnement personnalisé avec nos architectes solutions et configurez votre premier cluster dédié en moins de 15 minutes.
+
+                <p class="font-body-lg text-base sm:text-lg text-slate-300/90 max-w-2xl text-center mb-8 sm:mb-10 leading-relaxed font-normal">
+                  Bénéficiez d'un accompagnement personnalisé avec nos architectes solutions et configurez votre premier cluster dédié en toute sérénité.
                 </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md">
-                  <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold shadow-md hover:bg-secondary-fixed-dim transition-all">
-                    <span>Créer un compte Enterprise</span>
-                    <svg class="w-4 h-4 text-noir-text" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full max-w-lg mb-10 sm:mb-12">
+                  <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#ffa515] to-[#fca311] text-[#000a24] font-semibold text-sm shadow-[0_4px_20px_rgba(252,163,17,0.25)] hover:shadow-[0_6px_28px_rgba(252,163,17,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group">
+                    <span>Demander une démonstration privée</span>
+                    <svg class="w-4 h-4 text-[#000a24] group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                   </a>
-                  <a routerLink="/workflows" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-primary text-pure-white font-label-md text-label-md font-semibold hover:bg-primary-container transition-all">
-                    <svg class="w-4 h-4 text-pure-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line></svg>
+                  <a routerLink="/workflows" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.07] hover:bg-white/[0.12] text-white border border-white/15 font-semibold text-sm backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200">
+                    <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line></svg>
                     <span>Consulter la documentation</span>
                   </a>
                 </div>
-                <div class="mt-space-2xl pt-space-xl flex flex-wrap items-center justify-center gap-space-xl text-on-primary-container font-caption text-caption">
-                  <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> PoC gratuit sur infrastructure dédiée</span>
-                  <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Support technique architecte 24/7/365</span>
-                  <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Accord de confidentialité (NDA) immédiat</span>
+
+                <!-- Reassurance Pills -->
+                <div class="pt-6 sm:pt-8 border-t border-white/[0.1] w-full flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs sm:text-sm">
+                  <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+                    <div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                      <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <span class="font-medium">PoC gratuit sur infrastructure dédiée</span>
+                  </div>
+                  <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+                    <div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                      <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <span class="font-medium">Support technique architecte 24/7/365</span>
+                  </div>
+                  <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+                    <div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                      <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <span class="font-medium">Accord de confidentialité (NDA) immédiat</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -680,11 +750,54 @@ export class LandingComponent {
   protected readonly activeLifecycleTab = signal<'dev' | 'prod'>('dev');
   protected readonly zoomLevel = signal<number>(1.0);
   protected readonly isSimulating = signal<boolean>(false);
+  protected readonly currentSimStep = signal<number>(0);
+  protected readonly simSuccess = signal<boolean>(false);
+  protected readonly simThroughput = signal<string>('48,200 tx/sec');
+  protected readonly simLatency = signal<string>('3.8 ms');
+
+  private simTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected triggerSimulation(): void {
+    if (this.isSimulating()) return;
+
+    if (this.simTimer) {
+      clearTimeout(this.simTimer);
+    }
+
     this.isSimulating.set(true);
-    setTimeout(() => {
-      this.isSimulating.set(false);
-    }, 2000);
+    this.simSuccess.set(false);
+    this.currentSimStep.set(1);
+    this.simThroughput.set('64,800 tx/sec');
+    this.simLatency.set('1.2 ms');
+
+    // Step 1 -> Step 2 (Kafka -> Roslyn C#)
+    this.simTimer = setTimeout(() => {
+      this.currentSimStep.set(2);
+      this.simThroughput.set('73,400 tx/sec');
+      this.simLatency.set('1.8 ms');
+
+      // Step 2 -> Step 3 (Roslyn C# -> HITL WebAuthn)
+      this.simTimer = setTimeout(() => {
+        this.currentSimStep.set(3);
+        this.simThroughput.set('81,900 tx/sec');
+        this.simLatency.set('2.6 ms');
+
+        // Step 3 -> Step 4 (HITL -> SAP KMS)
+        this.simTimer = setTimeout(() => {
+          this.currentSimStep.set(4);
+          this.simThroughput.set('88,500 tx/sec');
+          this.simLatency.set('3.1 ms');
+
+          // Step 4 -> Complete
+          this.simTimer = setTimeout(() => {
+            this.currentSimStep.set(0);
+            this.isSimulating.set(false);
+            this.simSuccess.set(true);
+            this.simThroughput.set('48,200 tx/sec');
+            this.simLatency.set('3.8 ms');
+          }, 1200);
+        }, 1200);
+      }, 1200);
+    }, 1200);
   }
 }
