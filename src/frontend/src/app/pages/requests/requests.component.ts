@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
 import { RequestService } from '../../core/services/request.service';
@@ -20,7 +21,7 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
         <!-- Global Topbar -->
         <app-topbar />
 
-        <main class="w-full pt-16 sm:pt-20 bg-surface px-6 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
+        <main class="w-full pt-16 sm:pt-20 bg-surface px-4 sm:px-8 lg:px-10 xl:px-12 flex-1 flex flex-col max-w-7xl 2xl:max-w-[1536px] mx-auto pb-space-4xl min-w-0">
           <!-- Top Hero Header Area -->
           <div class="relative py-space-xl flex flex-col gap-space-lg">
             <!-- Breadcrumb & Status Pill -->
@@ -157,10 +158,10 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
                 <h2 class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Quick Launch Workflow Catalog</h2>
                 <p class="font-caption text-caption text-on-surface-variant">Pre-approved enterprise execution templates for rapid self-service provisioning.</p>
               </div>
-              <a href="#" class="font-label-sm text-label-sm text-secondary hover:text-primary font-bold flex items-center gap-1 transition-colors">
+              <button type="button" (click)="goToWorkflows()" class="font-label-sm text-label-sm text-secondary hover:text-primary font-bold flex items-center gap-1 transition-colors cursor-pointer bg-transparent border-0 p-0">
                 <span>Browse All 48 Workflows</span>
                 <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </a>
+              </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-lg">
@@ -261,7 +262,7 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
                   <svg class="w-4 h-4 text-outline absolute left-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                   <input
                     class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all border border-surface-container"
-                    placeholder="Filter by Request ID, title, requester, or engine reference..."
+                    placeholder="Filter by Request ID, title, requester, or engine reference..." aria-label="Filtrer les requêtes"
                     type="text"
                     [ngModel]="searchTerm()"
                     (ngModelChange)="onSearchChange($event)"
@@ -272,7 +273,7 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
                   <div class="relative">
                     <select
                       class="h-10 pl-3 pr-8 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary-container appearance-none cursor-pointer border border-surface-container"
-                      [ngModel]="selectedDepartment()"
+                      aria-label="Filtrer par département" [ngModel]="selectedDepartment()"
                       (ngModelChange)="onDepartmentChange($event)"
                     >
                       <option value="All Departments">All Departments</option>
@@ -289,15 +290,15 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
               <!-- High-Density Data Table Card -->
               <div class="rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden border border-surface-container">
                 <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
+                  <table class="w-full text-left border-collapse" aria-label="Registre des requêtes de service">
                     <thead>
                       <tr class="bg-surface-container-low text-on-surface font-caption text-caption uppercase tracking-wider font-bold border-b border-surface-container">
-                        <th class="py-space-md px-space-md">Request & Workflow</th>
-                        <th class="py-space-md px-space-md">Requester</th>
-                        <th class="py-space-md px-space-md">Current Stage / Owner</th>
-                        <th class="py-space-md px-space-md">SLA & Progress</th>
-                        <th class="py-space-md px-space-md">Status</th>
-                        <th class="py-space-md px-space-md text-right">Actions</th>
+                        <th scope="col" class="py-space-md px-space-md">Request & Workflow</th>
+                        <th scope="col" class="py-space-md px-space-md">Requester</th>
+                        <th scope="col" class="py-space-md px-space-md">Current Stage / Owner</th>
+                        <th scope="col" class="py-space-md px-space-md">SLA & Progress</th>
+                        <th scope="col" class="py-space-md px-space-md">Status</th>
+                        <th scope="col" class="py-space-md px-space-md text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody class="font-body-md text-body-md text-on-surface divide-y divide-surface-container">
@@ -559,27 +560,27 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
       <!-- Modal: New Request Wizard -->
       @if (showNewRequestModal()) {
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div class="bg-surface-container-lowest rounded-2xl shadow-2xl border border-surface-container max-w-xl w-full p-6 flex flex-col gap-4 animate-in fade-in zoom-in-95">
+          <div role="dialog" aria-modal="true" aria-labelledby="modal-title-request" class="bg-surface-container-lowest rounded-2xl shadow-2xl border border-surface-container max-w-xl w-full max-w-[calc(100vw-2rem)] p-4 sm:p-6 flex flex-col gap-4 animate-in fade-in zoom-in-95">
             <div class="flex items-center justify-between pb-3 border-b border-surface-container">
               <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-secondary-container">
                   <svg class="w-4 h-4 text-secondary-container" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="16"></line><line x1="8" x2="16" y1="12" y2="12"></line></svg>
                 </div>
-                <h3 class="font-headline-sm text-lg font-bold text-primary">Initiate Service Catalog Request</h3>
+                <h3 id="modal-title-request" class="font-headline-sm text-lg font-bold text-primary">Initiate Service Catalog Request</h3>
               </div>
-              <button type="button" (click)="showNewRequestModal.set(false)" class="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+              <button type="button" (click)="showNewRequestModal.set(false)" aria-label="Fermer la boîte de dialogue" class="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary-container">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
               </button>
             </div>
 
             <form (ngSubmit)="submitNewRequest()" class="space-y-4">
               <div>
-                <label class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
+                <label for="req-template" class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
                   Catalog Template <span class="text-error">*</span>
                 </label>
                 <select
                   class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-sm border border-surface-container focus:outline-none focus:ring-2 focus:ring-primary-container"
-                  [ngModel]="selectedModalTemplateId()"
+                  id="req-template" [ngModel]="selectedModalTemplateId()"
                   (ngModelChange)="selectedModalTemplateId.set($event)"
                   name="templateId"
                   required
@@ -591,7 +592,7 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
               </div>
 
               <div>
-                <label class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
+                <label for="req-title" class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
                   Request Title <span class="text-error">*</span>
                 </label>
                 <input
@@ -600,14 +601,14 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
                   [ngModel]="newRequestTitle()"
                   (ngModelChange)="newRequestTitle.set($event)"
                   name="title"
-                  placeholder="e.g. Dedicated GPU Sandbox for Transformer Testing"
+                  id="req-title" placeholder="e.g. Dedicated GPU Sandbox for Transformer Testing"
                   required
                 />
               </div>
 
-              <div class="grid grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
+                  <label for="req-dept" class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
                     Department <span class="text-error">*</span>
                   </label>
                   <input
@@ -616,18 +617,18 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
                     [ngModel]="newRequestDepartment()"
                     (ngModelChange)="newRequestDepartment.set($event)"
                     name="department"
-                    placeholder="AI Platform"
+                    id="req-dept" placeholder="AI Platform"
                     required
                   />
                 </div>
                 <div>
-                  <label class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
+                  <label for="req-budget" class="block font-label-md text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1">
                     Estimated Budget ($)
                   </label>
                   <input
                     type="number"
                     class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-sm border border-surface-container focus:outline-none focus:ring-2 focus:ring-primary-container"
-                    [ngModel]="newRequestBudget()"
+                    id="req-budget" [ngModel]="newRequestBudget()"
                     (ngModelChange)="newRequestBudget.set($event)"
                     name="budget"
                   />
@@ -657,6 +658,7 @@ import { CatalogTemplate, ServiceRequestSummary, ServiceRequestDetail } from '..
   `
 })
 export class RequestsComponent implements OnInit {
+  private readonly router = inject(Router);
   private readonly requestService = inject(RequestService);
 
   protected readonly templates = this.requestService.templates;
@@ -713,6 +715,10 @@ export class RequestsComponent implements OnInit {
       );
     }
     return list;
+  }
+
+  protected goToWorkflows(): void {
+    this.router.navigate(['/workflows']);
   }
 
   protected refresh(): void {
