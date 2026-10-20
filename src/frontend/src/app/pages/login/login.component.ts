@@ -65,101 +65,80 @@ import { AuthService } from '../../core/services/auth.service';
                   <!-- Identity badge -->
                   <div class="inline-flex items-center gap-2 bg-pure-white/10 px-3 py-1.5 rounded-full w-fit border border-white/10">
                     <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
-                    <span class="font-caption text-caption text-secondary-container tracking-wider uppercase font-bold">Enterprise Identity Backbone</span>
+                    <span class="font-caption text-caption text-secondary-container tracking-wider uppercase font-bold">Enterprise Trust & Security</span>
                   </div>
 
                   <!-- Section title & narrative -->
                   <div class="flex flex-col gap-3">
                     <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center shadow-md">
+                      <div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center shadow-md flex-shrink-0">
                         <svg class="w-6 h-6 text-noir-text" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                           <path d="M12 3v18m9-9H3m14-5l4 5-4 5m-10-10L3 12l4 5" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                       </div>
                       <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight leading-none font-bold">Vanguard Workflow Engine</h1>
                     </div>
-                    <p class="font-body-md text-body-md text-on-primary-container">
-                      Secure zero-trust orchestration framework built for automated high-volume pipelines, multi-region failovers, and compliance governance.
+                    <p class="font-body-md text-body-md text-on-primary-container leading-relaxed">
+                      Mission-critical orchestration platform engineered for enterprise pipelines, deterministic execution, and continuous compliance.
                     </p>
                   </div>
 
-                  <!-- Live Orchestration Visual Preview Node -->
-                  <div class="mt-4 rounded-lg bg-primary/70 backdrop-blur-md p-5 shadow-sm space-y-4 border border-white/5">
-                    <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                      <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-success"></span>
-                        <span class="font-label-sm text-label-sm text-pure-white font-semibold">Active Cluster: US-East-1A</span>
+                  <!-- 3 Trust Pillars (Linear / GitHub Enterprise style) -->
+                  <div class="mt-4 space-y-3.5">
+                    <!-- Pillar 1: Zero-Trust Multi-Tenancy -->
+                    <div class="flex items-start gap-3.5 p-3.5 rounded-lg bg-pure-white/5 border border-white/10 backdrop-blur-sm">
+                      <div class="w-8 h-8 rounded-md bg-secondary-container/20 flex items-center justify-center text-secondary-container flex-shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
                       </div>
-                      <span class="font-caption text-caption text-on-primary-container font-mono">FLOW-ID #88219</span>
-                    </div>
-
-                    <!-- Execution Steps Pipeline -->
-                    <div class="space-y-2.5">
-                      <!-- Step 1 -->
-                      <div class="flex items-center justify-between bg-pure-white/5 rounded-lg px-3 py-2 border border-white/5">
-                        <div class="flex items-center gap-2.5">
-                          <svg class="w-4 h-4 text-secondary-container flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-                          </svg>
-                          <span class="font-label-sm text-label-sm text-pure-white">Trigger #01: Webhook Ingest</span>
-                        </div>
-                        <span class="font-caption text-caption font-bold bg-success/20 text-success px-2 py-0.5 rounded-full">OK (12ms)</span>
-                      </div>
-                      <!-- Step 2 -->
-                      <div class="flex items-center justify-between bg-pure-white/5 rounded-lg px-3 py-2 border border-white/5">
-                        <div class="flex items-center gap-2.5">
-                          <svg class="w-4 h-4 text-warning flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
-                          </svg>
-                          <span class="font-label-sm text-label-sm text-pure-white">Dual Sign-Off Gate</span>
-                        </div>
-                        <span class="font-caption text-caption font-bold bg-warning/20 text-warning px-2 py-0.5 rounded-full">Secured</span>
-                      </div>
-                      <!-- Step 3 -->
-                      <div class="flex items-center justify-between bg-pure-white/5 rounded-lg px-3 py-2 border border-white/5">
-                        <div class="flex items-center gap-2.5">
-                          <svg class="w-4 h-4 text-info flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path>
-                          </svg>
-                          <span class="font-label-sm text-label-sm text-pure-white">Auto Execution: OK</span>
-                        </div>
-                        <span class="font-caption text-caption font-bold bg-success/20 text-success px-2 py-0.5 rounded-full">Completed</span>
-                      </div>
-                    </div>
-
-                    <!-- Pipeline Sparkline Metric -->
-                    <div class="pt-2 flex items-center justify-between">
                       <div class="flex flex-col">
-                        <span class="font-caption text-caption text-on-primary-container">Throughput</span>
-                        <span class="font-label-md text-label-md font-semibold text-pure-white">42,800 op/sec</span>
+                        <span class="font-label-md text-label-md font-semibold text-pure-white">Zero-Trust Multi-Tenancy</span>
+                        <span class="font-caption text-caption text-on-primary-container leading-relaxed mt-0.5">Strict tenant data isolation with query-level filtering and automated IDOR prevention.</span>
                       </div>
-                      <svg class="w-24 h-6 text-secondary-container" fill="none" viewBox="0 0 100 24">
-                        <path d="M0 18 L15 14 L30 19 L45 8 L60 12 L75 4 L90 7 L100 2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
-                      </svg>
+                    </div>
+
+                    <!-- Pillar 2: Cryptographic Audit Ledger -->
+                    <div class="flex items-start gap-3.5 p-3.5 rounded-lg bg-pure-white/5 border border-white/10 backdrop-blur-sm">
+                      <div class="w-8 h-8 rounded-md bg-secondary-container/20 flex items-center justify-center text-secondary-container flex-shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                      </div>
+                      <div class="flex flex-col">
+                        <span class="font-label-md text-label-md font-semibold text-pure-white">Cryptographic Audit Ledger</span>
+                        <span class="font-caption text-caption text-on-primary-container leading-relaxed mt-0.5">SHA-256 chained event ledger ensuring tamper-evident compliance with SOX-404 and SOC-2.</span>
+                      </div>
+                    </div>
+
+                    <!-- Pillar 3: High Availability & Resilience -->
+                    <div class="flex items-start gap-3.5 p-3.5 rounded-lg bg-pure-white/5 border border-white/10 backdrop-blur-sm">
+                      <div class="w-8 h-8 rounded-md bg-secondary-container/20 flex items-center justify-center text-secondary-container flex-shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                      </div>
+                      <div class="flex flex-col">
+                        <span class="font-label-md text-label-md font-semibold text-pure-white">High Availability & Resilience</span>
+                        <span class="font-caption text-caption text-on-primary-container leading-relaxed mt-0.5">Automated multi-region failovers and deterministic state transitions backed by a 99.99% SLA.</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Compliance & Security Badges -->
-                <div class="relative z-10 pt-8 mt-6">
-                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="flex items-center gap-2 bg-pure-white/5 rounded-lg p-2.5 border border-white/5">
-                      <svg class="w-4 h-4 text-success flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg>
-                      <span class="font-caption text-caption text-pure-white font-medium">SOC-2 Type II</span>
+                <!-- System Operational Status & Compliance Badges -->
+                <div class="relative z-10 pt-6 mt-6 border-t border-white/10">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-full bg-success animate-pulse"></span>
+                      <span class="font-caption text-caption text-pure-white font-medium">All Systems Operational</span>
                     </div>
-                    <div class="flex items-center gap-2 bg-pure-white/5 rounded-lg p-2.5 border border-white/5">
-                      <svg class="w-4 h-4 text-success flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg>
-                      <span class="font-caption text-caption text-pure-white font-medium">FIPS 140-3</span>
-                    </div>
-                    <div class="flex items-center gap-2 bg-pure-white/5 rounded-lg p-2.5 border border-white/5">
-                      <svg class="w-4 h-4 text-success flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg>
-                      <span class="font-caption text-caption text-pure-white font-medium">Audit Trail</span>
+                    <div class="flex items-center gap-2.5 text-on-primary-container font-mono text-caption">
+                      <span>SOC-2</span>
+                      <span class="text-white/30">•</span>
+                      <span>ISO 27001</span>
+                      <span class="text-white/30">•</span>
+                      <span class="text-secondary-container font-semibold">99.99% SLA</span>
                     </div>
                   </div>
                 </div>

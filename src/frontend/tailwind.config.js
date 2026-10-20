@@ -18,7 +18,7 @@ module.exports = {
         "inverse-primary": "#b9c6ea",
 
         "secondary": "#855300",
-        "secondary-container": "#fca311",
+        "secondary-container": "#ffa515",
         "on-secondary": "#ffffff",
         "on-secondary-container": "#684000",
         "secondary-fixed": "#ffddb8",
@@ -70,18 +70,42 @@ module.exports = {
         "disabled": "#9CA3AF"
       },
       borderRadius: {
-        "DEFAULT": "0.5rem",
+        "DEFAULT": "0.25rem",
         "sm": "0.25rem",
-        "md": "0.5rem",
-        "lg": "0.75rem",
-        "xl": "1rem",
+        "md": "0.375rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
         "full": "9999px"
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         display: ["Inter", "sans-serif"],
-        headline: ["Inter", "sans-serif"],
-        body: ["Inter", "sans-serif"],
+        caption: ["Inter", "sans-serif"],
+        "body-lg": ["Inter", "sans-serif"],
+        "label-md": ["Inter", "sans-serif"],
+        "headline-lg-mobile": ["Inter", "sans-serif"],
+        "headline-sm": ["Inter", "sans-serif"],
+        "body-md": ["Inter", "sans-serif"],
+        "headline-md": ["Inter", "sans-serif"],
+        "headline-lg": ["Inter", "sans-serif"],
+        "label-sm": ["Inter", "sans-serif"]
+      },
+      fontSize: {
+        "display": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "caption": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+        "headline-lg-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "headline-sm": ["20px", { lineHeight: "28px", letterSpacing: "-0.005em", fontWeight: "600" }],
+        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.015em", fontWeight: "700" }],
+        "label-sm": ["13px", { lineHeight: "18px", fontWeight: "500" }]
+      },
+      boxShadow: {
+        xs: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
       },
       spacing: {
         "space-xs": "0.25rem",
