@@ -34,7 +34,7 @@ public class WorkflowRepository : IWorkflowRepository
 
     public Task<List<WorkflowDefinition>> GetAllAsync(string? category = null, string? search = null, CancellationToken cancellationToken = default)
     {
-        var query = _context.WorkflowDefinitions.AsQueryable();
+        var query = _context.WorkflowDefinitions.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(category) && !string.Equals(category, "All", StringComparison.OrdinalIgnoreCase))
         {

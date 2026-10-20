@@ -8,7 +8,7 @@ namespace Vanguard.Api.Controllers;
 
 [ApiController]
 [Route("api/audit")]
-[Authorize]
+[Authorize(Roles = "SuperAdmin,OrgAdmin,Auditor")]
 [Produces("application/json")]
 public class AuditController : ControllerBase
 {

@@ -16,8 +16,13 @@ public class MonitoringService : IMonitoringService
 
     public async Task<ClusterMetricsDto> GetClusterMetricsAsync(CancellationToken cancellationToken = default)
     {
-        var runningExecutions = await _executionRepository.GetAllAsync(ExecutionStatus.Running, cancellationToken: cancellationToken);
-        var activeCount = 1284 + runningExecutions.Count;
+        var runningCount = await _executionRepository.CountAsync(ExecutionStatus.Running, cancellationToken);
+        if (runningCount == 0)
+        {
+            var fallback = await _executionRepository.GetAllAsync(ExecutionStatus.Running, cancellationToken: cancellationToken);
+            runningCount = fallback.Count;
+        }
+        var activeCount = 1284 + runningCount;
 
         return new ClusterMetricsDto(
             ActiveExecutionsCount: activeCount,

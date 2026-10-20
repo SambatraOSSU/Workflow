@@ -21,6 +21,7 @@ public class WorkflowEngine : IWorkflowEngine
     private readonly IAuditRepository _auditRepository;
     private readonly ICurrentTenantService _currentTenantService;
     private readonly IUnitOfWork _unitOfWork;
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
     public WorkflowEngine(
         IExecutionRepository executionRepository,
@@ -56,7 +57,7 @@ public class WorkflowEngine : IWorkflowEngine
         var refNumber = await _executionRepository.GenerateReferenceNumberAsync(cancellationToken);
 
         // Désérialisation du graphe
-        var graph = JsonSerializer.Deserialize<WorkflowGraphDto>(latestVersion.GraphDefinitionJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+        var graph = JsonSerializer.Deserialize<WorkflowGraphDto>(latestVersion.GraphDefinitionJson, JsonOptions)
                     ?? new WorkflowGraphDto(new List<WorkflowNodeDto>(), new List<WorkflowEdgeDto>());
 
         var triggerNode = graph.Nodes.FirstOrDefault(n => string.Equals(n.Type, "trigger", StringComparison.OrdinalIgnoreCase))
@@ -98,7 +99,7 @@ public class WorkflowEngine : IWorkflowEngine
         await _executionRepository.AddStepLogAsync(triggerLog, cancellationToken);
 
         // 2. Traitement du flux aval (Gate / Condition / Task)
-        await ProcessNextStepsAsync(execution, graph, triggerStepKey, request.PayloadJson, tenantId, cancellationToken);
+        await ProcessNextStepsAsync(execution, graph, triggerStepKey, request.PayloadJson, tenantId, cancellationToken, 0);
 
         // 3. Log d'audit immuable
         var prevHash = await _auditRepository.GetLastHashAsync(tenantId, cancellationToken);
@@ -207,15 +208,22 @@ public class WorkflowEngine : IWorkflowEngine
                       ?? workflow.Versions.OrderByDescending(v => v.VersionNumber).FirstOrDefault();
         if (version == null) return;
 
-        var graph = JsonSerializer.Deserialize<WorkflowGraphDto>(version.GraphDefinitionJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var graph = JsonSerializer.Deserialize<WorkflowGraphDto>(version.GraphDefinitionJson, JsonOptions);
         if (graph == null) return;
 
+        if (!string.IsNullOrWhiteSpace(outputPayloadJson) && outputPayloadJson != "{}")
+        {
+            execution.PayloadJson = outputPayloadJson;
+        }
+
         var tenantId = execution.TenantId;
-        await ProcessNextStepsAsync(execution, graph, currentStepKey, outputPayloadJson, tenantId, cancellationToken);
+        await ProcessNextStepsAsync(execution, graph, currentStepKey, outputPayloadJson, tenantId, cancellationToken, 0);
 
         _executionRepository.Update(execution);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
+
+    private const int MaxWorkflowTransitions = 50;
 
     private async Task ProcessNextStepsAsync(
         ExecutionInstance execution,
@@ -223,8 +231,29 @@ public class WorkflowEngine : IWorkflowEngine
         string currentStepKey,
         string currentPayloadJson,
         Guid tenantId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        int hopCount = 0)
     {
+        if (hopCount > MaxWorkflowTransitions)
+        {
+            execution.Status = ExecutionStatus.Failed;
+            execution.CompletedAtUtc = DateTime.UtcNow;
+            var failLog = new ExecutionStepLog
+            {
+                Id = Guid.NewGuid(),
+                TenantId = tenantId,
+                ExecutionInstanceId = execution.Id,
+                StepKey = currentStepKey,
+                StepName = "Max Transitions Exceeded",
+                StepType = "System",
+                Status = "Failed",
+                ErrorMessage = "Nombre maximal de transitions dépassé (boucle infinie détectée).",
+                CreatedAtUtc = DateTime.UtcNow
+            };
+            await _executionRepository.AddStepLogAsync(failLog, cancellationToken);
+            return;
+        }
+
         var outgoingEdges = graph.Edges.Where(e => string.Equals(e.From, currentStepKey, StringComparison.OrdinalIgnoreCase)).ToList();
         if (outgoingEdges.Count == 0)
         {
@@ -240,7 +269,7 @@ public class WorkflowEngine : IWorkflowEngine
             var targetNode = graph.Nodes.FirstOrDefault(n => string.Equals(n.Id, edge.To, StringComparison.OrdinalIgnoreCase));
             if (targetNode == null) continue;
 
-            await ProcessTargetNodeAsync(execution, graph, targetNode, currentPayloadJson, tenantId, cancellationToken);
+            await ProcessTargetNodeAsync(execution, graph, targetNode, currentPayloadJson, tenantId, cancellationToken, hopCount + 1);
             return;
         }
     }
@@ -251,7 +280,8 @@ public class WorkflowEngine : IWorkflowEngine
         WorkflowNodeDto targetNode,
         string currentPayloadJson,
         Guid tenantId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        int hopCount = 0)
     {
         if (string.Equals(targetNode.Type, "gate", StringComparison.OrdinalIgnoreCase))
         {
@@ -285,17 +315,17 @@ public class WorkflowEngine : IWorkflowEngine
                 var nextNode = graph.Nodes.FirstOrDefault(n => string.Equals(n.Id, selectedEdge.To, StringComparison.OrdinalIgnoreCase));
                 if (nextNode != null)
                 {
-                    await ProcessTargetNodeAsync(execution, graph, nextNode, currentPayloadJson, tenantId, cancellationToken);
+                    await ProcessTargetNodeAsync(execution, graph, nextNode, currentPayloadJson, tenantId, cancellationToken, hopCount + 1);
                 }
                 else
                 {
-                    await ProcessNextStepsAsync(execution, graph, selectedEdge.To, currentPayloadJson, tenantId, cancellationToken);
+                    await ProcessNextStepsAsync(execution, graph, selectedEdge.To, currentPayloadJson, tenantId, cancellationToken, hopCount + 1);
                 }
             }
             return;
         }
 
-        if (string.Equals(targetNode.Type, "task", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(targetNode.Type, "task", StringComparison.OrdinalIgnoreCase) || string.Equals(targetNode.Type, "approval", StringComparison.OrdinalIgnoreCase))
         {
             // Tâche humaine (HITL) : suspendre l'exécution en attente d'approbation
             execution.CurrentStepKey = targetNode.Id;
@@ -356,7 +386,7 @@ public class WorkflowEngine : IWorkflowEngine
             await _executionRepository.AddStepLogAsync(intLog, cancellationToken);
 
             // Continuer vers le nœud suivant
-            await ProcessNextStepsAsync(execution, graph, targetNode.Id, currentPayloadJson, tenantId, cancellationToken);
+            await ProcessNextStepsAsync(execution, graph, targetNode.Id, currentPayloadJson, tenantId, cancellationToken, hopCount + 1);
             return;
         }
 
@@ -394,15 +424,18 @@ public class WorkflowEngine : IWorkflowEngine
             using var doc = JsonDocument.Parse(payloadJson);
             if (expr.Contains("amount", StringComparison.OrdinalIgnoreCase) && expr.Contains(">"))
             {
+                var match = System.Text.RegularExpressions.Regex.Match(expr, @">\s*(\d+(?:\.\d+)?)");
+                var threshold = match.Success && decimal.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var t) ? t : 50000m;
+
                 if (doc.RootElement.TryGetProperty("amount", out var amountProp) && amountProp.TryGetDecimal(out var amount))
                 {
-                    return amount > 50000;
+                    return amount > threshold;
                 }
             }
         }
         catch
         {
-            // Fallback safe
+            return false;
         }
 
         return true;

@@ -62,6 +62,7 @@ public class WorkflowController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "SuperAdmin,OrgAdmin,WorkflowDesigner")]
     [ProducesResponseType(typeof(ApiResponse<WorkflowSummaryDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<WorkflowSummaryDto>>> CreateWorkflow(
@@ -91,6 +92,7 @@ public class WorkflowController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,OrgAdmin,WorkflowDesigner")]
     [ProducesResponseType(typeof(ApiResponse<WorkflowSummaryDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -142,6 +144,7 @@ public class WorkflowController : ControllerBase
     }
 
     [HttpPut("{id:guid}/graph")]
+    [Authorize(Roles = "SuperAdmin,OrgAdmin,WorkflowDesigner")]
     [ProducesResponseType(typeof(ApiResponse<WorkflowDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -173,6 +176,7 @@ public class WorkflowController : ControllerBase
     }
 
     [HttpPost("{id:guid}/publish")]
+    [Authorize(Roles = "SuperAdmin,OrgAdmin,WorkflowDesigner")]
     [ProducesResponseType(typeof(ApiResponse<WorkflowVersionDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

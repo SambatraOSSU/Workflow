@@ -8,7 +8,7 @@ namespace Vanguard.Api.Controllers;
 
 [ApiController]
 [Route("api/settings")]
-[Authorize]
+[Authorize(Roles = "SuperAdmin,OrgAdmin")]
 [Produces("application/json")]
 public class SettingsController : ControllerBase
 {

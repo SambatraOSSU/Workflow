@@ -35,7 +35,7 @@ public class ExecutionRepository : IExecutionRepository
         string? search = null,
         CancellationToken cancellationToken = default)
     {
-        var query = _context.ExecutionInstances
+        var query = _context.ExecutionInstances.AsNoTracking()
             .Include(e => e.WorkflowDefinition)
             .Include(e => e.StepLogs)
             .AsQueryable();
@@ -77,9 +77,18 @@ public class ExecutionRepository : IExecutionRepository
         await _context.ExecutionStepLogs.AddAsync(log, cancellationToken);
     }
 
+    public Task<int> CountAsync(ExecutionStatus? status = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.ExecutionInstances.AsNoTracking();
+        if (status.HasValue)
+        {
+            query = query.Where(e => e.Status == status.Value);
+        }
+        return query.CountAsync(cancellationToken);
+    }
+
     public async Task<string> GenerateReferenceNumberAsync(CancellationToken cancellationToken = default)
     {
-        var count = await _context.ExecutionInstances.CountAsync(cancellationToken) + 1;
         var randomNum = Random.Shared.Next(1000, 9999);
         return $"WF-{randomNum}";
     }

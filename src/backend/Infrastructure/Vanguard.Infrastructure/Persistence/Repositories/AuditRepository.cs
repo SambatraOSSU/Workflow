@@ -32,6 +32,7 @@ public class AuditRepository : IAuditRepository
     public Task<List<AuditLedgerEntry>> GetRecentEntriesAsync(int count = 50, CancellationToken cancellationToken = default)
     {
         return _context.AuditLedgerEntries
+            .AsNoTracking()
             .OrderByDescending(a => a.TimestampUtc)
             .Take(count)
             .ToListAsync(cancellationToken);

@@ -35,7 +35,7 @@ public class TaskRepository : ITaskRepository
         string? search = null,
         CancellationToken cancellationToken = default)
     {
-        var query = _context.TaskInstances
+        var query = _context.TaskInstances.AsNoTracking()
             .Include(t => t.ExecutionInstance!)
                 .ThenInclude(e => e.WorkflowDefinition)
             .AsQueryable();
@@ -81,7 +81,7 @@ public class TaskRepository : ITaskRepository
 
     public Task<int> GetPendingTasksCountAsync(Guid? userId = null, CancellationToken cancellationToken = default)
     {
-        var query = _context.TaskInstances.Where(t => t.Status == TaskStatus.Pending);
+        var query = _context.TaskInstances.AsNoTracking().Where(t => t.Status == TaskStatus.Pending);
         if (userId.HasValue)
         {
             query = query.Where(t => t.AssignedToUserId == userId.Value || t.AssignedToUserId == null);
