@@ -170,4 +170,37 @@ public class AuditAndSettingsTests
         _auditRepoMock.Verify(r => r.AppendEntryAsync(It.Is<AuditLedgerEntry>(e => e.EventType == "DangerZone:Flush Cache"), It.IsAny<CancellationToken>()), Times.Once);
         _unitOfWorkMock.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task SettingsService_DifferentTenants_ShouldHaveIsolatedSettings()
+    {
+        // Arrange
+        var tenantA = Guid.NewGuid();
+        var tenantB = Guid.NewGuid();
+
+        var tenantServiceMockA = new Mock<ICurrentTenantService>();
+        tenantServiceMockA.Setup(t => t.TenantId).Returns(tenantA);
+
+        var tenantServiceMockB = new Mock<ICurrentTenantService>();
+        tenantServiceMockB.Setup(t => t.TenantId).Returns(tenantB);
+
+        var serviceA = new SettingsService(_auditRepoMock.Object, tenantServiceMockA.Object, _unitOfWorkMock.Object);
+        var serviceB = new SettingsService(_auditRepoMock.Object, tenantServiceMockB.Object, _unitOfWorkMock.Object);
+
+        // Act
+        await serviceA.UpdateSettingsAsync(new EngineSettingsDto
+        {
+            DefaultWorkflowTimeoutSeconds = 9999,
+            MaxConcurrencyPerTenant = 100
+        });
+
+        var settingsA = await serviceA.GetSettingsAsync();
+        var settingsB = await serviceB.GetSettingsAsync();
+
+        // Assert
+        Assert.Equal(9999, settingsA.DefaultWorkflowTimeoutSeconds);
+        Assert.Equal(100, settingsA.MaxConcurrencyPerTenant);
+        // Tenant B should not be affected by Tenant A's settings
+        Assert.NotEqual(9999, settingsB.DefaultWorkflowTimeoutSeconds);
+    }
 }

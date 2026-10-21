@@ -87,9 +87,9 @@ public class ExecutionRepository : IExecutionRepository
         return query.CountAsync(cancellationToken);
     }
 
-    public async Task<string> GenerateReferenceNumberAsync(CancellationToken cancellationToken = default)
+    public Task<string> GenerateReferenceNumberAsync(CancellationToken cancellationToken = default)
     {
-        var randomNum = Random.Shared.Next(1000, 9999);
-        return $"WF-{randomNum}";
+        var suffix = Guid.NewGuid().ToString("N")[..6].ToUpperInvariant();
+        return Task.FromResult($"WF-{DateTime.UtcNow:yyyyMMdd}-{suffix}");
     }
 }

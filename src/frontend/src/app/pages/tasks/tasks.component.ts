@@ -473,7 +473,7 @@ interface MockFeedItem {
                   <div class="flex items-center gap-2.5">
                     <button
                       type="button"
-                      (click)="handleReject()"
+                      (click)="openRejectModal()"
                       class="h-10 px-4 rounded-lg bg-error/15 hover:bg-error/25 border border-error/30 text-error text-xs font-bold flex items-center gap-1.5 transition-colors">
                       <svg class="w-3.5 h-3.5 text-error" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -535,6 +535,145 @@ interface MockFeedItem {
         </main>
       </div>
 
+      <!-- Rejection Confirmation Modal -->
+      @if (showRejectModal()) {
+        <div class="fixed inset-0 z-50 bg-noir-text/60 backdrop-blur-xs flex items-center justify-center p-4" (keydown.escape)="closeRejectModal()">
+          <div role="dialog" aria-modal="true" aria-labelledby="modal-title-reject" class="bg-surface-container-lowest rounded-2xl border border-surface-container-high shadow-2xl max-w-lg w-full max-w-[calc(100vw-2rem)] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <!-- Modal Header -->
+            <div class="p-space-lg bg-surface-container-low border-b border-surface-container flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-error/15 text-error flex items-center justify-center shrink-0 border border-error/30">
+                  <svg class="w-5 h-5 text-error" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 id="modal-title-reject" class="font-bold text-primary text-body-lg">Rejeter la demande</h3>
+                  <p class="text-caption text-on-surface-variant text-[11px]">Justification obligatoire consignée dans le registre d'audit Vanguard.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="closeRejectModal()"
+                aria-label="Fermer la boîte de dialogue"
+                class="text-on-surface-variant hover:text-primary p-1.5 rounded-lg transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary-container">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <line x1="18" x2="6" y1="6" y2="18"></line>
+                  <line x1="6" x2="18" y1="6" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Modal Content & Form -->
+            <form (ngSubmit)="confirmReject()" class="p-space-lg space-y-space-md">
+              <!-- Targeted Item Summary Card -->
+              <div class="p-3 rounded-xl bg-surface-container-low border border-surface-container flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-error/15 text-error font-mono font-bold text-[11px]">{{ activeTaskRef() }}</span>
+                  <span class="font-semibold text-primary truncate max-w-[240px]">{{ activeTaskTitle() }}</span>
+                </div>
+                <span class="font-mono font-bold text-primary">{{ activeTaskAmount() }}</span>
+              </div>
+
+              <!-- Rejection Category / Code -->
+              <div class="flex flex-col gap-1.5">
+                <label for="reject-code-select" class="text-caption font-semibold text-on-surface">Motif standard de rejet</label>
+                <select
+                  id="reject-code-select"
+                  [ngModel]="rejectionCode()"
+                  (ngModelChange)="rejectionCode.set($event)"
+                  name="rejectionCode"
+                  class="h-10 px-3 rounded-lg bg-surface-container border border-surface-container-high text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-error/30 cursor-pointer">
+                  <option value="POLICY_NON_COMPLIANT">Non-conformité politique interne (FIN-SEC-2024)</option>
+                  <option value="BUDGET_EXCEEDED">Dépassement de seuil budgétaire</option>
+                  <option value="MISSING_JUSTIFICATION">Justificatifs ou pièces jointes manquants</option>
+                  <option value="SECURITY_RISK">Risque de sécurité / Accès non autorisé</option>
+                  <option value="DUPLICATE_ORDER">Demande ou bon de commande en doublon</option>
+                  <option value="OTHER">Autre motif opérationnel</option>
+                </select>
+              </div>
+
+              <!-- Justification Textarea -->
+              <div class="flex flex-col gap-1.5">
+                <label for="reject-reason-input" class="text-caption font-semibold text-on-surface flex items-center justify-between">
+                  <span>Justification d'audit *</span>
+                  <span class="text-[11px] text-outline font-normal">Obligatoire</span>
+                </label>
+                <textarea
+                  id="reject-reason-input"
+                  rows="3"
+                  [ngModel]="rejectionReason()"
+                  (ngModelChange)="rejectionReason.set($event); rejectModalError.set(null)"
+                  name="rejectionReason"
+                  placeholder="Ex : Dépassement du seuil autorisé par le département Finance. Requiert un avenant budgétaire préalable..."
+                  class="w-full p-3 rounded-xl bg-surface-container border border-surface-container-high text-xs text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-error/30 transition-all leading-relaxed"
+                  required></textarea>
+                
+                <!-- Quick Tags / Suggestions -->
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  <button
+                    type="button"
+                    (click)="setQuickReason('Non conforme à la politique de validation financière FIN-SEC.')"
+                    class="px-2 py-0.5 rounded-md bg-surface-container hover:bg-surface-container-high text-[11px] text-on-surface-variant hover:text-primary transition-colors cursor-pointer border border-surface-container-high">
+                    + Politique FIN-SEC
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setQuickReason('Budget non alloué pour cet exercice fiscal.')"
+                    class="px-2 py-0.5 rounded-md bg-surface-container hover:bg-surface-container-high text-[11px] text-on-surface-variant hover:text-primary transition-colors cursor-pointer border border-surface-container-high">
+                    + Budget insuffisant
+                  </button>
+                  <button
+                    type="button"
+                    (click)="setQuickReason('Pièces justificatives ou devis signés manquants.')"
+                    class="px-2 py-0.5 rounded-md bg-surface-container hover:bg-surface-container-high text-[11px] text-on-surface-variant hover:text-primary transition-colors cursor-pointer border border-surface-container-high">
+                    + Justificatifs manquants
+                  </button>
+                </div>
+              </div>
+
+              @if (rejectModalError()) {
+                <div class="p-3 rounded-lg bg-error-container text-error text-caption font-medium border border-error/20 flex items-center gap-2">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" x2="12" y1="8" y2="12"></line>
+                    <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                  </svg>
+                  <span>{{ rejectModalError() }}</span>
+                </div>
+              }
+
+              <!-- Modal Actions -->
+              <div class="pt-3 border-t border-surface-container flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  (click)="closeRejectModal()"
+                  class="h-10 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high border border-surface-container-high text-primary text-xs font-semibold transition-colors cursor-pointer">
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  [disabled]="!rejectionReason().trim() || isSubmittingReject()"
+                  class="h-10 px-5 rounded-lg bg-error hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed text-pure-white text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer">
+                  @if (isSubmittingReject()) {
+                    <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    <span>Rejet en cours...</span>
+                  } @else {
+                    <svg class="w-3.5 h-3.5 text-pure-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span>Confirmer le rejet</span>
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+
       <!-- Toast Feedback Message -->
       @if (toastMsg()) {
         <div class="fixed bottom-6 right-6 z-50 bg-primary-container text-pure-white px-5 py-3 rounded-xl shadow-2xl border border-white/10 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-150">
@@ -556,6 +695,84 @@ export class TasksComponent implements OnInit, OnDestroy {
   readonly timerSeconds = signal<number>(6477); // 01:47:57
   readonly toastMsg = signal<string | null>(null);
   decisionNotes = '';
+  readonly showRejectModal = signal<boolean>(false);
+  readonly rejectionReason = signal<string>('');
+  readonly rejectionCode = signal<string>('POLICY_NON_COMPLIANT');
+  readonly isSubmittingReject = signal<boolean>(false);
+  readonly rejectModalError = signal<string | null>(null);
+
+  activeTaskRef(): string {
+    const selected = this.selectedItemId();
+    const item = this.feedItems.find(f => f.id === selected) || this.feedItems[0];
+    const backendTask = this.taskService.tasks().find(t => t.id === selected);
+    return item?.ref || (backendTask ? '#' + backendTask.id.slice(0, 8) : '#WF-8821');
+  }
+
+  activeTaskTitle(): string {
+    const selected = this.selectedItemId();
+    const item = this.feedItems.find(f => f.id === selected) || this.feedItems[0];
+    const backendTask = this.taskService.tasks().find(t => t.id === selected);
+    return item?.title || backendTask?.title || 'Demande opérationnelle';
+  }
+
+  activeTaskAmount(): string {
+    const selected = this.selectedItemId();
+    const item = this.feedItems.find(f => f.id === selected) || this.feedItems[0];
+    return item?.amount || '$124,500.00 USD';
+  }
+
+  openRejectModal(): void {
+    this.rejectionReason.set('');
+    this.rejectionCode.set('POLICY_NON_COMPLIANT');
+    this.rejectModalError.set(null);
+    this.isSubmittingReject.set(false);
+    this.showRejectModal.set(true);
+  }
+
+  closeRejectModal(): void {
+    if (this.isSubmittingReject()) return;
+    this.showRejectModal.set(false);
+    this.rejectModalError.set(null);
+  }
+
+  setQuickReason(reason: string): void {
+    this.rejectionReason.set(reason);
+    this.rejectModalError.set(null);
+  }
+
+  confirmReject(): void {
+    const reason = this.rejectionReason().trim();
+    if (!reason) {
+      this.rejectModalError.set('Veuillez fournir un motif de rejet pour la traçabilité.');
+      return;
+    }
+
+    const selected = this.selectedItemId();
+    const backendTask = this.taskService.tasks().find(t => t.id === selected) || this.taskService.tasks()[0];
+    const targetId = backendTask?.id;
+
+    if (!targetId) {
+      this.rejectModalError.set('Aucune tâche active trouvée pour rejet.');
+      return;
+    }
+
+    this.isSubmittingReject.set(true);
+    this.rejectModalError.set(null);
+
+    this.taskService.rejectTask(targetId, reason, this.rejectionCode()).subscribe({
+      next: () => {
+        this.isSubmittingReject.set(false);
+        this.showRejectModal.set(false);
+        this.showToast('Demande rejetée avec succès. Événement d\'escalade clôturé.');
+        this.taskService.loadTasks().subscribe();
+      },
+      error: (err) => {
+        this.isSubmittingReject.set(false);
+        const errorMsg = err?.error?.message || err?.message || 'Erreur lors du rejet de la tâche.';
+        this.rejectModalError.set('Échec du rejet : ' + errorMsg);
+      }
+    });
+  }
 
   private timerInterval?: number;
 
@@ -640,40 +857,29 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   handleApprove(): void {
-    const note = this.decisionNotes.trim() || 'Approved Purchase Order #88319 under policy FIN-SEC-2024.';
-    const backendTaskId = this.taskService.tasks()[0]?.id;
+    const note = this.decisionNotes.trim() || 'Approved Purchase Order under policy FIN-SEC-2024.';
+    const selected = this.selectedItemId();
+    const backendTask = this.taskService.tasks().find(t => t.id === selected) || this.taskService.tasks()[0];
+    const targetId = backendTask?.id;
 
-    if (backendTaskId) {
-      this.taskService.approveTask(backendTaskId, note).subscribe({
+    if (targetId) {
+      this.taskService.approveTask(targetId, note).subscribe({
         next: () => {
-          this.showToast('PO Approved successfully! SHA-256 state transition broadcast to cluster.');
+          this.showToast('Task approved successfully! State transition broadcast to cluster.');
+          this.taskService.loadTasks().subscribe();
         },
-        error: () => {
-          this.showToast('PO Approved successfully! State transition broadcast to cluster.');
+        error: (err) => {
+          const errorMsg = err?.error?.message || err?.message || 'Erreur lors de l\'approbation de la tâche.';
+          this.showToast(`Échec d'approbation : ${errorMsg}`);
         }
       });
     } else {
-      this.showToast('PO Approved successfully! State transition broadcast to cluster.');
+      this.showToast('Aucune tâche active trouvée pour approbation.');
     }
   }
 
   handleReject(): void {
-    const reason = prompt('Please enter required rejection code or justification for the audit trail:');
-    if (!reason) return;
-
-    const backendTaskId = this.taskService.tasks()[0]?.id;
-    if (backendTaskId) {
-      this.taskService.rejectTask(backendTaskId, reason).subscribe({
-        next: () => {
-          this.showToast('Purchase Order rejected. Escalation event closed.');
-        },
-        error: () => {
-          this.showToast('Purchase Order rejected. Escalation event closed.');
-        }
-      });
-    } else {
-      this.showToast('Purchase Order rejected. Escalation event closed.');
-    }
+    this.openRejectModal();
   }
 
   handleRevision(): void {

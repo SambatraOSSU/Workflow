@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@a
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { UiStateService } from '../../../core/services/ui-state.service';
+import { ThemeService } from '../../../core/services/theme.service';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-topbar',
@@ -15,7 +17,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
           type="button"
           (click)="ui.toggleMobileSidebar()"
           class="lg:hidden p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container active:scale-95 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container shrink-0 transition-all cursor-pointer"
-          aria-label="Ouvrir le menu de navigation"
+          [attr.aria-label]="i18n.t().navCloseMenu"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -29,9 +31,9 @@ import { UiStateService } from '../../../core/services/ui-state.service';
           </svg>
           <input
             class="w-full h-10 pl-9 pr-12 rounded-lg bg-surface-container-low text-sm text-on-surface placeholder:text-outline border border-surface-container focus:outline-none focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
-            placeholder="Search workflows, runs, triggers (Cmd+K)..."
+            [placeholder]="i18n.t().topbarSearchPlaceholder"
             type="text"
-            aria-label="Rechercher des workflows ou des runs"
+            [attr.aria-label]="i18n.t().topbarSearchPlaceholder"
           />
           <kbd class="hidden sm:inline-block absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-surface-container-highest text-[11px] text-on-surface-variant font-mono font-medium border border-surface-container/60">⌘K</kbd>
         </div>
@@ -39,12 +41,98 @@ import { UiStateService } from '../../../core/services/ui-state.service';
         <!-- Vanguard Environment Cluster Status -->
         <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low border border-surface-container text-on-surface-variant text-xs shrink-0 select-none">
           <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <span class="text-on-surface font-medium text-[11px] tracking-wide">Production - US-East-1</span>
+          <span class="text-on-surface font-medium text-[11px] tracking-wide">{{ i18n.t().topbarClusterStatus }}</span>
         </div>
       </div>
 
       <!-- Action Buttons & User Profile -->
       <div class="flex items-center gap-2 sm:gap-space-md">
+        <!-- Global Quick Language Switcher -->
+        <div class="relative">
+          <button
+            type="button"
+            (click)="toggleLangMenu()"
+            class="h-9 px-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-surface-container shadow-xs"
+            [title]="i18n.currentLang() === 'fr' ? 'Langue : Français (fr-FR)' : 'Language: English (en-US)'"
+            aria-label="Changer la langue de l'application"
+            [attr.aria-expanded]="langMenuOpen()"
+            aria-haspopup="listbox"
+          >
+            <span class="text-base leading-none" aria-hidden="true">{{ i18n.currentLang() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
+            <span class="hidden sm:inline font-semibold text-xs">{{ i18n.currentLang() === 'fr' ? 'Français' : 'English (US)' }}</span>
+            <span class="sm:hidden font-bold text-[11px]">{{ i18n.currentLang() === 'fr' ? 'FR' : 'US' }}</span>
+            <svg class="w-3.5 h-3.5 text-outline transition-transform duration-200" [class.rotate-180]="langMenuOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+
+          @if (langMenuOpen()) {
+            <div (click)="closeLangMenu()" class="fixed inset-0 z-40" aria-hidden="true"></div>
+            <div role="listbox" aria-label="Langues disponibles" class="absolute right-0 top-11 w-44 rounded-xl bg-surface-container-lowest border border-surface-container shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+              <button
+                type="button"
+                role="option"
+                [attr.aria-selected]="i18n.currentLang() === 'fr'"
+                (click)="selectLanguage('fr')"
+                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold hover:bg-surface-container text-on-surface transition-colors cursor-pointer"
+                [class.bg-surface-container]="i18n.currentLang() === 'fr'"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-base leading-none">🇫🇷</span>
+                  <span>Français</span>
+                </div>
+                @if (i18n.currentLang() === 'fr') {
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                }
+              </button>
+
+              <button
+                type="button"
+                role="option"
+                [attr.aria-selected]="i18n.currentLang() === 'en'"
+                (click)="selectLanguage('en')"
+                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold hover:bg-surface-container text-on-surface transition-colors cursor-pointer mt-1"
+                [class.bg-surface-container]="i18n.currentLang() === 'en'"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-base leading-none">🇺🇸</span>
+                  <span>English (US)</span>
+                </div>
+                @if (i18n.currentLang() === 'en') {
+                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                }
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Global Quick Theme Switcher (Blanc / Noir) -->
+        <button
+          type="button"
+          (click)="theme.toggleTheme()"
+          class="h-9 w-9 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
+          [title]="theme.currentTheme() === 'light' ? i18n.t().topbarThemeDark : i18n.t().topbarThemeLight"
+          aria-label="Basculer le thème blanc/noir"
+        >
+          @if (theme.currentTheme() === 'light') {
+            <svg class="w-4 h-4 text-warning" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          } @else {
+            <svg class="w-4 h-4 text-info" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          }
+        </button>
+
         <!-- New Workflow CTA (Vanguard Primary Action: Secondary Accent Orange #FCA311 with #000000 text) -->
         <button
           type="button"
@@ -55,8 +143,8 @@ import { UiStateService } from '../../../core/services/ui-state.service';
             <line x1="12" x2="12" y1="5" y2="19"></line>
             <line x1="5" x2="19" y1="12" y2="12"></line>
           </svg>
-          <span class="hidden sm:inline">New Workflow</span>
-          <span class="sm:hidden">New</span>
+          <span class="hidden sm:inline">{{ i18n.t().topbarNewWorkflow }}</span>
+          <span class="sm:hidden">{{ i18n.t().topbarNewShort }}</span>
         </button>
 
         <!-- Notification Bell with Active Ping Indicator -->
@@ -64,8 +152,8 @@ import { UiStateService } from '../../../core/services/ui-state.service';
           type="button"
           (click)="onNotificationClick()"
           class="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container active:scale-95 rounded-lg cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary-container/30"
-          title="Notifications & Alertes"
-          aria-label="Notifications et alertes"
+          [title]="i18n.t().topbarNotificationsTitle"
+          [attr.aria-label]="i18n.t().topbarNotificationsTitle"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -139,7 +227,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
                   <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
-                <span>Paramètres système</span>
+                <span>{{ i18n.t().topbarSystemSettings }}</span>
               </button>
 
               <div class="my-1 border-t border-surface-container"></div>
@@ -154,7 +242,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
                   <polyline points="16 17 21 12 16 7"></polyline>
                   <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                <span>Déconnexion</span>
+                <span>{{ i18n.t().topbarLogout }}</span>
               </button>
             </div>
           }
@@ -167,9 +255,12 @@ import { UiStateService } from '../../../core/services/ui-state.service';
 export class TopbarComponent {
   protected readonly auth = inject(AuthService);
   protected readonly ui = inject(UiStateService);
+  protected readonly theme = inject(ThemeService);
+  protected readonly i18n = inject(I18nService);
   private readonly router = inject(Router);
 
   protected readonly menuOpen = signal(false);
+  protected readonly langMenuOpen = signal(false);
 
   protected readonly userInitials = computed(() => {
     const name = this.auth.currentUser()?.fullName;
@@ -180,11 +271,26 @@ export class TopbarComponent {
   });
 
   protected toggleMenu(): void {
+    this.langMenuOpen.set(false);
     this.menuOpen.update((v) => !v);
   }
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  protected toggleLangMenu(): void {
+    this.menuOpen.set(false);
+    this.langMenuOpen.update((v) => !v);
+  }
+
+  protected closeLangMenu(): void {
+    this.langMenuOpen.set(false);
+  }
+
+  protected selectLanguage(lang: 'fr' | 'en'): void {
+    this.i18n.setLanguage(lang);
+    this.closeLangMenu();
   }
 
   protected onNewWorkflow(): void {

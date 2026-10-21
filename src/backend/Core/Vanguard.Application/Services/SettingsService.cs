@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 using Vanguard.Application.Common.Interfaces;
@@ -10,7 +11,7 @@ namespace Vanguard.Application.Services;
 
 public class SettingsService : ISettingsService
 {
-    private static EngineSettingsDto _currentSettings = new();
+    private static readonly ConcurrentDictionary<Guid, EngineSettingsDto> _tenantSettings = new();
     private readonly IAuditRepository _auditRepository;
     private readonly ICurrentTenantService _currentTenantService;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,15 +28,17 @@ public class SettingsService : ISettingsService
 
     public Task<EngineSettingsDto> GetSettingsAsync(CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(_currentSettings);
+        var tenantId = _currentTenantService.TenantId ?? Guid.Empty;
+        var settings = _tenantSettings.GetOrAdd(tenantId, _ => new EngineSettingsDto());
+        return Task.FromResult(settings);
     }
 
     public async Task<EngineSettingsDto> UpdateSettingsAsync(EngineSettingsDto settings, CancellationToken cancellationToken = default)
     {
-        _currentSettings = settings;
+        var tenantId = _currentTenantService.TenantId ?? Guid.Empty;
+        _tenantSettings[tenantId] = settings;
 
         // Log this settings modification to the immutable audit ledger
-        var tenantId = _currentTenantService.TenantId ?? Guid.Empty;
         var previousHash = await _auditRepository.GetLastHashAsync(tenantId, cancellationToken);
 
         var details = $"{{\"action\":\"UpdateSettings\",\"timeout\":{settings.DefaultWorkflowTimeoutSeconds},\"concurrency\":{settings.MaxConcurrencyPerTenant},\"algorithm\":\"{settings.SignatureAlgorithm}\"}}";
@@ -60,7 +63,7 @@ public class SettingsService : ISettingsService
         await _auditRepository.AppendEntryAsync(entry, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return _currentSettings;
+        return settings;
     }
 
     public async Task<ActionResultDto> ExecuteDangerZoneActionAsync(string actionName, string justification, CancellationToken cancellationToken = default)

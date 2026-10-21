@@ -50,31 +50,6 @@ export class AuthService {
         if (res.success && res.data) {
           this.setSession(res.data);
         }
-      }),
-      catchError((err) => {
-        // Mode démonstration / hors-ligne si l'API backend n'est pas encore démarrée
-        if (err.status === 0 || err.status === 404) {
-          if (request.email && request.password) {
-            const mockData: LoginResponse = {
-              token: 'vanguard_demo_jwt_token_alexander_vance',
-              expiresAtUtc: new Date(Date.now() + 86400000).toISOString(),
-              userId: '22222222-2222-2222-2222-222222222222',
-              email: request.email,
-              fullName: request.email.includes('alexander') ? 'Alexander Vance' : 'Vanguard User',
-              role: 'OrgAdmin',
-              tenantId: '11111111-1111-1111-1111-111111111111',
-              tenantName: 'Vanguard HQ',
-              tenantSlug: 'vanguard-hq'
-            };
-            this.setSession(mockData);
-            return of({
-              success: true,
-              message: 'Connexion réussie (Session locale activée)',
-              data: mockData
-            });
-          }
-        }
-        return throwError(() => err);
       })
     );
   }
@@ -93,28 +68,6 @@ export class AuthService {
         if (res.success && res.data) {
           this.setSession(res.data);
         }
-      }),
-      catchError((err) => {
-        if (err.status === 0 || err.status === 404) {
-          const mockData: LoginResponse = {
-            token: `vanguard_tenant_jwt_${request.organizationSlug}`,
-            expiresAtUtc: new Date(Date.now() + 86400000).toISOString(),
-            userId: '33333333-3333-3333-3333-333333333333',
-            email: request.adminEmail,
-            fullName: request.adminFullName,
-            role: 'OrgAdmin',
-            tenantId: '44444444-4444-4444-4444-444444444444',
-            tenantName: request.organizationName,
-            tenantSlug: request.organizationSlug
-          };
-          this.setSession(mockData);
-          return of({
-            success: true,
-            message: 'Organisation initialisée avec succès (Session cluster activée)',
-            data: mockData
-          });
-        }
-        return throwError(() => err);
       })
     );
   }

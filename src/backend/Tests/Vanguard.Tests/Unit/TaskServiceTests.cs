@@ -1,3 +1,4 @@
+using Vanguard.Domain.Entities.Identity;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -400,5 +401,89 @@ public class TaskServiceTests
 
         // Assert
         result.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task RejectTaskAsync_AlreadyResolvedTask_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var taskId = Guid.NewGuid();
+        var execId = Guid.NewGuid();
+        var task = CreateSampleTask(taskId, execId, TaskStatus.Approved);
+
+        _taskRepoMock.Setup(r => r.GetByIdWithExecutionAsync(taskId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(task);
+
+        var request = new RejectTaskRequestDto("Rejected reason", "REJ01");
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _service.RejectTaskAsync(taskId, request, _userId));
+
+        ex.Message.Should().Contain("déjà été résolue");
+    }
+
+    [Fact]
+    public async Task DelegateTaskAsync_AlreadyResolvedTask_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var taskId = Guid.NewGuid();
+        var execId = Guid.NewGuid();
+        var task = CreateSampleTask(taskId, execId, TaskStatus.Rejected);
+
+        _taskRepoMock.Setup(r => r.GetByIdWithExecutionAsync(taskId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(task);
+
+        var request = new DelegateTaskRequestDto("colleague@vanguard.io", "Delegation note");
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _service.DelegateTaskAsync(taskId, request, _userId));
+
+        ex.Message.Should().Contain("déjà été résolue");
+    }
+
+    [Fact]
+    public async Task ApproveTaskAsync_WithUserRepository_ShouldUseUserEmailInAuditTrail()
+    {
+        // Arrange
+        var userRepoMock = new Mock<IUserRepository>();
+        var user = new User
+        {
+            Id = _userId,
+            TenantId = _tenantId,
+            Email = "auditor.real@vanguard.io",
+            FullName = "Real Auditor"
+        };
+        userRepoMock.Setup(u => u.GetByIdAsync(_userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
+
+        var serviceWithUser = new TaskService(
+            _taskRepoMock.Object,
+            _execRepoMock.Object,
+            _engineMock.Object,
+            _auditRepoMock.Object,
+            _tenantServiceMock.Object,
+            _uowMock.Object,
+            userRepoMock.Object
+        );
+
+        var taskId = Guid.NewGuid();
+        var execId = Guid.NewGuid();
+        var task = CreateSampleTask(taskId, execId, TaskStatus.Pending);
+
+        _taskRepoMock.Setup(r => r.GetByIdWithExecutionAsync(taskId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(task);
+
+        var request = new ApproveTaskRequestDto("Approved by real user", "WEBAUTHN_SIG_OK");
+
+        // Act
+        var result = await serviceWithUser.ApproveTaskAsync(taskId, request, _userId);
+
+        // Assert
+        result.Should().NotBeNull();
+        _auditRepoMock.Verify(a => a.AppendEntryAsync(It.Is<AuditLedgerEntry>(entry =>
+            entry.EventType == "TaskApproved" &&
+            entry.ActorEmail == "auditor.real@vanguard.io"), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

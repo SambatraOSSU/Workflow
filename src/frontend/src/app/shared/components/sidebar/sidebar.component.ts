@@ -1,7 +1,10 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { UiStateService } from '../../../core/services/ui-state.service';
+import { TaskService } from '../../../core/services/task.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -83,7 +86,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
                 <rect height="7" rx="1.5" width="7" x="14" y="14"></rect>
                 <rect height="7" rx="1.5" width="7" x="3" y="14"></rect>
               </svg>
-              <span class="text-sm">Dashboard</span>
+              <span class="text-sm">{{ i18n.t().navDashboard }}</span>
             </div>
           </a>
 
@@ -101,7 +104,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
                 <circle cx="18" cy="19" r="3"></circle>
                 <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-              <span class="text-sm">Workflows</span>
+              <span class="text-sm">{{ i18n.t().navWorkflows }}</span>
             </div>
           </a>
 
@@ -116,9 +119,9 @@ import { UiStateService } from '../../../core/services/ui-state.service';
               <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-              <span class="text-sm">Tasks</span>
+              <span class="text-sm">{{ i18n.t().navTasks }}</span>
             </div>
-            <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-secondary-container text-noir-text group-[.is-active]:bg-primary group-[.is-active]:text-pure-white transition-colors">14</span>
+            <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-secondary-container text-noir-text group-[.is-active]:bg-primary group-[.is-active]:text-pure-white transition-colors">{{ pendingTasksCount() }}</span>
           </a>
 
           <!-- Requests -->
@@ -132,7 +135,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
               <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-4.586a1 1 0 00-.707.293l-1.414 1.414a2 2 0 01-1.414.586h-3.172a2 2 0 01-1.414-.586l-1.414-1.414A1 1 0 006.586 13H2" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-              <span class="text-sm">Requests</span>
+              <span class="text-sm">{{ i18n.t().navRequests }}</span>
             </div>
           </a>
 
@@ -147,7 +150,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
               <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-              <span class="text-sm">Monitoring</span>
+              <span class="text-sm">{{ i18n.t().navMonitoring }}</span>
             </div>
           </a>
 
@@ -162,11 +165,11 @@ import { UiStateService } from '../../../core/services/ui-state.service';
               <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-              <span class="text-sm">Audit Center</span>
+              <span class="text-sm">{{ i18n.t().navAuditCenter }}</span>
             </div>
           </a>
 
-          <div class="pt-space-sm pb-space-xs px-space-sm text-[11px] font-bold text-on-primary-container/70 uppercase tracking-wider">Configuration</div>
+          <div class="pt-space-sm pb-space-xs px-space-sm text-[11px] font-bold text-on-primary-container/70 uppercase tracking-wider">{{ i18n.t().navConfiguration }}</div>
 
           <!-- Notifications -->
           <a
@@ -179,9 +182,9 @@ import { UiStateService } from '../../../core/services/ui-state.service';
               <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-              <span class="text-sm">Notifications</span>
+              <span class="text-sm">{{ i18n.t().navNotifications }}</span>
             </div>
-            <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-secondary-container text-noir-text group-[.is-active]:bg-primary group-[.is-active]:text-pure-white transition-colors">5</span>
+            <span class="px-2 py-0.5 rounded-full font-bold text-[11px] bg-secondary-container text-noir-text group-[.is-active]:bg-primary group-[.is-active]:text-pure-white transition-colors">{{ unreadNotificationsCount() }}</span>
           </a>
 
           <!-- Settings -->
@@ -196,7 +199,7 @@ import { UiStateService } from '../../../core/services/ui-state.service';
                 <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
-              <span class="text-sm">Settings</span>
+              <span class="text-sm">{{ i18n.t().navSettings }}</span>
             </div>
           </a>
         </nav>
@@ -206,12 +209,12 @@ import { UiStateService } from '../../../core/services/ui-state.service';
       <div class="p-space-md flex flex-col gap-space-xs bg-primary border-t border-white/10 select-none">
         <div class="flex items-center justify-between px-space-sm py-space-xs">
           <div class="flex flex-col">
-            <span class="text-[11px] text-on-primary-container">Cluster Health</span>
+            <span class="text-[11px] text-on-primary-container">{{ i18n.t().navClusterHealth }}</span>
             <span class="text-xs text-success font-semibold flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-success"></span> 99.99% Uptime
             </span>
           </div>
-          <span class="text-on-primary-container text-xs font-mono">24/24 Nodes</span>
+          <span class="text-on-primary-container text-xs font-mono">24/24 {{ i18n.t().navActiveNodes }}</span>
         </div>
         <div class="pt-space-xs mt-space-xs border-t border-white/10 flex items-center justify-between px-space-sm text-on-primary-container text-xs font-mono">
           <span>Tenant: {{ auth.tenantSlug() }}</span>
@@ -222,7 +225,36 @@ import { UiStateService } from '../../../core/services/ui-state.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   protected readonly auth = inject(AuthService);
   protected readonly ui = inject(UiStateService);
+  protected readonly taskService = inject(TaskService);
+  protected readonly notificationService = inject(NotificationService);
+  protected readonly i18n = inject(I18nService);
+
+  protected readonly pendingTasksCount = computed(() => {
+    const list = this.taskService.tasks();
+    return list.filter(t => t.status === 'Pending').length;
+  });
+
+  protected readonly unreadNotificationsCount = computed(() => {
+    const sum = this.notificationService.summary();
+    if (sum?.unreadCount !== undefined) {
+      return sum.unreadCount;
+    }
+    const notifs = this.notificationService.notifications();
+    if (notifs.length > 0) {
+      return notifs.filter(n => !n.isRead).length;
+    }
+    return 5;
+  });
+
+  ngOnInit(): void {
+    if (this.taskService.tasks().length === 0) {
+      this.taskService.loadTasks().subscribe();
+    }
+    if (!this.notificationService.summary()) {
+      this.notificationService.loadSummary().subscribe();
+    }
+  }
 }

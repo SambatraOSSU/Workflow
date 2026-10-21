@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@a
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-register',
@@ -32,11 +34,58 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
           </div>
 
-          <div class="flex items-center gap-space-xl">
-            <nav class="hidden md:flex items-center gap-space-xl">
-              <a routerLink="/login" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors font-semibold">Se connecter</a>
-              <a routerLink="/register" class="transition-colors text-primary font-bold">Demander une démo</a>
-            </nav>
+          <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Language Switcher -->
+            <button
+              type="button"
+              (click)="i18n.toggleLanguage()"
+              class="h-9 px-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-surface-container shadow-xs"
+              [title]="i18n.currentLang() === 'fr' ? 'Switch to English (en-US)' : 'Passer en Français (fr-FR)'"
+              aria-label="Changer la langue"
+            >
+              <span class="text-base leading-none" aria-hidden="true">{{ i18n.currentLang() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
+              <span class="hidden sm:inline font-semibold text-xs">{{ i18n.currentLang() === 'fr' ? 'Français' : 'English (US)' }}</span>
+              <span class="sm:hidden font-bold text-[11px]">{{ i18n.currentLang() === 'fr' ? 'FR' : 'US' }}</span>
+            </button>
+
+            <!-- Theme Switcher -->
+            <button
+              type="button"
+              (click)="theme.toggleTheme()"
+              class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
+              [title]="theme.currentTheme() === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair'"
+              aria-label="Basculer le thème blanc/noir"
+            >
+              @if (theme.currentTheme() === 'light') {
+                <svg class="w-4 h-4 text-warning" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              } @else {
+                <svg class="w-4 h-4 text-info" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              }
+            </button>
+
+            <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg bg-surface-container-low transition-colors">
+              Se connecter
+            </a>
+
+            <a routerLink="/register" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
+              Créer un compte
+            </a>
+
+
+
+
           </div>
         </div>
       </header>
@@ -113,6 +162,7 @@ import { AuthService } from '../../core/services/auth.service';
                   </li>
                 </ol>
               </nav>
+  
 
               <!-- Main Form Master Card -->
               <div class="w-full bg-surface-container-lowest rounded-xl shadow-md overflow-hidden flex flex-col border border-surface-container">
@@ -552,17 +602,19 @@ import { AuthService } from '../../core/services/auth.service';
                     <button
                       type="submit"
                       [disabled]="loading()"
-                      class="w-full md:w-auto min-w-[320px] h-12 px-space-2xl bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white rounded-lg font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-space-sm shadow-md hover:shadow-lg transition-all duration-150 transform active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                      [attr.aria-busy]="loading()"
+                      aria-live="polite"
+                      class="w-full md:w-auto min-w-[340px] h-[52px] min-h-[52px] px-space-2xl bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white rounded-lg font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all duration-150 transform active:scale-[0.99] cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
                     >
                       @if (loading()) {
-                        <svg class="w-5 h-5 animate-spin text-current" fill="none" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 animate-spin motion-reduce:animate-none text-current shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                         </svg>
-                        <span>Initialisation du cluster...</span>
+                        <span class="inline-block">Création du compte…</span>
                       } @else {
-                        <span>Demander une démo & Initialiser le Cluster</span>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+                        <span>Créer un compte</span>
+                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                           <polyline points="13 17 18 12 13 7"></polyline>
                           <polyline points="6 17 11 12 6 7"></polyline>
                         </svg>
@@ -683,6 +735,8 @@ import { AuthService } from '../../core/services/auth.service';
   `
 })
 export class RegisterComponent {
+  protected readonly theme = inject(ThemeService);
+  protected readonly i18n = inject(I18nService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -724,6 +778,10 @@ export class RegisterComponent {
   }
 
   protected onSubmit(): void {
+    if (this.loading()) {
+      return;
+    }
+
     if (!this.organizationName() || !this.organizationSlug() || !this.adminEmail() || !this.adminPassword() || !this.adminFullName()) {
       this.errorMessage.set('Veuillez compléter tous les champs obligatoires.');
       return;

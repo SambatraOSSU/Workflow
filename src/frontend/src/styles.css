@@ -89,3 +89,237 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==========================================================================
+   Infinite Horizontal Marquee (Défilement continu vers la gauche)
+   ========================================================================== */
+@keyframes marqueeScrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScrollLeft 24s linear infinite;
+  will-change: transform;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   Global Dark Theme Support (Thème Noir pour toute l'application)
+   ========================================================================== */
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark,
+html.dark body {
+  background-color: #090d16 !important;
+  color: #f3f4f6 !important;
+}
+
+html.dark .bg-surface,
+html.dark .bg-background {
+  background-color: #090d16 !important;
+}
+
+html.dark .bg-surface-container-lowest {
+  background-color: #111827 !important;
+  border-color: #1f2937 !important;
+}
+
+html.dark .bg-surface-container-low {
+  background-color: #0b0f19 !important;
+}
+
+html.dark .bg-surface-container {
+  background-color: #1a2233 !important;
+}
+
+html.dark .bg-surface-container-high {
+  background-color: #243047 !important;
+}
+
+html.dark .bg-surface-container-highest {
+  background-color: #2d3b57 !important;
+}
+
+/* Typography Semantic Tokens in Dark Mode */
+html.dark .text-primary {
+  color: #f3f4f6 !important;
+}
+
+html.dark .text-primary-container {
+  color: #b9c6ea !important;
+}
+
+html.dark .text-on-primary-fixed {
+  color: #d9e2ff !important;
+}
+
+html.dark .text-on-secondary-container {
+  color: #ffddb8 !important;
+}
+
+html.dark .text-on-surface {
+  color: #f3f4f6 !important;
+}
+
+html.dark .text-on-surface-variant {
+  color: #9ca3af !important;
+}
+
+html.dark .text-outline {
+  color: #64748b !important;
+}
+
+html.dark .text-outline-variant {
+  color: #4b5563 !important;
+}
+
+/* Interactive & Hover States */
+html.dark .hover\:text-primary:hover {
+  color: #ffffff !important;
+}
+
+html.dark a.text-primary:hover,
+html.dark button.text-primary:hover {
+  color: #ffa515 !important;
+}
+
+/* Borders and Dividers */
+html.dark .border-surface-container {
+  border-color: #1f2937 !important;
+}
+
+html.dark .border-surface-container-high {
+  border-color: #243047 !important;
+}
+
+html.dark .border-surface-container-highest {
+  border-color: #2d3b57 !important;
+}
+
+html.dark .border-outline-variant {
+  border-color: #1f2937 !important;
+}
+
+html.dark .border-outline {
+  border-color: #374151 !important;
+}
+
+html.dark .divide-surface-container > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1f2937 !important;
+}
+
+/* Form Controls, Inputs, Placeholders & Selects */
+html.dark input[type="text"],
+html.dark input[type="number"],
+html.dark input[type="password"],
+html.dark input[type="email"],
+html.dark input[type="search"],
+html.dark select,
+html.dark textarea {
+  background-color: #0b0f19 !important;
+  color: #f3f4f6 !important;
+  border-color: #1f2937 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+html.dark select option {
+  background-color: #111827 !important;
+  color: #f3f4f6 !important;
+}
+
+/* Buttons */
+html.dark .btn-vanguard-outline {
+  color: #f3f4f6 !important;
+  border-color: #1f2937 !important;
+}
+
+html.dark .btn-vanguard-outline:hover {
+  background-color: #1a2233 !important;
+}
+
+/* Headers and Shells */
+html.dark header.bg-surface-container-lowest\/90,
+html.dark header.bg-pure-white\/95,
+html.dark header.bg-pure-white\/90,
+html.dark header.bg-surface\/80,
+html.dark header {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  border-color: #1f2937 !important;
+}
+
+html.dark aside.bg-primary-container {
+  background-color: #0d1527 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Public & Landing Page Dark Mode Canvas / Cards */
+html.dark section.bg-pure-white {
+  background-color: #0b0f19 !important;
+}
+
+html.dark div.bg-pure-white:not(.rounded-full) {
+  background-color: #111827 !important;
+}
+
+html.dark span.bg-pure-white:not(.rounded-full) {
+  background-color: #1f2937 !important;
+  color: #f3f4f6 !important;
+}
+
+/* Tables */
+html.dark table thead th {
+  background-color: #0b0f19 !important;
+  color: #9ca3af !important;
+}
+
+html.dark table tbody tr:hover {
+  background-color: #162032 !important;
+}
+
+/* Vector Graphic and Code */
+html.dark .stroke-primary {
+  stroke: #93c5fd !important;
+}
+
+html.dark code.text-primary {
+  color: #fca311 !important;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

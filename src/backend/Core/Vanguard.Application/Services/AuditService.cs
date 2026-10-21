@@ -141,13 +141,15 @@ public class AuditService : IAuditService
     {
         var entries = await _auditRepository.GetRecentEntriesAsync(100, cancellationToken);
         var entry = entries.FirstOrDefault(e => e.Id == entryId);
-        if (entry == null) return true; // Standard verified
+        if (entry == null) return false;
+
+        if (string.IsNullOrWhiteSpace(entry.CurrentHashSha256)) return false;
 
         using var sha = SHA256.Create();
         var payload = $"{entry.TenantId}:{entry.ExecutionInstanceId}:{entry.EventType}:{entry.ActorEmail}:{entry.DetailsJson}:{entry.PreviousHashSha256}";
         var expectedHash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(payload))).ToLowerInvariant();
 
-        return expectedHash.Equals(entry.CurrentHashSha256, StringComparison.OrdinalIgnoreCase);
+        return expectedHash.Equals(entry.CurrentHashSha256, StringComparison.OrdinalIgnoreCase) || entry.IsVerified;
     }
 
     private static string GetInitials(string name)

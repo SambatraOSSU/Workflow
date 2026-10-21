@@ -46,7 +46,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
                 <div class="flex items-center gap-1.5 bg-surface-container px-space-sm py-1 rounded">
                   <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
                   <span class="font-medium text-on-surface">SHA-256 Merkle Root:</span>
-                  <span class="font-mono text-noir-text font-bold">{{ metrics()?.merkleRoot || '0x7f4b8a...c992' }}</span>
+                  <span class="font-mono text-on-surface font-bold">{{ metrics()?.merkleRoot || '0x7f4b8a...c992' }}</span>
                 </div>
                 <div class="flex items-center gap-1 text-outline">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
@@ -431,7 +431,7 @@ import { AuditLedgerEntry, ComplianceCertificate } from '../../core/models/audit
                       <td class="py-4 px-space-lg whitespace-nowrap">
                         <span
                           [ngClass]="{
-                            'bg-secondary-container/20 text-noir-text': entry.eventType.includes('Approval'),
+                            'bg-secondary-container/20 text-on-surface font-semibold': entry.eventType.includes('Approval'),
                             'bg-surface-container text-on-surface': !entry.eventType.includes('Approval') && !entry.eventType.includes('Blocked'),
                             'bg-error/15 text-error': entry.eventType.includes('Blocked')
                           }"

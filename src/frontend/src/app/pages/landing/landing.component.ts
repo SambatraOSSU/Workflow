@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { ThemeService } from '../../core/services/theme.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -35,7 +37,46 @@ import { RouterLink } from '@angular/router';
           </div>
 
           <!-- Actions -->
-          <div class="flex items-center gap-3 sm:gap-4">
+          <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Language Switcher -->
+            <button
+              type="button"
+              (click)="i18n.toggleLanguage()"
+              class="h-9 px-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-surface-container shadow-xs"
+              [title]="i18n.currentLang() === 'fr' ? 'Switch to English (en-US)' : 'Passer en Français (fr-FR)'"
+              aria-label="Changer la langue"
+            >
+              <span class="text-base leading-none" aria-hidden="true">{{ i18n.currentLang() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
+              <span class="hidden sm:inline font-semibold text-xs">{{ i18n.currentLang() === 'fr' ? 'Français' : 'English (US)' }}</span>
+              <span class="sm:hidden font-bold text-[11px]">{{ i18n.currentLang() === 'fr' ? 'FR' : 'US' }}</span>
+            </button>
+
+            <!-- Theme Switcher -->
+            <button
+              type="button"
+              (click)="theme.toggleTheme()"
+              class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
+              [title]="theme.currentTheme() === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair'"
+              aria-label="Basculer le thème blanc/noir"
+            >
+              @if (theme.currentTheme() === 'light') {
+                <svg class="w-4 h-4 text-warning" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              } @else {
+                <svg class="w-4 h-4 text-info" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              }
+            </button>
             <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg hover:bg-surface-container-low transition-colors">
               Connexion
             </a>
@@ -348,37 +389,73 @@ import { RouterLink } from '@angular/router';
             </div>
           </section>
 
-          <!-- SOCIAL PROOF / ENTERPRISE ADOPTION TICKER -->
-          <section class="w-full bg-pure-white py-space-3xl px-gutter-lg shadow-sm">
+          <!-- SOCIAL PROOF / ENTERPRISE ADOPTION TICKER (ANIMATION VERS LA GAUCHE) -->
+          <section class="w-full bg-pure-white dark:bg-[#111827] py-space-3xl px-gutter-lg shadow-sm border-y border-surface-container/40 dark:border-white/5 overflow-hidden">
             <div class="max-w-6xl mx-auto flex flex-col items-center">
               <p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold text-center mb-space-xl">
                 Propulsé au cœur des infrastructures financières et industrielles les plus exigeantes
               </p>
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-space-xl items-center w-full justify-items-center opacity-85">
-                <!-- Logo 1 -->
-                <div class="flex items-center gap-space-xs text-primary font-bold tracking-tight">
-                  <svg class="w-6 h-6 text-primary-container" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                  <span class="font-headline-sm text-headline-sm">APEX·BANK</span>
-                </div>
-                <!-- Logo 2 -->
-                <div class="flex items-center gap-space-xs text-primary font-bold tracking-tight">
-                  <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
-                  <span class="font-headline-sm text-headline-sm">AERODYN</span>
-                </div>
-                <!-- Logo 3 -->
-                <div class="flex items-center gap-space-xs text-primary font-bold tracking-tight">
-                  <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-                  <span class="font-headline-sm text-headline-sm">HEALTHTRUST</span>
-                </div>
-                <!-- Logo 4 -->
-                <div class="flex items-center gap-space-xs text-primary font-bold tracking-tight">
-                  <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect height="13" width="15" x="1" y="3"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                  <span class="font-headline-sm text-headline-sm">NORDIC LOG</span>
-                </div>
-                <!-- Logo 5 -->
-                <div class="flex items-center gap-space-xs text-primary font-bold tracking-tight">
-                  <svg class="w-6 h-6 text-secondary-container" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                  <span class="font-headline-sm text-headline-sm">FINVANTAGE</span>
+              
+              <!-- Infinite scrolling ticker to the left -->
+              <div class="ticker-wrapper w-full">
+                <div class="ticker-track flex items-center py-2">
+                  <!-- First Logo Set -->
+                  <div class="flex items-center gap-12 sm:gap-16 pr-12 sm:pr-16 shrink-0 opacity-85">
+                    <!-- Logo 1: APEX·BANK -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-primary-container dark:text-secondary-container" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                      <span class="font-headline-sm text-headline-sm">APEX·BANK</span>
+                    </div>
+                    <!-- Logo 2: AERODYN -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+                      <span class="font-headline-sm text-headline-sm">AERODYN</span>
+                    </div>
+                    <!-- Logo 3: HEALTHTRUST -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                      <span class="font-headline-sm text-headline-sm">HEALTHTRUST</span>
+                    </div>
+                    <!-- Logo 4: NORDIC LOG -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-primary dark:text-primary-fixed" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect height="13" width="15" x="1" y="3"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                      <span class="font-headline-sm text-headline-sm">NORDIC LOG</span>
+                    </div>
+                    <!-- Logo 5: FINVANTAGE -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-secondary-container" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                      <span class="font-headline-sm text-headline-sm">FINVANTAGE</span>
+                    </div>
+                  </div>
+
+                  <!-- Second Logo Set (Duplicate for seamless continuous looping) -->
+                  <div class="flex items-center gap-12 sm:gap-16 pr-12 sm:pr-16 shrink-0 opacity-85" aria-hidden="true">
+                    <!-- Logo 1: APEX·BANK -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-primary-container dark:text-secondary-container" fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                      <span class="font-headline-sm text-headline-sm">APEX·BANK</span>
+                    </div>
+                    <!-- Logo 2: AERODYN -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+                      <span class="font-headline-sm text-headline-sm">AERODYN</span>
+                    </div>
+                    <!-- Logo 3: HEALTHTRUST -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                      <span class="font-headline-sm text-headline-sm">HEALTHTRUST</span>
+                    </div>
+                    <!-- Logo 4: NORDIC LOG -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-primary dark:text-primary-fixed" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect height="13" width="15" x="1" y="3"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                      <span class="font-headline-sm text-headline-sm">NORDIC LOG</span>
+                    </div>
+                    <!-- Logo 5: FINVANTAGE -->
+                    <div class="flex items-center gap-space-xs text-primary dark:text-[#f3f4f6] font-bold tracking-tight shrink-0 hover:scale-105 transition-transform select-none">
+                      <svg class="w-6 h-6 text-secondary-container" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                      <span class="font-headline-sm text-headline-sm">FINVANTAGE</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -747,6 +824,8 @@ import { RouterLink } from '@angular/router';
   `
 })
 export class LandingComponent {
+  protected readonly theme = inject(ThemeService);
+  protected readonly i18n = inject(I18nService);
   protected readonly activeLifecycleTab = signal<'dev' | 'prod'>('dev');
   protected readonly zoomLevel = signal<number>(1.0);
   protected readonly isSimulating = signal<boolean>(false);

@@ -61,8 +61,8 @@ import { CreateWorkflowRequest, WorkflowSummary } from '../../core/models/workfl
               </svg>
               <input
                 type="text"
-                [(ngModel)]="searchQuery"
-                (ngModelChange)="onFilterChanged()"
+                [value]="searchQuery()"
+                (input)="searchQuery.set($any($event.target).value)"
                 placeholder="Search workflows by key, title, department..." aria-label="Rechercher des workflows"
                 class="w-full h-10 pl-9 pr-4 rounded-lg bg-surface-container-low text-caption text-on-surface placeholder:text-outline border border-transparent focus:border-outline-variant focus:bg-surface-container-lowest focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" />
             </div>

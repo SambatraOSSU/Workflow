@@ -19,6 +19,7 @@ public class TaskService : ITaskService
     private readonly IAuditRepository _auditRepository;
     private readonly ICurrentTenantService _currentTenantService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository? _userRepository;
 
     public TaskService(
         ITaskRepository taskRepository,
@@ -26,7 +27,8 @@ public class TaskService : ITaskService
         IWorkflowEngine workflowEngine,
         IAuditRepository auditRepository,
         ICurrentTenantService currentTenantService,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IUserRepository? userRepository = null)
     {
         _taskRepository = taskRepository;
         _executionRepository = executionRepository;
@@ -34,6 +36,20 @@ public class TaskService : ITaskService
         _auditRepository = auditRepository;
         _currentTenantService = currentTenantService;
         _unitOfWork = unitOfWork;
+        _userRepository = userRepository;
+    }
+
+    private async Task<string> ResolveActorEmailAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        if (_userRepository != null && userId != Guid.Empty)
+        {
+            var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+            if (user != null && !string.IsNullOrWhiteSpace(user.Email))
+            {
+                return user.Email;
+            }
+        }
+        return userId != Guid.Empty ? $"user-{userId.ToString()[..8]}@vanguard.io" : "system@vanguard.io";
     }
 
     public async Task<List<TaskSummaryDto>> GetTasksAsync(
@@ -142,7 +158,7 @@ public class TaskService : ITaskService
             TenantId = tenantId,
             ExecutionInstanceId = task.ExecutionInstanceId,
             EventType = "TaskApproved",
-            ActorEmail = "alexander.vance@vanguard.io",
+            ActorEmail = await ResolveActorEmailAsync(userId, cancellationToken),
             ActorRole = task.AssignedToRole ?? "Org Admin / CFO",
             DetailsJson = JsonSerializer.Serialize(new
             {
@@ -180,6 +196,11 @@ public class TaskService : ITaskService
             throw new KeyNotFoundException($"Tâche '{id}' introuvable.");
         }
 
+        if (task.Status != TaskStatus.Pending)
+        {
+            throw new InvalidOperationException("Cette tâche a déjà été résolue.");
+        }
+
         task.Status = TaskStatus.Rejected;
         task.ActionTakenAtUtc = DateTime.UtcNow;
         task.ActionTakenByUserId = userId;
@@ -202,7 +223,7 @@ public class TaskService : ITaskService
             TenantId = tenantId,
             ExecutionInstanceId = task.ExecutionInstanceId,
             EventType = "TaskRejected",
-            ActorEmail = "alexander.vance@vanguard.io",
+            ActorEmail = await ResolveActorEmailAsync(userId, cancellationToken),
             ActorRole = task.AssignedToRole ?? "Org Admin / CFO",
             DetailsJson = JsonSerializer.Serialize(new
             {
@@ -231,6 +252,12 @@ public class TaskService : ITaskService
             throw new KeyNotFoundException($"Tâche '{id}' introuvable.");
         }
 
+        if (task.Status != TaskStatus.Pending)
+        {
+            throw new InvalidOperationException("Cette tâche a déjà été résolue.");
+        }
+
+        task.Status = TaskStatus.Delegated;
         task.DecisionNotes = $"Délégué à {request.DelegateToUserEmail}. Note: {request.DelegateNotes}";
         _taskRepository.Update(task);
 
@@ -242,7 +269,7 @@ public class TaskService : ITaskService
             TenantId = tenantId,
             ExecutionInstanceId = task.ExecutionInstanceId,
             EventType = "TaskDelegated",
-            ActorEmail = "alexander.vance@vanguard.io",
+            ActorEmail = await ResolveActorEmailAsync(userId, cancellationToken),
             ActorRole = task.AssignedToRole ?? "Org Admin / CFO",
             DetailsJson = JsonSerializer.Serialize(new
             {

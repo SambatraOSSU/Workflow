@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, OnInit, computed } from '@angular/core';
+import { TaskService } from '../../core/services/task.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { RouterLink } from '@angular/router';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
@@ -130,7 +132,7 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
                 </div>
                 <div class="my-3 flex items-baseline gap-2">
                   <span class="text-3xl font-extrabold text-on-surface leading-none">142</span>
-                  <span class="text-xs text-warning font-bold">(14 urgents)</span>
+                  <span class="text-xs text-warning font-bold">({{ urgentTasksCount() }} urgents)</span>
                 </div>
                 <div class="flex items-center gap-1 text-xs text-on-surface-variant">
                   <svg class="w-4 h-4 text-warning" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -314,7 +316,7 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
                   <p class="text-xs text-on-surface-variant">Actions humaines requérant une décision sous politique SOX-404 et 4-Eyes.</p>
                 </div>
                 <a routerLink="/tasks" class="text-xs font-bold text-secondary hover:text-primary flex items-center gap-1 transition-colors">
-                  <span>Voir les 14 tâches</span>
+                  <span>{{ urgentTasksCount() === 1 ? 'Voir la tâche' : 'Voir les ' + urgentTasksCount() + ' tâches' }}</span>
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
@@ -394,7 +396,43 @@ import { TopbarComponent } from '../../shared/components/topbar/topbar.component
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  protected readonly taskService = inject(TaskService);
+  protected readonly notificationService = inject(NotificationService);
+
+  protected readonly urgentTasksCount = computed(() => {
+    const list = this.taskService.tasks();
+    return list.filter(t => 
+      (t.priority?.toLowerCase() === 'urgent' || t.priority?.toLowerCase() === 'critical') && 
+      t.status === 'Pending'
+    ).length;
+  });
+
+  protected readonly pendingTasksCount = computed(() => {
+    const list = this.taskService.tasks();
+    return list.filter(t => t.status === 'Pending').length;
+  });
+
+  protected readonly unreadNotificationsCount = computed(() => {
+    const sum = this.notificationService.summary();
+    if (sum?.unreadCount !== undefined) {
+      return sum.unreadCount;
+    }
+    const notifs = this.notificationService.notifications();
+    if (notifs.length > 0) {
+      return notifs.filter(n => !n.isRead).length;
+    }
+    return 5;
+  });
+
+  ngOnInit(): void {
+    if (this.taskService.tasks().length === 0) {
+      this.taskService.loadTasks().subscribe();
+    }
+    if (!this.notificationService.summary()) {
+      this.notificationService.loadSummary().subscribe();
+    }
+  }
   protected readonly selectedTimeframe = signal('24h');
   protected readonly selectedDepartment = signal('all');
   protected readonly showToast = signal(false);
