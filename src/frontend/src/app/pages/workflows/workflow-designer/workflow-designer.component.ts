@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject, signal, computed, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject, signal, computed, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -360,22 +360,10 @@ interface NodeTemplate {
           <!-- CENTER: WORKFLOW CANVAS & NODE GRAPH (FLEX-1)         -->
           <!-- ---------------------------------------------------- -->
           <main
-            class="flex-1 relative bg-pure-white overflow-hidden cursor-default select-none"
-            (mousemove)="onCanvasMouseMove($event)"
-            (mouseup)="onCanvasMouseUp()">
+            class="flex-1 relative bg-pure-white overflow-hidden cursor-default select-none">
             
-            <!-- DOTTED CANVAS GRID BACKGROUND (SVG Pattern) -->
-            <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-60" height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="canvas-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1" class="fill-outline-variant/60"></circle>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#canvas-grid)"></rect>
-            </svg>
-
             <!-- FLOATING CANVAS CONTROLS TOOLBAR -->
-            <div class="absolute top-4 left-6 z-20 flex items-center bg-surface-container-lowest/90 backdrop-blur-md rounded-xl p-1 shadow-md border border-surface-container-highest gap-1 text-on-surface">
+            <div class="absolute top-4 left-6 z-30 flex items-center bg-surface-container-lowest/90 backdrop-blur-md rounded-xl p-1 shadow-md border border-surface-container-highest gap-1 text-on-surface">
               <button
                 type="button"
                 (click)="isPanMode.set(false)"
@@ -423,7 +411,7 @@ interface NodeTemplate {
                 type="button"
                 (click)="resetZoom()"
                 class="p-2 rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors"
-                title="Fit to Screen">
+                title="Fit to Screen / Reset View">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
                 </svg>
@@ -444,7 +432,7 @@ interface NodeTemplate {
             </div>
 
             <!-- FLOATING CANVAS STATUS PILL -->
-            <div class="absolute bottom-4 left-6 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-lowest/95 backdrop-blur-md border border-surface-container-highest shadow-xs text-caption">
+            <div class="absolute bottom-4 left-6 z-30 flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-lowest/95 backdrop-blur-md border border-surface-container-highest shadow-xs text-caption">
               @if (validation()?.isValid !== false) {
                 <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
               } @else {
@@ -456,171 +444,263 @@ interface NodeTemplate {
 
             <!-- PENDING CONNECTION INDICATOR -->
             @if (connectingFromNodeId()) {
-              <div class="absolute top-4 right-6 z-20 px-3 py-1.5 rounded-lg bg-secondary-container text-noir-text text-caption font-bold shadow-md flex items-center gap-2 animate-pulse">
-                <span>Click destination node's input port to link</span>
-                <button (click)="cancelConnection()" class="underline text-xs ml-1">Cancel</button>
+              <div class="absolute top-4 right-6 z-30 px-3 py-1.5 rounded-lg bg-secondary-container text-noir-text text-caption font-bold shadow-md flex items-center gap-2 animate-pulse">
+                <span>Cliquez ou reliez au port d'entrée cible</span>
+                <button (click)="cancelConnection()" class="underline text-xs ml-1 hover:text-primary">Annuler (Échap)</button>
               </div>
             }
 
-            <!-- ================= VECTOR CONNECTORS (SVG EDGES) ================= -->
-            <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="arrow-navy" markerWidth="6" markerHeight="6" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
-                  <path d="M 0 1 L 8 5 L 0 9 z" class="fill-primary-container"></path>
-                </marker>
-                <marker id="arrow-orange" markerWidth="7" markerHeight="7" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
-                  <path d="M 0 1 L 8 5 L 0 9 z" class="fill-secondary-container"></path>
-                </marker>
-                <marker id="arrow-green" markerWidth="6" markerHeight="6" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
-                  <path d="M 0 1 L 8 5 L 0 9 z" class="fill-success"></path>
-                </marker>
-              </defs>
-
-              @for (edge of edges(); track edge.id) {
-                <path
-                  [attr.d]="computeBezierPath(edge)"
-                  fill="none"
-                  [class]="getEdgeClass(edge)"
-                  [attr.stroke-width]="getEdgeWidth(edge)"
-                  [attr.stroke-dasharray]="getEdgeDash(edge)"
-                  [attr.marker-end]="getEdgeMarker(edge)">
-                </path>
-              }
-            </svg>
-
-            <!-- ================= GRAPH NODES CONTAINER ================= -->
+            <!-- SCROLLABLE CANVAS VIEWPORT (Native smooth scroll in all directions) -->
             <div
-              class="relative w-full h-full overflow-auto p-12 transition-transform origin-top-left"
-              [style.transform]="'scale(' + zoomLevel() / 100 + ')'">
-              
-              @for (node of nodes(); track node.id) {
-                <div
-                  [id]="node.id"
-                  (mousedown)="startDragNode(node, $event)"
-                  (click)="selectNode(node, $event)"
-                  [class]="isSelected(node) 
-                    ? 'absolute w-64 bg-surface-container-lowest rounded-xl shadow-xl ring-2 ring-secondary-container z-20 cursor-move' 
-                    : 'absolute w-56 md:w-60 bg-surface-container-lowest rounded-xl shadow-md border border-surface-container-high transition-transform hover:-translate-y-0.5 z-10 cursor-move'"
-                  [style.left.px]="node.position.x"
-                  [style.top.px]="node.position.y">
+              #canvasScrollContainer
+              class="w-full h-full overflow-auto relative cursor-default"
+              (mousedown)="onCanvasMouseDown($event)"
+              (mousemove)="onCanvasMouseMove($event)"
+              (mouseup)="onCanvasMouseUp()">
 
-                  <!-- Input Port (Left) with enlarged hitbox -->
-                  @if (node.type !== 'trigger') {
-                    <div
-                      (click)="onInputPortClick(node, $event)"
-                      title="Connect target"
-                      class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center cursor-pointer z-30 group/port">
-                      <div
-                        [class]="connectingFromNodeId() ? 'w-4 h-4 rounded-full bg-secondary-container border-2 border-pure-white shadow-md ring-2 ring-secondary animate-bounce' : 'w-3.5 h-3.5 rounded-full bg-pure-white border-2 border-primary shadow-xs group-hover/port:scale-125 group-hover/port:border-secondary transition-transform'">
-                      </div>
-                    </div>
-                  }
+              <!-- UNIFIED CANVAS STAGE (Contains BOTH SVG Edges and HTML Nodes in the same coordinate space) -->
+              <div
+                #canvasStage
+                class="relative min-w-[3200px] min-h-[2000px] origin-top-left"
+                [style.transform]="'scale(' + zoomLevel() / 100 + ')'"
+                [style.cursor]="isPanMode() ? (isPanning ? 'grabbing' : 'grab') : 'default'">
 
-                  <!-- Active Selection Pill -->
-                  @if (isSelected(node)) {
-                    <div class="absolute -top-3 left-4 px-2.5 py-0.5 rounded-full bg-secondary-container text-noir-text font-label-sm text-[10px] font-black uppercase tracking-wider shadow-xs flex items-center gap-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-noir-text animate-ping"></span>
-                      ACTIVE SELECTED NODE
-                    </div>
-                  }
+                <!-- DOTTED CANVAS GRID BACKGROUND (Full Stage) -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-60" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="canvas-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                      <circle cx="2" cy="2" r="1" class="fill-outline-variant/60"></circle>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#canvas-grid)"></rect>
+                </svg>
 
-                  <!-- Node Header -->
-                  <div
-                    [class]="getNodeHeaderClass(node)">
-                    <div class="flex items-center gap-2">
-                      <span class="w-6 h-6 rounded-md bg-secondary-container text-noir-text flex items-center justify-center font-bold text-xs">
-                        @switch (node.type) {
-                          @case ('trigger') { ⚡ }
-                          @case ('gate') { ⇄ }
-                          @case ('task') { ✓ }
-                          @case ('integration') { ⚙ }
-                          @case ('end') { 🏁 }
-                          @default { • }
-                        }
-                      </span>
-                      <span class="font-label-sm text-caption font-bold tracking-wide uppercase">{{ node.id }}</span>
-                    </div>
+                <!-- VECTOR CONNECTORS (SVG EDGES) -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="arrow-navy" markerWidth="6" markerHeight="6" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
+                      <path d="M 0 1 L 8 5 L 0 9 z" class="fill-primary-container"></path>
+                    </marker>
+                    <marker id="arrow-orange" markerWidth="7" markerHeight="7" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
+                      <path d="M 0 1 L 8 5 L 0 9 z" class="fill-secondary-container"></path>
+                    </marker>
+                    <marker id="arrow-green" markerWidth="6" markerHeight="6" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
+                      <path d="M 0 1 L 8 5 L 0 9 z" class="fill-success"></path>
+                    </marker>
+                    <marker id="arrow-selected" markerWidth="7" markerHeight="7" refX="7" refY="5" viewBox="0 0 10 10" orient="auto-start-reverse">
+                      <path d="M 0 1 L 8 5 L 0 9 z" class="fill-secondary"></path>
+                    </marker>
+                  </defs>
 
-                    @if (node.type === 'trigger' || node.type === 'end') {
-                      <span class="w-2 h-2 rounded-full bg-success"></span>
-                    } @else if (node.type === 'gate') {
-                      <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-bold">IF / ELSE</span>
-                    } @else if (node.type === 'task') {
-                      <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-mono text-[10px] font-bold">
-                        {{ node.config?.consensusPolicy || 'Four-Eyes' }}
-                      </span>
+                  @for (edge of edges(); track edge.id) {
+                    <!-- Invisible hit-area path for easy edge selection -->
+                    <path
+                      [attr.d]="computeBezierPath(edge)"
+                      fill="none"
+                      stroke="transparent"
+                      stroke-width="18"
+                      class="pointer-events-auto cursor-pointer"
+                      (click)="selectEdge(edge, $event)">
+                    </path>
+
+                    <!-- Visible Edge Path -->
+                    <path
+                      [attr.d]="computeBezierPath(edge)"
+                      fill="none"
+                      [class]="getEdgeClass(edge)"
+                      [attr.stroke-width]="getEdgeWidth(edge)"
+                      [attr.stroke-dasharray]="getEdgeDash(edge)"
+                      [attr.marker-end]="getEdgeMarker(edge)"
+                      class="pointer-events-none transition-colors duration-150">
+                    </path>
+
+                    <!-- Edge Midpoint Label & Quick Delete Button -->
+                    @if (computeEdgeMidpoint(edge); as mid) {
+                      @if (edge.label || isEdgeSelected(edge)) {
+                        <g class="pointer-events-auto cursor-pointer" (click)="selectEdge(edge, $event)">
+                          <rect
+                            [attr.x]="mid.x - (isEdgeSelected(edge) ? 55 : 40)"
+                            [attr.y]="mid.y - 12"
+                            [attr.width]="isEdgeSelected(edge) ? 110 : 80"
+                            height="24"
+                            rx="12"
+                            [class]="isEdgeSelected(edge) ? 'fill-secondary-container stroke-secondary shadow-md' : 'fill-surface-container-lowest stroke-surface-container-highest shadow-xs'"
+                            stroke-width="1.5">
+                          </rect>
+                          <text
+                            [attr.x]="mid.x - (isEdgeSelected(edge) ? 10 : 0)"
+                            [attr.y]="mid.y + 4"
+                            text-anchor="middle"
+                            [class]="isEdgeSelected(edge) ? 'fill-noir-text text-[10px] font-mono font-bold select-none' : 'fill-on-surface text-[10px] font-mono font-medium select-none'">
+                            {{ edge.label || 'Liaison' }}
+                          </text>
+                          @if (isEdgeSelected(edge)) {
+                            <g (click)="deleteSelectedEdge($event)" class="cursor-pointer hover:opacity-80">
+                              <circle [attr.cx]="mid.x + 40" [attr.cy]="mid.y" r="8" class="fill-error"></circle>
+                              <text [attr.x]="mid.x + 40" [attr.y]="mid.y + 3.5" text-anchor="middle" class="fill-white text-[10px] font-bold">×</text>
+                            </g>
+                          }
+                        </g>
+                      }
                     }
-                  </div>
+                  }
 
-                  <!-- Node Body -->
-                  <div class="p-3">
-                    <h4 class="font-label-md text-caption font-bold text-on-surface leading-tight">
-                      {{ node.label }}
-                    </h4>
-                    <p class="text-[11px] text-on-surface-variant mt-0.5 line-clamp-1">
-                      {{ node.description || 'Configured step logic' }}
-                    </p>
+                  <!-- Rubber-band preview connection path during drawing -->
+                  @if (connectingFromNodeId() && connectionPreviewPos(); as previewPos) {
+                    <path
+                      [attr.d]="computePreviewBezierPath(connectingFromNodeId()!, previewPos)"
+                      fill="none"
+                      class="stroke-secondary stroke-[3] animate-pulse"
+                      stroke-dasharray="6 4"
+                      marker-end="url(#arrow-orange)">
+                    </path>
+                  }
+                </svg>
 
-                    <!-- Contextual snippet based on node type -->
-                    @if (node.type === 'trigger') {
-                      <div class="mt-2.5 p-2 rounded-lg bg-surface-container-low font-mono text-[11px] text-on-surface space-y-0.5">
-                        <div class="flex justify-between text-outline">
-                          <span class="font-sans">event</span>
-                          <span>{{ node.config?.eventName || 'po.created' }}</span>
+                <!-- GRAPH NODES LAYER -->
+                <div class="relative w-full h-full">
+                  @for (node of nodes(); track node.id) {
+                    <div
+                      [id]="node.id"
+                      (mousedown)="startDragNode(node, $event)"
+                      (click)="selectNode(node, $event)"
+                      [class]="isSelected(node) 
+                        ? 'absolute w-60 bg-surface-container-lowest rounded-xl shadow-xl ring-2 ring-secondary-container z-20 cursor-move' 
+                        : 'absolute w-60 bg-surface-container-lowest rounded-xl shadow-md border border-surface-container-high transition-transform hover:-translate-y-0.5 z-10 cursor-move'"
+                      [style.left.px]="node.position.x"
+                      [style.top.px]="node.position.y">
+
+                      <!-- Input Port (Left) with enlarged hitbox & reactive feedback -->
+                      @if (node.type !== 'trigger') {
+                        <div
+                          (click)="onInputPortClick(node, $event)"
+                          (mouseup)="onInputPortMouseUp(node, $event)"
+                          (mouseenter)="onInputPortMouseEnter(node)"
+                          (mouseleave)="onInputPortMouseLeave()"
+                          title="Port d'entrée (cible)"
+                          class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center cursor-pointer z-30 group/port">
+                          <div
+                            [class]="isConnectingTarget(node) 
+                              ? 'w-4 h-4 rounded-full bg-success border-2 border-pure-white shadow-md ring-4 ring-success/40 scale-125 transition-transform' 
+                              : connectingFromNodeId() 
+                                ? 'w-4 h-4 rounded-full bg-secondary-container border-2 border-pure-white shadow-md ring-2 ring-secondary animate-bounce' 
+                                : 'w-3.5 h-3.5 rounded-full bg-pure-white border-2 border-primary shadow-xs group-hover/port:scale-125 group-hover/port:border-secondary transition-transform'">
+                          </div>
                         </div>
-                        <div class="flex justify-between font-semibold">
-                          <span class="font-sans text-outline">amount</span>
-                          <span class="text-primary font-bold">$124,500.00</span>
+                      }
+
+                      <!-- Active Selection Pill -->
+                      @if (isSelected(node)) {
+                        <div class="absolute -top-3 left-4 px-2.5 py-0.5 rounded-full bg-secondary-container text-noir-text font-label-sm text-[10px] font-black uppercase tracking-wider shadow-xs flex items-center gap-1">
+                          <span class="w-1.5 h-1.5 rounded-full bg-noir-text animate-ping"></span>
+                          ACTIVE SELECTED NODE
                         </div>
+                      }
+
+                      <!-- Node Header -->
+                      <div [class]="getNodeHeaderClass(node)">
+                        <div class="flex items-center gap-2">
+                          <span class="w-6 h-6 rounded-md bg-secondary-container text-noir-text flex items-center justify-center font-bold text-xs">
+                            @switch (node.type) {
+                              @case ('trigger') { ⚡ }
+                              @case ('gate') { ⇄ }
+                              @case ('task') { ✓ }
+                              @case ('integration') { ⚙ }
+                              @case ('end') { 🏁 }
+                              @default { • }
+                            }
+                          </span>
+                          <span class="font-label-sm text-caption font-bold tracking-wide uppercase">{{ node.id }}</span>
+                        </div>
+
+                        @if (node.type === 'trigger' || node.type === 'end') {
+                          <span class="w-2 h-2 rounded-full bg-success"></span>
+                        } @else if (node.type === 'gate') {
+                          <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-bold">IF / ELSE</span>
+                        } @else if (node.type === 'task') {
+                          <span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-mono text-[10px] font-bold">
+                            {{ node.config?.consensusPolicy || 'Four-Eyes' }}
+                          </span>
+                        }
                       </div>
-                    } @else if (node.type === 'gate') {
-                      <div class="mt-2 p-1.5 rounded bg-primary/5 font-mono text-[11px] text-primary font-medium flex items-center gap-1">
-                        <span class="text-secondary font-bold">expr:</span>
-                        <span class="truncate">{{ node.config?.conditionExpression || 'amount > $50,000' }}</span>
-                      </div>
-                    } @else if (node.type === 'task') {
-                      <div class="mt-2.5 space-y-1.5 text-caption">
-                        <div class="flex items-center justify-between text-[11px]">
-                          <span class="text-outline">Assigned:</span>
-                          <span class="font-semibold text-primary truncate">A. Vance & S. Chen</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[11px]">
-                          <span class="text-outline">Target SLA:</span>
-                          <span class="font-mono text-warning font-semibold">{{ node.config?.targetSlaHours || 4 }}h (Strict)</span>
-                        </div>
-                        @if (node.config?.requireMfa) {
-                          <div class="flex items-center gap-1 text-[10px] text-success font-semibold pt-0.5">
-                            <svg class="w-3 h-3 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                              <rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
-                              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                            <span>FIDO2 WebAuthn Enforced</span>
+
+                      <!-- Node Body -->
+                      <div class="p-3">
+                        <h4 class="font-label-md text-caption font-bold text-on-surface leading-tight">
+                          {{ node.label }}
+                        </h4>
+                        <p class="text-[11px] text-on-surface-variant mt-0.5 line-clamp-1">
+                          {{ node.description || 'Configured step logic' }}
+                        </p>
+
+                        <!-- Contextual snippet based on node type -->
+                        @if (node.type === 'trigger') {
+                          <div class="mt-2.5 p-2 rounded-lg bg-surface-container-low font-mono text-[11px] text-on-surface space-y-0.5">
+                            <div class="flex justify-between text-outline">
+                              <span class="font-sans">event</span>
+                              <span>{{ node.config?.eventName || 'po.created' }}</span>
+                            </div>
+                            <div class="flex justify-between font-semibold">
+                              <span class="font-sans text-outline">amount</span>
+                              <span class="text-primary font-bold">$124,500.00</span>
+                            </div>
+                          </div>
+                        } @else if (node.type === 'gate') {
+                          <div class="mt-2 p-1.5 rounded bg-primary/5 font-mono text-[11px] text-primary font-medium flex items-center gap-1">
+                            <span class="text-secondary font-bold">expr:</span>
+                            <span class="truncate">{{ node.config?.conditionExpression || 'amount > $50,000' }}</span>
+                          </div>
+                        } @else if (node.type === 'task') {
+                          <div class="mt-2.5 space-y-1.5 text-caption">
+                            <div class="flex items-center justify-between text-[11px]">
+                              <span class="text-outline">Assigned:</span>
+                              <span class="font-semibold text-primary truncate">A. Vance & S. Chen</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[11px]">
+                              <span class="text-outline">Target SLA:</span>
+                              <span class="font-mono text-warning font-semibold">{{ node.config?.targetSlaHours || 4 }}h (Strict)</span>
+                            </div>
+                            @if (node.config?.requireMfa) {
+                              <div class="flex items-center gap-1 text-[10px] text-success font-semibold pt-0.5">
+                                <svg class="w-3 h-3 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                  <rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+                                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <span>FIDO2 WebAuthn Enforced</span>
+                              </div>
+                            }
+                          </div>
+                        } @else if (node.type === 'end') {
+                          <div class="mt-2.5 flex items-center gap-2 text-[11px] text-on-surface">
+                            <span class="px-2 py-0.5 rounded bg-surface-container font-mono text-outline">{{ node.config?.notificationTarget || '#procurement-exec' }}</span>
+                            <span class="text-success font-semibold flex items-center gap-1">
+                              <svg class="w-3 h-3 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                              Ready
+                            </span>
                           </div>
                         }
                       </div>
-                    } @else if (node.type === 'end') {
-                      <div class="mt-2.5 flex items-center gap-2 text-[11px] text-on-surface">
-                        <span class="px-2 py-0.5 rounded bg-surface-container font-mono text-outline">{{ node.config?.notificationTarget || '#procurement-exec' }}</span>
-                        <span class="text-success font-semibold flex items-center gap-1">
-                          <svg class="w-3 h-3 text-success" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                          Ready
-                        </span>
-                      </div>
-                    }
-                  </div>
 
-                  <!-- Output Port (Right) -->
-                  @if (node.type !== 'end') {
-                    <div
-                      (click)="onOutputPortClick(node, $event)"
-                      title="Click to draw connection"
-                      class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-pure-white border-2 border-primary shadow-xs hover:scale-125 transition-transform cursor-crosshair">
+                      <!-- Output Port (Right) with Drag-to-Connect and Click-to-Connect -->
+                      @if (node.type !== 'end') {
+                        <div
+                          (mousedown)="startConnecting(node, $event)"
+                          (click)="onOutputPortClick(node, $event)"
+                          title="Tirer ou cliquer pour créer une liaison"
+                          class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center cursor-crosshair z-30 group/outport">
+                          <div
+                            [class]="connectingFromNodeId() === node.id 
+                              ? 'w-4 h-4 rounded-full bg-secondary border-2 border-pure-white shadow-md ring-4 ring-secondary/40 scale-125' 
+                              : 'w-3.5 h-3.5 rounded-full bg-pure-white border-2 border-primary shadow-xs group-hover/outport:scale-125 group-hover/outport:border-secondary transition-transform'">
+                          </div>
+                        </div>
+                      }
                     </div>
                   }
                 </div>
-              }
+              </div>
             </div>
           </main>
 
@@ -890,6 +970,87 @@ interface NodeTemplate {
                   <span>Delete Node</span>
                 </button>
               </div>
+            } @else if (selectedEdge(); as selEdge) {
+              <!-- Inspector Header for Selected Edge -->
+              <div class="p-space-md border-b border-surface-container flex items-start justify-between bg-surface-container-low/30">
+                <div class="flex flex-col min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-mono text-[10px] font-bold uppercase">{{ selEdge.id }}</span>
+                    <span class="text-caption text-on-surface-variant">Liaison (Edge)</span>
+                  </div>
+                  <h2 class="text-body-lg font-bold text-primary mt-1 truncate">{{ selEdge.label || 'Liaison directe' }}</h2>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-[11px] font-bold flex-shrink-0">
+                  Active
+                </span>
+              </div>
+
+              <div class="flex-1 overflow-y-auto p-space-lg space-y-5">
+                <div>
+                  <label class="block text-caption font-bold text-on-surface uppercase tracking-wider mb-1.5">Libellé de la liaison</label>
+                  <input
+                    type="text"
+                    [value]="selEdge.label || ''"
+                    (input)="updateSelectedEdgeLabel($any($event.target).value)"
+                    class="w-full px-3 py-2 rounded-lg bg-surface-container-low border border-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary text-body-md text-on-surface font-mono"
+                    placeholder="Ex: True (> $50k), Validé...">
+                </div>
+
+                <div>
+                  <label class="block text-caption font-bold text-on-surface uppercase tracking-wider mb-1.5">Condition logique</label>
+                  <input
+                    type="text"
+                    [value]="selEdge.condition || ''"
+                    (input)="updateSelectedEdgeCondition($any($event.target).value)"
+                    class="w-full px-3 py-2 rounded-lg bg-surface-container-low border border-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary text-body-md text-on-surface font-mono"
+                    placeholder="Ex: amount > 50000">
+                </div>
+
+                <div>
+                  <label class="block text-caption font-bold text-on-surface uppercase tracking-wider mb-1.5">Style visuel</label>
+                  <select
+                    [value]="selEdge.style || 'navy'"
+                    (change)="updateSelectedEdgeStyle($any($event.target).value)"
+                    class="w-full px-3 py-2 rounded-lg bg-surface-container-low border border-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary text-body-md text-on-surface">
+                    <option value="navy">Primaire (Bleu Navy)</option>
+                    <option value="orange">Conditionnel (Orange)</option>
+                    <option value="green">Succès (Vert)</option>
+                    <option value="dashed">Pointillés (Dashed)</option>
+                  </select>
+                </div>
+
+                <div class="p-3 rounded-lg bg-surface-container-low border border-surface-container text-caption space-y-1">
+                  <div class="flex justify-between text-outline">
+                    <span>Source :</span>
+                    <span class="font-mono font-bold text-on-surface">{{ selEdge.from }}</span>
+                  </div>
+                  <div class="flex justify-between text-outline">
+                    <span>Cible :</span>
+                    <span class="font-mono font-bold text-on-surface">{{ selEdge.to }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inspector Actions Footer -->
+              <div class="p-space-md border-t border-surface-container bg-surface-container-low/40 flex items-center justify-between">
+                <button
+                  type="button"
+                  (click)="selectedEdgeId.set(null)"
+                  class="h-9 px-space-md rounded-lg hover:bg-surface-container text-on-surface-variant font-label-md text-caption font-medium transition-colors">
+                  Désélectionner
+                </button>
+
+                <button
+                  type="button"
+                  (click)="deleteSelectedEdge()"
+                  class="h-9 px-space-md rounded-lg hover:bg-error-container text-error font-label-md text-caption font-semibold flex items-center gap-1.5 transition-colors">
+                  <svg class="w-3.5 h-3.5 text-error" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  <span>Supprimer la liaison</span>
+                </button>
+              </div>
             } @else {
               <!-- Empty Inspector State -->
               <div class="p-space-xl flex flex-col items-center justify-center text-center h-full text-on-surface-variant">
@@ -1050,19 +1211,34 @@ export class WorkflowDesignerComponent implements OnInit {
   readonly workflow = this.workflowService.currentWorkflow;
   readonly validation = this.workflowService.validationResult;
 
+  @ViewChild('canvasScrollContainer') canvasScrollContainer?: ElementRef<HTMLElement>;
+  @ViewChild('canvasStage') canvasStage?: ElementRef<HTMLElement>;
+
   // Canvas State
   readonly nodes = signal<WorkflowNode[]>([]);
   readonly edges = signal<WorkflowEdge[]>([]);
   readonly selectedNodeId = signal<string | null>(null);
+  readonly selectedEdgeId = signal<string | null>(null);
   readonly zoomLevel = signal<number>(100);
   readonly isPanMode = signal<boolean>(false);
   readonly isSnapToGrid = signal<boolean>(true);
+
+  // Connection State
   readonly connectingFromNodeId = signal<string | null>(null);
+  readonly connectionPreviewPos = signal<{ x: number; y: number } | null>(null);
+  readonly hoveredTargetNodeId = signal<string | null>(null);
+  private isDraggingConnection = false;
 
   // Dragging State
   private isDraggingNode = false;
   private dragNodeId: string | null = null;
-  private dragOffset = { x: 0, y: 0 };
+  private dragStartMouse = { x: 0, y: 0 };
+  private dragStartNodePos = { x: 0, y: 0 };
+
+  // Panning State
+  isPanning = false;
+  private panStartMouse = { x: 0, y: 0 };
+  private panStartScroll = { x: 0, y: 0 };
 
   // Inspector State
   readonly inspectorTab = signal<'config' | 'rules' | 'schema'>('config');
@@ -1082,6 +1258,12 @@ export class WorkflowDesignerComponent implements OnInit {
     const id = this.selectedNodeId();
     if (!id) return null;
     return this.nodes().find(n => n.id === id) || null;
+  });
+
+  readonly selectedEdge = computed(() => {
+    const id = this.selectedEdgeId();
+    if (!id) return null;
+    return this.edges().find(e => e.id === id) || null;
   });
 
   readonly topologyText = computed(() => {
