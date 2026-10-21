@@ -122,6 +122,39 @@
 }
 
 /* ==========================================================================
+   Workflow DAG Vector Cable Pulse (Animation de flux de données)
+   ========================================================================== */
+@keyframes cablePulse {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-cable-pulse {
+  stroke-dasharray: 6 6;
+  animation: cablePulse 0.8s linear infinite;
+}
+
+/* Smooth mobile drawer transition */
+.drawer-enter {
+  animation: drawerEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawerEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
    Global Dark Theme Support (Thème Noir pour toute l'application)
    ========================================================================== */
 html {
