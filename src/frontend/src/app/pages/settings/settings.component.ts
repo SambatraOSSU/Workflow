@@ -226,23 +226,35 @@ interface TranslationStrings {
 
             <!-- Global Quick Switchers & Actions -->
             <div class="flex flex-wrap items-center gap-space-sm self-start xl:self-center shrink-0">
-              <!-- Quick Language Switcher Button -->
-              <button
-                type="button"
-                (click)="toggleLanguage()"
-                class="flex items-center gap-space-xs px-3.5 py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md font-semibold transition-colors shadow-sm cursor-pointer border border-surface-container"
-                [title]="currentLanguage() === 'fr' ? 'Changer en anglais' : 'Switch to French'"
-                aria-label="Basculer la langue"
-              >
-                <span class="text-base">{{ currentLanguage() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
-                <span>{{ currentLanguage() === 'fr' ? 'Français' : 'English (US)' }}</span>
-              </button>
+              <!-- Quick Language Switcher (FR / EN) -->
+              <div class="h-10 inline-flex items-center p-0.5 rounded-lg bg-surface-container border border-surface-container shadow-xs">
+                <button
+                  type="button"
+                  (click)="setLanguage('fr')"
+                  class="h-full px-3 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                  [class]="currentLanguage() === 'fr' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+                  title="Passer en Français"
+                >
+                  <span class="text-sm leading-none" aria-hidden="true">🇫🇷</span>
+                  <span class="leading-none text-xs">FR</span>
+                </button>
+                <button
+                  type="button"
+                  (click)="setLanguage('en')"
+                  class="h-full px-3 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                  [class]="currentLanguage() === 'en' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+                  title="Switch to English"
+                >
+                  <span class="text-sm leading-none" aria-hidden="true">🇺🇸</span>
+                  <span class="leading-none text-xs">EN</span>
+                </button>
+              </div>
 
               <!-- Quick Theme Switcher Button (Blanc / Noir) -->
               <button
                 type="button"
                 (click)="toggleTheme()"
-                class="flex items-center gap-space-xs px-3.5 py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md font-semibold transition-colors shadow-sm cursor-pointer border border-surface-container"
+                class="h-10 inline-flex items-center gap-space-xs px-3.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md font-semibold transition-colors shadow-sm cursor-pointer border border-surface-container"
                 [title]="currentTheme() === 'light' ? 'Activer le thème noir' : 'Activer le thème blanc'"
                 aria-label="Basculer le thème blanc/noir"
               >

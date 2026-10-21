@@ -47,70 +47,37 @@ import { I18nService } from '../../../core/services/i18n.service';
 
       <!-- Action Buttons & User Profile -->
       <div class="flex items-center gap-2 sm:gap-space-md">
-        <!-- Global Quick Language Switcher -->
-        <div class="relative">
+        <!-- Global Quick Language Switcher (FR / EN Segmented Toggle) -->
+        <div class="h-9 inline-flex items-center p-0.5 rounded-lg bg-surface-container border border-surface-container shadow-xs">
           <button
             type="button"
-            (click)="toggleLangMenu()"
-            class="h-9 px-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-surface-container shadow-xs"
-            [title]="i18n.currentLang() === 'fr' ? 'Langue : Français (fr-FR)' : 'Language: English (en-US)'"
-            aria-label="Changer la langue de l'application"
-            [attr.aria-expanded]="langMenuOpen()"
-            aria-haspopup="listbox"
+            (click)="selectLanguage('fr')"
+            class="h-full px-2 sm:px-2.5 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+            [class]="i18n.currentLang() === 'fr' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+            title="Français (fr-FR)"
+            aria-label="Passer en Français"
           >
-            <span class="text-base leading-none" aria-hidden="true">{{ i18n.currentLang() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
-            <span class="hidden sm:inline font-semibold text-xs">{{ i18n.currentLang() === 'fr' ? 'Français' : 'English (US)' }}</span>
-            <span class="sm:hidden font-bold text-[11px]">{{ i18n.currentLang() === 'fr' ? 'FR' : 'US' }}</span>
-            <svg class="w-3.5 h-3.5 text-outline transition-transform duration-200" [class.rotate-180]="langMenuOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
+            <span class="text-xs leading-none" aria-hidden="true">🇫🇷</span>
+            <span class="leading-none text-xs">FR</span>
           </button>
-
-          @if (langMenuOpen()) {
-            <div (click)="closeLangMenu()" class="fixed inset-0 z-40" aria-hidden="true"></div>
-            <div role="listbox" aria-label="Langues disponibles" class="absolute right-0 top-11 w-44 rounded-xl bg-surface-container-lowest border border-surface-container shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
-              <button
-                type="button"
-                role="option"
-                [attr.aria-selected]="i18n.currentLang() === 'fr'"
-                (click)="selectLanguage('fr')"
-                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold hover:bg-surface-container text-on-surface transition-colors cursor-pointer"
-                [class.bg-surface-container]="i18n.currentLang() === 'fr'"
-              >
-                <div class="flex items-center gap-2">
-                  <span class="text-base leading-none">🇫🇷</span>
-                  <span>Français</span>
-                </div>
-                @if (i18n.currentLang() === 'fr') {
-                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                }
-              </button>
-
-              <button
-                type="button"
-                role="option"
-                [attr.aria-selected]="i18n.currentLang() === 'en'"
-                (click)="selectLanguage('en')"
-                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold hover:bg-surface-container text-on-surface transition-colors cursor-pointer mt-1"
-                [class.bg-surface-container]="i18n.currentLang() === 'en'"
-              >
-                <div class="flex items-center gap-2">
-                  <span class="text-base leading-none">🇺🇸</span>
-                  <span>English (US)</span>
-                </div>
-                @if (i18n.currentLang() === 'en') {
-                  <svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                }
-              </button>
-            </div>
-          }
+          <button
+            type="button"
+            (click)="selectLanguage('en')"
+            class="h-full px-2 sm:px-2.5 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+            [class]="i18n.currentLang() === 'en' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+            title="English (en-US)"
+            aria-label="Switch to English"
+          >
+            <span class="text-xs leading-none" aria-hidden="true">🇺🇸</span>
+            <span class="leading-none text-xs">EN</span>
+          </button>
         </div>
 
         <!-- Global Quick Theme Switcher (Blanc / Noir) -->
         <button
           type="button"
           (click)="theme.toggleTheme()"
-          class="h-9 w-9 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
+          class="h-9 w-9 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface inline-flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
           [title]="theme.currentTheme() === 'light' ? i18n.t().topbarThemeDark : i18n.t().topbarThemeLight"
           aria-label="Basculer le thème blanc/noir"
         >
@@ -137,7 +104,7 @@ import { I18nService } from '../../../core/services/i18n.service';
         <button
           type="button"
           (click)="onNewWorkflow()"
-          class="h-9 sm:h-10 px-3.5 sm:px-4 rounded-lg bg-secondary hover:bg-secondary-hover active:scale-[0.98] text-noir-text font-bold text-xs sm:text-sm flex items-center gap-2 transition-all duration-150 shadow-xs hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 cursor-pointer"
+          class="h-9 px-3.5 sm:px-4 rounded-lg bg-secondary hover:bg-secondary-hover active:scale-[0.98] text-noir-text font-bold text-xs sm:text-sm inline-flex items-center gap-2 transition-all duration-150 shadow-xs hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 cursor-pointer"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <line x1="12" x2="12" y1="5" y2="19"></line>
@@ -151,11 +118,11 @@ import { I18nService } from '../../../core/services/i18n.service';
         <button
           type="button"
           (click)="onNotificationClick()"
-          class="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container active:scale-95 rounded-lg cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary-container/30"
+          class="h-9 w-9 relative inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container active:scale-95 rounded-lg cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary-container/30"
           [title]="i18n.t().topbarNotificationsTitle"
           [attr.aria-label]="i18n.t().topbarNotificationsTitle"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
           </svg>
@@ -177,16 +144,16 @@ import { I18nService } from '../../../core/services/i18n.service';
             (keydown.space)="toggleMenu()"
             [attr.aria-expanded]="menuOpen()"
             aria-haspopup="true"
-            class="flex items-center gap-space-sm cursor-pointer group p-1.5 rounded-lg hover:bg-surface-container/60 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container/30"
+            class="h-9 inline-flex items-center gap-space-sm cursor-pointer group px-2 rounded-lg hover:bg-surface-container/60 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container/30"
           >
-            <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs ring-2 ring-primary/10 shadow-sm shrink-0">
+            <div class="w-7 h-7 rounded-full bg-primary-container text-secondary-container flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-surface-container-lowest">
               {{ userInitials() }}
             </div>
-            <div class="hidden xl:flex flex-col text-left">
-              <span class="text-xs font-semibold text-on-surface leading-tight group-hover:text-primary transition-colors">
+            <div class="hidden md:flex flex-col text-left leading-none">
+              <span class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">
                 {{ auth.currentUser()?.fullName ?? 'Alexander Vance' }}
               </span>
-              <span class="text-[11px] text-on-surface-variant leading-none mt-0.5">
+              <span class="text-[10px] text-on-surface-variant mt-0.5">
                 {{ auth.currentUser()?.role ?? 'Org Admin' }}
               </span>
             </div>

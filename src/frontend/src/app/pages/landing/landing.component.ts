@@ -38,24 +38,37 @@ import { RouterLink } from '@angular/router';
 
           <!-- Actions -->
           <div class="flex items-center gap-2 sm:gap-3">
-            <!-- Language Switcher -->
-            <button
-              type="button"
-              (click)="i18n.toggleLanguage()"
-              class="h-9 px-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-surface-container shadow-xs"
-              [title]="i18n.currentLang() === 'fr' ? 'Switch to English (en-US)' : 'Passer en Français (fr-FR)'"
-              aria-label="Changer la langue"
-            >
-              <span class="text-base leading-none" aria-hidden="true">{{ i18n.currentLang() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
-              <span class="hidden sm:inline font-semibold text-xs">{{ i18n.currentLang() === 'fr' ? 'Français' : 'English (US)' }}</span>
-              <span class="sm:hidden font-bold text-[11px]">{{ i18n.currentLang() === 'fr' ? 'FR' : 'US' }}</span>
-            </button>
+            <!-- Language Switcher (FR / EN) -->
+            <div class="h-9 inline-flex items-center p-0.5 rounded-lg bg-surface-container-low border border-surface-container shadow-xs">
+              <button
+                type="button"
+                (click)="i18n.setLanguage('fr')"
+                class="h-full px-2 sm:px-2.5 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                [class]="i18n.currentLang() === 'fr' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+                title="Passer en Français"
+                aria-label="Passer en Français"
+              >
+                <span class="text-xs leading-none" aria-hidden="true">🇫🇷</span>
+                <span class="leading-none text-xs">FR</span>
+              </button>
+              <button
+                type="button"
+                (click)="i18n.setLanguage('en')"
+                class="h-full px-2 sm:px-2.5 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                [class]="i18n.currentLang() === 'en' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+                title="Switch to English"
+                aria-label="Switch to English"
+              >
+                <span class="text-xs leading-none" aria-hidden="true">🇺🇸</span>
+                <span class="leading-none text-xs">EN</span>
+              </button>
+            </div>
 
-            <!-- Theme Switcher -->
+            <!-- Theme Switcher (Blanc / Noir) -->
             <button
               type="button"
               (click)="theme.toggleTheme()"
-              class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
+              class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface inline-flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
               [title]="theme.currentTheme() === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair'"
               aria-label="Basculer le thème blanc/noir"
             >
@@ -77,12 +90,15 @@ import { RouterLink } from '@angular/router';
                 </svg>
               }
             </button>
-            <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg hover:bg-surface-container-low transition-colors">
+
+            <!-- Connexion Link -->
+            <a routerLink="/login" class="h-9 inline-flex items-center justify-center px-3.5 rounded-lg text-sm font-semibold text-primary hover:text-secondary-container hover:bg-surface-container-low transition-colors">
               Connexion
             </a>
 
-            <a routerLink="/register" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
-              Demander une démo
+            <!-- Créer un compte Button -->
+            <a routerLink="/register" class="h-9 inline-flex items-center justify-center px-4 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
+              Créer un compte
             </a>
           </div>
         </div>
@@ -109,7 +125,7 @@ import { RouterLink } from '@angular/router';
               <!-- Action CTAs -->
               <div class="flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md mb-space-2xl">
                 <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-space-sm rounded-lg bg-secondary-container text-noir-text font-label-md text-label-md font-bold shadow-md hover:bg-secondary-fixed-dim transition-all">
-                  <span>Demander une démo</span>
+                  <span>Créer un compte</span>
                   <svg class="w-4 h-4 text-noir-text" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
                     <line x1="5" x2="19" y1="12" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -119,7 +135,7 @@ import { RouterLink } from '@angular/router';
                   <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
                   </svg>
-                  <span>Se connecter / Démo interactive</span>
+                  <span>Se connecter</span>
                 </a>
               </div>
 
@@ -709,7 +725,7 @@ import { RouterLink } from '@angular/router';
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full max-w-lg mb-10 sm:mb-12">
                   <a routerLink="/register" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#ffa515] to-[#fca311] text-[#000a24] font-semibold text-sm shadow-[0_4px_20px_rgba(252,163,17,0.25)] hover:shadow-[0_6px_28px_rgba(252,163,17,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group">
-                    <span>Demander une démonstration privée</span>
+                    <span>Créer un compte</span>
                     <svg class="w-4 h-4 text-[#000a24] group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                   </a>
                   <a routerLink="/workflows" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.07] hover:bg-white/[0.12] text-white border border-white/15 font-semibold text-sm backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200">

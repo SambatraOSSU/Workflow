@@ -35,24 +35,37 @@ import { I18nService } from '../../core/services/i18n.service';
           </div>
 
           <div class="flex items-center gap-2 sm:gap-3">
-            <!-- Language Switcher -->
-            <button
-              type="button"
-              (click)="i18n.toggleLanguage()"
-              class="h-9 px-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-surface-container shadow-xs"
-              [title]="i18n.currentLang() === 'fr' ? 'Switch to English (en-US)' : 'Passer en Français (fr-FR)'"
-              aria-label="Changer la langue"
-            >
-              <span class="text-base leading-none" aria-hidden="true">{{ i18n.currentLang() === 'fr' ? '🇫🇷' : '🇺🇸' }}</span>
-              <span class="hidden sm:inline font-semibold text-xs">{{ i18n.currentLang() === 'fr' ? 'Français' : 'English (US)' }}</span>
-              <span class="sm:hidden font-bold text-[11px]">{{ i18n.currentLang() === 'fr' ? 'FR' : 'US' }}</span>
-            </button>
+            <!-- Language Switcher (FR / EN) -->
+            <div class="h-9 inline-flex items-center p-0.5 rounded-lg bg-surface-container-low border border-surface-container shadow-xs">
+              <button
+                type="button"
+                (click)="i18n.setLanguage('fr')"
+                class="h-full px-2 sm:px-2.5 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                [class]="i18n.currentLang() === 'fr' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+                title="Passer en Français"
+                aria-label="Passer en Français"
+              >
+                <span class="text-xs leading-none" aria-hidden="true">🇫🇷</span>
+                <span class="leading-none text-xs">FR</span>
+              </button>
+              <button
+                type="button"
+                (click)="i18n.setLanguage('en')"
+                class="h-full px-2 sm:px-2.5 rounded-md text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                [class]="i18n.currentLang() === 'en' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
+                title="Switch to English"
+                aria-label="Switch to English"
+              >
+                <span class="text-xs leading-none" aria-hidden="true">🇺🇸</span>
+                <span class="leading-none text-xs">EN</span>
+              </button>
+            </div>
 
-            <!-- Theme Switcher -->
+            <!-- Theme Switcher (Blanc / Noir) -->
             <button
               type="button"
               (click)="theme.toggleTheme()"
-              class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
+              class="h-9 w-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface inline-flex items-center justify-center transition-colors cursor-pointer border border-surface-container shadow-xs"
               [title]="theme.currentTheme() === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair'"
               aria-label="Basculer le thème blanc/noir"
             >
@@ -75,17 +88,15 @@ import { I18nService } from '../../core/services/i18n.service';
               }
             </button>
 
-            <a routerLink="/login" class="text-sm font-semibold text-primary hover:text-secondary-container px-3 py-2 rounded-lg bg-surface-container-low transition-colors">
+            <!-- Connexion Link -->
+            <a routerLink="/login" class="h-9 inline-flex items-center justify-center px-3.5 rounded-lg text-sm font-semibold text-primary hover:text-secondary-container hover:bg-surface-container-low transition-colors">
               Se connecter
             </a>
 
-            <a routerLink="/register" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
+            <!-- Créer un compte Button -->
+            <a routerLink="/register" class="h-9 inline-flex items-center justify-center px-4 rounded-lg bg-secondary-container hover:bg-secondary text-noir-text hover:text-pure-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all">
               Créer un compte
             </a>
-
-
-
-
           </div>
         </div>
       </header>
@@ -176,7 +187,7 @@ import { I18nService } from '../../core/services/i18n.service';
                       </span>
                       <span class="text-on-primary-container font-caption text-caption">· Architecture Isolation Spec 4.2</span>
                     </div>
-                    <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight font-bold">Demander une démo Enterprise</h1>
+                    <h1 class="font-headline-lg text-headline-lg text-pure-white tracking-tight font-bold">Créer un compte Enterprise</h1>
                     <p class="font-body-md text-body-md text-on-primary-container leading-relaxed">
                       Deploy your dedicated workflow orchestration cluster with isolated cryptographic enclaves, zero-trust state verification, and single-tenant memory spaces.
                     </p>
