@@ -235,7 +235,11 @@ interface TranslationStrings {
                   [class]="currentLanguage() === 'fr' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
                   title="Passer en Français"
                 >
-                  <span class="text-sm leading-none" aria-hidden="true">🇫🇷</span>
+                  <svg class="w-4 h-2.5 rounded-[2px] shadow-xs shrink-0 overflow-hidden border border-black/10 inline-block align-middle" viewBox="0 0 640 480" aria-hidden="true">
+                  <path fill="#fff" d="M0 0h640v480H0z"/>
+                  <path fill="#00267f" d="M0 0h213.3v480H0z"/>
+                  <path fill="#f31830" d="M426.7 0H640v480H426.7z"/>
+                </svg>
                   <span class="leading-none text-xs">FR</span>
                 </button>
                 <button
@@ -245,7 +249,20 @@ interface TranslationStrings {
                   [class]="currentLanguage() === 'en' ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'"
                   title="Switch to English"
                 >
-                  <span class="text-sm leading-none" aria-hidden="true">🇺🇸</span>
+                  <svg class="w-4 h-2.5 rounded-[2px] shadow-xs shrink-0 overflow-hidden border border-black/10 inline-block align-middle" viewBox="0 0 640 480" aria-hidden="true">
+                  <path fill="#b22234" d="M0 0h640v480H0z"/>
+                  <path stroke="#fff" stroke-width="37" d="M0 55.5h640M0 129.5h640M0 203.5h640M0 277.5h640M0 351.5h640M0 425.5h640"/>
+                  <path fill="#3c3b6e" d="M0 0h260v259H0z"/>
+                  <g fill="#fff">
+                    <circle cx="30" cy="25" r="7"/><circle cx="70" cy="25" r="7"/><circle cx="110" cy="25" r="7"/><circle cx="150" cy="25" r="7"/><circle cx="190" cy="25" r="7"/><circle cx="230" cy="25" r="7"/>
+                    <circle cx="50" cy="60" r="7"/><circle cx="90" cy="60" r="7"/><circle cx="130" cy="60" r="7"/><circle cx="170" cy="60" r="7"/><circle cx="210" cy="60" r="7"/>
+                    <circle cx="30" cy="95" r="7"/><circle cx="70" cy="95" r="7"/><circle cx="110" cy="95" r="7"/><circle cx="150" cy="95" r="7"/><circle cx="190" cy="95" r="7"/><circle cx="230" cy="95" r="7"/>
+                    <circle cx="50" cy="130" r="7"/><circle cx="90" cy="130" r="7"/><circle cx="130" cy="130" r="7"/><circle cx="170" cy="130" r="7"/><circle cx="210" cy="130" r="7"/>
+                    <circle cx="30" cy="165" r="7"/><circle cx="70" cy="165" r="7"/><circle cx="110" cy="165" r="7"/><circle cx="150" cy="165" r="7"/><circle cx="190" cy="165" r="7"/><circle cx="230" cy="165" r="7"/>
+                    <circle cx="50" cy="200" r="7"/><circle cx="90" cy="200" r="7"/><circle cx="130" cy="200" r="7"/><circle cx="170" cy="200" r="7"/><circle cx="210" cy="200" r="7"/>
+                    <circle cx="30" cy="235" r="7"/><circle cx="70" cy="235" r="7"/><circle cx="110" cy="235" r="7"/><circle cx="150" cy="235" r="7"/><circle cx="190" cy="235" r="7"/><circle cx="230" cy="235" r="7"/>
+                  </g>
+                </svg>
                   <span class="leading-none text-xs">EN</span>
                 </button>
               </div>
@@ -622,8 +639,12 @@ interface TranslationStrings {
                     >
                       <div class="flex items-center justify-between">
                         <div class="flex items-center gap-space-sm">
-                          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center font-bold text-lg shadow-xs">
-                            🇫🇷
+                          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center shadow-xs">
+                            <svg class="w-6 h-4 rounded-[2px] shadow-xs shrink-0 overflow-hidden border border-black/10" viewBox="0 0 640 480" aria-hidden="true">
+                            <path fill="#fff" d="M0 0h640v480H0z"/>
+                            <path fill="#00267f" d="M0 0h213.3v480H0z"/>
+                            <path fill="#f31830" d="M426.7 0H640v480H426.7z"/>
+                          </svg>
                           </div>
                           <div>
                             <span class="font-label-md text-label-md font-bold text-on-surface block">{{ t().langFrTitle }}</span>
@@ -674,8 +695,21 @@ interface TranslationStrings {
                     >
                       <div class="flex items-center justify-between">
                         <div class="flex items-center gap-space-sm">
-                          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center font-bold text-lg shadow-xs">
-                            🇺🇸
+                          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center shadow-xs">
+                            <svg class="w-6 h-4 rounded-[2px] shadow-xs shrink-0 overflow-hidden border border-black/10" viewBox="0 0 640 480" aria-hidden="true">
+                            <path fill="#b22234" d="M0 0h640v480H0z"/>
+                            <path stroke="#fff" stroke-width="37" d="M0 55.5h640M0 129.5h640M0 203.5h640M0 277.5h640M0 351.5h640M0 425.5h640"/>
+                            <path fill="#3c3b6e" d="M0 0h260v259H0z"/>
+                            <g fill="#fff">
+                              <circle cx="30" cy="25" r="7"/><circle cx="70" cy="25" r="7"/><circle cx="110" cy="25" r="7"/><circle cx="150" cy="25" r="7"/><circle cx="190" cy="25" r="7"/><circle cx="230" cy="25" r="7"/>
+                              <circle cx="50" cy="60" r="7"/><circle cx="90" cy="60" r="7"/><circle cx="130" cy="60" r="7"/><circle cx="170" cy="60" r="7"/><circle cx="210" cy="60" r="7"/>
+                              <circle cx="30" cy="95" r="7"/><circle cx="70" cy="95" r="7"/><circle cx="110" cy="95" r="7"/><circle cx="150" cy="95" r="7"/><circle cx="190" cy="95" r="7"/><circle cx="230" cy="95" r="7"/>
+                              <circle cx="50" cy="130" r="7"/><circle cx="90" cy="130" r="7"/><circle cx="130" cy="130" r="7"/><circle cx="170" cy="130" r="7"/><circle cx="210" cy="130" r="7"/>
+                              <circle cx="30" cy="165" r="7"/><circle cx="70" cy="165" r="7"/><circle cx="110" cy="165" r="7"/><circle cx="150" cy="165" r="7"/><circle cx="190" cy="165" r="7"/><circle cx="230" cy="165" r="7"/>
+                              <circle cx="50" cy="200" r="7"/><circle cx="90" cy="200" r="7"/><circle cx="130" cy="200" r="7"/><circle cx="170" cy="200" r="7"/><circle cx="210" cy="200" r="7"/>
+                              <circle cx="30" cy="235" r="7"/><circle cx="70" cy="235" r="7"/><circle cx="110" cy="235" r="7"/><circle cx="150" cy="235" r="7"/><circle cx="190" cy="235" r="7"/><circle cx="230" cy="235" r="7"/>
+                            </g>
+                          </svg>
                           </div>
                           <div>
                             <span class="font-label-md text-label-md font-bold text-on-surface block">{{ t().langEnTitle }}</span>
