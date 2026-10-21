@@ -504,7 +504,7 @@ import { RouterLink } from '@angular/router';
                     L'orchestration d'entreprise réinventée sans compromis
                   </h2>
                 </div>
-                <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                <p class="font-body-lg text-base sm:text-lg text-on-surface-variant dark:text-slate-300 leading-relaxed max-w-lg font-normal">
                   Un moteur déterministe et résistant aux pannes, conçu pour éliminer les ruptures d'intégrité et les goulots d'étranglement manuels.
                 </p>
               </div>
